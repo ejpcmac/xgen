@@ -1,4 +1,4 @@
-defmodule Xgen do
+defmodule ExGen do
   @moduledoc """
   An Elixir project generator.
   """
