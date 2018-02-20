@@ -1,17 +1,10 @@
 defmodule ExGen do
-  @moduledoc """
-  An Elixir project generator.
-  """
+  @moduledoc false
 
   import Mix.Generator
 
-  @typedoc "A project type"
   @type project_type() :: :std
-
-  @typedoc "A template type"
   @type template_type() :: :text | :eex | :keep
-
-  @typedoc "A mapping between a template and a generated file"
   @type mapping() :: [{template_type(), String.t(), String.t()}]
 
   @base [
@@ -71,9 +64,7 @@ defmodule ExGen do
     end
   end)
 
-  @doc """
-  Generates a new project.
-  """
+  @doc false
   @spec generate(project_type(), String.t(), String.t(), keyword()) ::
           :ok | no_return()
   def generate(:std, app, mod, opts) do
@@ -111,9 +102,7 @@ defmodule ExGen do
     :ok
   end
 
-  @doc """
-  Fetch dependencies and build the project.
-  """
+  @doc false
   @spec build(project_type()) :: boolean()
   def build(:std) do
     msg =
