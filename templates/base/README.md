@@ -6,7 +6,7 @@
 
 ## [Contributing](CONTRIBUTING.md)
 
-Before to contribute on this project, please read the
+Before contributing to this project, please read the
 [CONTRIBUTING.md](CONTRIBUTING.md).<% end %><%= if @license == "MIT" do %>
 
 ## License
