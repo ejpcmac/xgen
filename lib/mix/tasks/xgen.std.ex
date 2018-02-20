@@ -36,7 +36,36 @@ defmodule Mix.Tasks.Xgen.Std do
           File.mkdir_p!(path)
         end
 
-        File.cd!(path, fn -> ExGen.generate(:std, app, mod, opts) end)
+        compiled? =
+          File.cd!(path, fn ->
+            ExGen.generate(:std, app, mod, opts)
+            ExGen.build(:std)
+          end)
+
+        Mix.shell().info("""
+
+        Your project has been successfully created.
+        """)
+
+        unless compiled? do
+          Mix.shell().info("""
+          You can now fetch its dependencies and compile it:
+
+              cd #{path}
+              mix deps.get
+              mix compile
+
+          You can also run tests:
+
+              mix test
+          """)
+        end
+
+        Mix.shell().info("""
+        After your first commit, you can setup gitflow:
+
+            ./.gitsetup
+        """)
     end
   end
 

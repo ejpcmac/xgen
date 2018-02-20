@@ -104,10 +104,50 @@ defmodule ExGen do
     copy(@std, assigns)
     if opts[:sup], do: copy(@std_sup, assigns)
 
+    Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
     System.cmd("git", ["init"])
     if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
 
     :ok
+  end
+
+  @doc """
+  Fetch dependencies and build the project.
+  """
+  @spec build(project_type()) :: boolean()
+  def build(:std) do
+    msg =
+      "\nFetch dependencies and build in dev and test environments in parallel?"
+
+    if Mix.shell().yes?(msg) do
+      Mix.shell().info([:green, "* running", :reset, " mix deps.get"])
+      System.cmd("mix", ["deps.get"])
+
+      build_task =
+        Task.async(fn ->
+          Mix.shell().info([:green, "* running", :reset, " mix compile"])
+          System.cmd("mix", ["compile"])
+          Mix.shell().info([:green, "=> project compilation complete", :reset])
+        end)
+
+      test_task =
+        Task.async(fn ->
+          Mix.shell().info([
+            :green,
+            "* running",
+            :reset,
+            " MIX_ENV=test mix compile"
+          ])
+
+          System.cmd("mix", ["compile"], env: [{"MIX_ENV", "test"}])
+          Mix.shell().info([:green, "=> tests compilation complete", :reset])
+        end)
+
+      Task.await(build_task, :infinity)
+      Task.await(test_task, :infinity)
+
+      true
+    end
   end
 
   @spec check_application_name!(String.t(), boolean()) :: nil | no_return()
