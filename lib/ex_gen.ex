@@ -74,14 +74,9 @@ defmodule ExGen do
   @doc """
   Generates a new project.
   """
-  @spec generate(
-          project_type(),
-          String.t(),
-          String.t(),
-          String.t(),
-          keyword()
-        ) :: :ok | no_return()
-  def generate(:std, app, mod, path, opts) do
+  @spec generate(project_type(), String.t(), String.t(), keyword()) ::
+          :ok | no_return()
+  def generate(:std, app, mod, opts) do
     check_application_name!(app, !!opts[:app])
     check_mod_name_validity!(mod)
     check_mod_name_availability!(mod)
@@ -99,23 +94,18 @@ defmodule ExGen do
       github_account: config[:github_account]
     ]
 
-    create_directory(path)
-
     # Generate base files.
-    copy(@base, path, assigns)
-    if opts[:contrib], do: copy(@base_contrib, path, assigns)
-    if opts[:license] == "MIT", do: copy(@base_license_mit, path, assigns)
-    if opts[:todo], do: copy(@base_todo, path, assigns)
+    copy(@base, assigns)
+    if opts[:contrib], do: copy(@base_contrib, assigns)
+    if opts[:license] == "MIT", do: copy(@base_license_mit, assigns)
+    if opts[:todo], do: copy(@base_todo, assigns)
 
     # Generate standard project.
-    copy(@std, path, assigns)
-    if opts[:sup], do: copy(@std_sup, path, assigns)
+    copy(@std, assigns)
+    if opts[:sup], do: copy(@std_sup, assigns)
 
-    File.cd!(path, fn ->
-      System.cmd("git", ["init"])
-
-      if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
-    end)
+    System.cmd("git", ["init"])
+    if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
 
     :ok
   end
@@ -195,11 +185,10 @@ defmodule ExGen do
     config
   end
 
-  @spec copy(mapping(), String.t(), keyword()) :: :ok
-  defp copy(mapping, dest_path, assigns) do
+  @spec copy(mapping(), keyword()) :: :ok
+  defp copy(mapping, assigns) do
     Enum.each(mapping, fn {type, source, target} ->
-      target =
-        Path.join(dest_path, String.replace(target, ":app", assigns[:app]))
+      target = String.replace(target, ":app", assigns[:app])
 
       case type do
         :keep -> create_directory(target)
