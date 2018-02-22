@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1
+
+* Add a `local.xgen` Mix task to update ExGen locally
+* Provide documentation for installing from the precompiled archive
+
 ## v0.1.0
 
 * Generator for a standard project with dependencies and a Git repo
