@@ -17,7 +17,19 @@ Each new project comes with the following dependencies:
 You can choose to add package information, a license, and a `CONTRIBUTING.md` to
 your project.
 
-## Setup
+## Installation
+
+### From archive
+
+You can install ExGen directly from a compiled archive:
+
+    $ mix archive.install https://ejpcmac.net/bin/ex_gen.ez
+
+To update an already installed ExGen:
+
+    $ mix local.xgen
+
+### From source
 
 1. Clone this repository
 
@@ -27,11 +39,14 @@ your project.
 
         $ MIX_ENV=prod mix archive.install
 
-3. Generate a configuration file
+## Configuration
 
-        $ mix xgen.config.create
-        Full name: <your name>
-        GitHub account: <your account>
+You will need to generate a configuration file for ExGen to put your name and
+the correct GitHub links in the generated projects:
+
+    $ mix xgen.config.create
+    Full name: <your name>
+    GitHub account: <your account>
 
 ## Usage
 
