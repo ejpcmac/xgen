@@ -87,6 +87,7 @@ defmodule ExGen do
 
     # Generate base files.
     copy(@base, assigns)
+    File.chmod!(".gitsetup", 0o755)
     if opts[:contrib], do: copy(@base_contrib, assigns)
     if opts[:license] == "MIT", do: copy(@base_license_mit, assigns)
     if opts[:todo], do: copy(@base_todo, assigns)
