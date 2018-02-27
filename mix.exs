@@ -4,7 +4,7 @@ defmodule ExGen.MixProject do
   def project do
     [
       app: :ex_gen,
-      version: "0.1.2-dev",
+      version: "0.1.2",
       elixir: "~> 1.6",
       deps: deps()
     ]
