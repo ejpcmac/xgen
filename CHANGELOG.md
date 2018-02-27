@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2
+
+* Make the generated `.gitsetup` executable
+* Remove useless TODO in the `/TODO`
+
 ## v0.1.1
 
 * Add a `local.xgen` Mix task to update ExGen locally
