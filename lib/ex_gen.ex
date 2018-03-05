@@ -5,51 +5,60 @@ defmodule ExGen do
 
   @type project_type() :: :std
   @type template_type() :: :text | :eex | :keep
-  @type mapping() :: [{template_type(), String.t(), String.t()}]
+  @type collection() :: [String.t()]
 
-  @base [
-    {:eex, "base/README.md", "README.md"},
-    {:text, "base/CHANGELOG.md", "CHANGELOG.md"},
-    {:text, "base/.editorconfig", ".editorconfig"},
-    {:text, "base/.formatter.exs", ".formatter.exs"},
-    {:text, "base/.credo.exs", ".credo.exs"},
-    {:text, "base/.dialyzer_ignore", ".dialyzer_ignore"},
-    {:text, "base/.gitsetup", ".gitsetup"},
-    {:eex, "base/.gitignore", ".gitignore"}
-  ]
+  @templates %{
+    # Base
+    "base/README.md" => {:eex, "README.md"},
+    "base/CHANGELOG.md" => {:text, "CHANGELOG.md"},
+    "base/CONTRIBUTING.md" => {:eex, "CONTRIBUTING.md"},
+    "base/LICENSE_MIT" => {:eex, "LICENSE"},
+    "base/.editorconfig" => {:text, ".editorconfig"},
+    "base/.credo.exs" => {:text, ".credo.exs"},
+    "base/.dialyzer_ignore" => {:text, ".dialyzer_ignore"},
+    "base/.gitsetup" => {:text, ".gitsetup"},
+    "base/.gitignore" => {:eex, ".gitignore"},
+    "base/TODO" => {:text, "TODO"},
 
-  @base_contrib [{:eex, "base/CONTRIBUTING.md", "CONTRIBUTING.md"}]
-  @base_license_mit [{:eex, "base/LICENSE_MIT", "LICENSE"}]
-  @base_todo [{:text, "base/TODO", "TODO"}]
+    # Standard
+    "std/.formatter.exs" => {:text, ".formatter.exs"},
+    "std/mix.exs" => {:eex, "mix.exs"},
+    "std/config/config.exs" => {:text, "config/config.exs"},
+    "std/lib/app_name.ex" => {:eex, "lib/:app.ex"},
+    "std/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
+    "std/test/support" => {:keep, "test/support"},
+    "std/test/test_helper.exs" => {:text, "test/test_helper.exs"},
+    "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"}
+  }
+
+  @contrib ["base/CONTRIBUTING.md"]
+  @license_mit ["base/LICENSE_MIT"]
+  @todo ["base/TODO"]
 
   @std [
-    {:eex, "std/mix.exs", "mix.exs"},
-    {:text, "std/config/config.exs", "config/config.exs"},
-    {:eex, "std/lib/app_name.ex", "lib/:app.ex"},
-    {:keep, "std/test/support", "test/support"},
-    {:text, "std/test/test_helper.exs", "test/test_helper.exs"},
-    {:eex, "std/test/app_name_test.exs", "test/:app_test.exs"}
+    "base/README.md",
+    "base/CHANGELOG.md",
+    "base/.editorconfig",
+    "std/.formatter.exs",
+    "base/.credo.exs",
+    "base/.dialyzer_ignore",
+    "base/.gitsetup",
+    "base/.gitignore",
+    "std/mix.exs",
+    "std/config/config.exs",
+    "std/lib/app_name.ex",
+    "std/test/support",
+    "std/test/test_helper.exs",
+    "std/test/app_name_test.exs"
   ]
 
-  @std_sup [
-    {:eex, "std/lib/app_name/application.ex", "lib/:app/application.ex"}
-  ]
+  @std_sup ["std/lib/app_name/application.ex"]
 
-  templates = [
-    @base,
-    @base_contrib,
-    @base_license_mit,
-    @base_todo,
-    @std,
-    @std_sup
-  ]
+  @templates_root Path.expand("../templates", __DIR__)
 
-  templates_root = Path.expand("../templates", __DIR__)
-
-  templates
-  |> List.flatten()
-  |> Enum.each(fn {type, source, _target} ->
-    file = Path.join(templates_root, source)
+  @templates
+  |> Enum.each(fn {source, {type, _target}} ->
+    file = Path.join(@templates_root, source)
 
     case type do
       :text ->
@@ -85,16 +94,12 @@ defmodule ExGen do
       github_account: config[:github_account]
     ]
 
-    # Generate base files.
-    copy(@base, assigns)
-    File.chmod!(".gitsetup", 0o755)
-    if opts[:contrib], do: copy(@base_contrib, assigns)
-    if opts[:license] == "MIT", do: copy(@base_license_mit, assigns)
-    if opts[:todo], do: copy(@base_todo, assigns)
-
-    # Generate standard project.
     copy(@std, assigns)
+    File.chmod!(".gitsetup", 0o755)
     if opts[:sup], do: copy(@std_sup, assigns)
+    if opts[:contrib], do: copy(@contrib, assigns)
+    if opts[:license] == "MIT", do: copy(@license_mit, assigns)
+    if opts[:todo], do: copy(@todo, assigns)
 
     Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
     System.cmd("git", ["init"])
@@ -215,14 +220,15 @@ defmodule ExGen do
     config
   end
 
-  @spec copy(mapping(), keyword()) :: :ok
-  defp copy(mapping, assigns) do
-    Enum.each(mapping, fn {type, source, target} ->
+  @spec copy(collection(), keyword()) :: :ok
+  defp copy(templates, assigns) do
+    Enum.each(templates, fn template ->
+      {type, target} = @templates[template]
       target = String.replace(target, ":app", assigns[:app])
 
       case type do
         :keep -> create_directory(target)
-        _ -> create_file(target, render(source, assigns))
+        _ -> create_file(target, render(template, assigns))
       end
     end)
   end
