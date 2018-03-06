@@ -3,7 +3,7 @@ defmodule ExGen do
 
   import Mix.Generator
 
-  @type project_type() :: :std
+  @type project_type() :: :std | :nerves
   @type template_type() :: :text | :eex | :keep
   @type collection() :: [String.t()]
 
@@ -28,7 +28,16 @@ defmodule ExGen do
     "std/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
     "std/test/support" => {:keep, "test/support"},
     "std/test/test_helper.exs" => {:text, "test/test_helper.exs"},
-    "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"}
+    "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"},
+
+    # Nerves
+    "nerves/.formatter.exs" => {:text, ".formatter.exs"},
+    "nerves/mix.exs" => {:eex, "mix.exs"},
+    "nerves/config/config.exs" => {:eex, "config/config.exs"},
+    "nerves/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
+    "nerves/rel/config.exs" => {:eex, "rel/config.exs"},
+    "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
+    "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"}
   }
 
   @templates_root Path.expand("../templates", __DIR__)
@@ -78,6 +87,24 @@ defmodule ExGen do
 
   defp collection(:std_sup), do: ["std/lib/app_name/application.ex"]
 
+  defp collection(:nerves) do
+    [
+      "base/README.md",
+      "base/CHANGELOG.md",
+      "base/.editorconfig",
+      "nerves/.formatter.exs",
+      "base/.gitsetup",
+      "base/.gitignore",
+      "nerves/mix.exs",
+      "nerves/config/config.exs",
+      "std/lib/app_name.ex",
+      "nerves/rel/plugins/.gitignore",
+      "nerves/rel/config.exs",
+      "nerves/rel/vm.args",
+      "nerves/test/test_helper.exs"
+    ]
+  end
+
   ## Generator
 
   @doc false
@@ -93,7 +120,9 @@ defmodule ExGen do
     assigns = [
       app: app,
       mod: mod,
+      cookie: 48 |> :crypto.strong_rand_bytes() |> Base.encode64(),
       sup: !!opts[:sup],
+      net: !!opts[:net],
       contrib: !!opts[:contrib],
       package: !!opts[:package],
       license: opts[:license],
@@ -104,7 +133,7 @@ defmodule ExGen do
     collection =
       []
       |> add_collection(type, true)
-      |> add_collection(:std_sup, !!opts[:sup] and type in [:std])
+      |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
       |> add_collection(:todo, !!opts[:todo])
@@ -163,6 +192,16 @@ defmodule ExGen do
       Task.await(build_task, :infinity)
       Task.await(test_task, :infinity)
 
+      true
+    end
+  end
+
+  def build(:nerves) do
+    msg = "\nFetch dependencies?"
+
+    if Mix.shell().yes?(msg) do
+      Mix.shell().info([:green, "* running", :reset, " mix deps.get"])
+      System.cmd("mix", ["deps.get"])
       true
     end
   end
