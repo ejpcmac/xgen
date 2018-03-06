@@ -31,31 +31,9 @@ defmodule ExGen do
     "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"}
   }
 
-  @contrib ["base/CONTRIBUTING.md"]
-  @license_mit ["base/LICENSE_MIT"]
-  @todo ["base/TODO"]
-
-  @std [
-    "base/README.md",
-    "base/CHANGELOG.md",
-    "base/.editorconfig",
-    "std/.formatter.exs",
-    "base/.credo.exs",
-    "base/.dialyzer_ignore",
-    "base/.gitsetup",
-    "base/.gitignore",
-    "std/mix.exs",
-    "std/config/config.exs",
-    "std/lib/app_name.ex",
-    "std/test/support",
-    "std/test/test_helper.exs",
-    "std/test/app_name_test.exs"
-  ]
-
-  @std_sup ["std/lib/app_name/application.ex"]
-
   @templates_root Path.expand("../templates", __DIR__)
 
+  # Generates a render/2 function per template.
   @templates
   |> Enum.each(fn {source, {type, _target}} ->
     file = Path.join(@templates_root, source)
@@ -73,10 +51,39 @@ defmodule ExGen do
     end
   end)
 
+  ## Collections
+
+  defp collection(:contrib), do: ["base/CONTRIBUTING.md"]
+  defp collection(:license_mit), do: ["base/LICENSE_MIT"]
+  defp collection(:todo), do: ["base/TODO"]
+
+  defp collection(:std) do
+    [
+      "base/README.md",
+      "base/CHANGELOG.md",
+      "base/.editorconfig",
+      "std/.formatter.exs",
+      "base/.credo.exs",
+      "base/.dialyzer_ignore",
+      "base/.gitsetup",
+      "base/.gitignore",
+      "std/mix.exs",
+      "std/config/config.exs",
+      "std/lib/app_name.ex",
+      "std/test/support",
+      "std/test/test_helper.exs",
+      "std/test/app_name_test.exs"
+    ]
+  end
+
+  defp collection(:std_sup), do: ["std/lib/app_name/application.ex"]
+
+  ## Generator
+
   @doc false
   @spec generate(project_type(), String.t(), String.t(), keyword()) ::
           :ok | no_return()
-  def generate(:std, app, mod, opts) do
+  def generate(type, app, mod, opts) do
     check_application_name!(app, !!opts[:app])
     check_mod_name_validity!(mod)
     check_mod_name_availability!(mod)
@@ -94,12 +101,17 @@ defmodule ExGen do
       github_account: config[:github_account]
     ]
 
-    copy(@std, assigns)
+    collection =
+      []
+      |> add_collection(type, true)
+      |> add_collection(:std_sup, !!opts[:sup] and type in [:std])
+      |> add_collection(:contrib, !!opts[:contrib])
+      |> add_collection(:license_mit, opts[:license] == "MIT")
+      |> add_collection(:todo, !!opts[:todo])
+      |> make_collection()
+
+    copy(collection, assigns)
     File.chmod!(".gitsetup", 0o755)
-    if opts[:sup], do: copy(@std_sup, assigns)
-    if opts[:contrib], do: copy(@contrib, assigns)
-    if opts[:license] == "MIT", do: copy(@license_mit, assigns)
-    if opts[:todo], do: copy(@todo, assigns)
 
     Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
     System.cmd("git", ["init"])
@@ -107,6 +119,16 @@ defmodule ExGen do
 
     :ok
   end
+
+  defp add_collection(names, c, true), do: [c | names]
+  defp add_collection(names, _, false), do: names
+
+  defp make_collection(names), do: do_make_collection(names, [])
+
+  defp do_make_collection([], collection), do: List.flatten(collection)
+
+  defp do_make_collection([name | names], collection),
+    do: do_make_collection(names, [collection(name) | collection])
 
   @doc false
   @spec build(project_type()) :: boolean()
