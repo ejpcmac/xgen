@@ -1,7 +1,7 @@
 # <%= @mod %>
-
+<%= if @package do %>
 [![hex.pm version](http://img.shields.io/hexpm/v/<%= @app %>.svg?style=flat)](https://hex.pm/packages/<%= @app %>)
-
+<% end %>
 **TODO: Add description**<%= if @contrib do %>
 
 ## [Contributing](CONTRIBUTING.md)
