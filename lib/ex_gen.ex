@@ -1,11 +1,16 @@
 defmodule ExGen do
-  @moduledoc false
+  @moduledoc """
+  Helpers for Elixir projects generation.
+  """
 
   import ExGen.Templates
 
+  @typedoc "Project type"
   @type project_type() :: :std | :nerves
 
-  @doc false
+  @doc """
+  Generates a project of the given `type`.
+  """
   @spec generate(project_type(), String.t(), String.t(), keyword()) ::
           :ok | no_return()
   def generate(type, app, mod, opts) do
@@ -47,33 +52,26 @@ defmodule ExGen do
     :ok
   end
 
-  @doc false
+  @doc """
+  Fetches the dependencies and build the project.
+  """
   @spec build(project_type()) :: boolean()
   def build(:std) do
     msg =
       "\nFetch dependencies and build in dev and test environments in parallel?"
 
     if Mix.shell().yes?(msg) do
-      Mix.shell().info([:green, "* running", :reset, " mix deps.get"])
-      System.cmd("mix", ["deps.get"])
+      run_command("mix", ["deps.get"])
 
       build_task =
         Task.async(fn ->
-          Mix.shell().info([:green, "* running", :reset, " mix compile"])
-          System.cmd("mix", ["compile"])
+          run_command("mix", ["compile"])
           Mix.shell().info([:green, "=> project compilation complete", :reset])
         end)
 
       test_task =
         Task.async(fn ->
-          Mix.shell().info([
-            :green,
-            "* running",
-            :reset,
-            " MIX_ENV=test mix compile"
-          ])
-
-          System.cmd("mix", ["compile"], env: [{"MIX_ENV", "test"}])
+          run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
           Mix.shell().info([:green, "=> tests compilation complete", :reset])
         end)
 
@@ -88,8 +86,7 @@ defmodule ExGen do
     msg = "\nFetch dependencies?"
 
     if Mix.shell().yes?(msg) do
-      Mix.shell().info([:green, "* running", :reset, " mix deps.get"])
-      System.cmd("mix", ["deps.get"])
+      run_command("mix", ["deps.get"])
       true
     end
   end
@@ -167,5 +164,18 @@ defmodule ExGen do
     end
 
     config
+  end
+
+  @spec run_command(binary(), [binary()], keyword()) ::
+          {Collectable.t(), non_neg_integer}
+  defp run_command(cmd, args, opts \\ []) do
+    env = Enum.map(opts[:env] || [], fn {key, value} -> " #{key}=#{value}" end)
+    fmt_args = Enum.join(args, " ")
+
+    Mix.shell().info(
+      [:green, "* running", :reset] ++ env ++ [" #{cmd} ", fmt_args]
+    )
+
+    System.cmd(cmd, args, opts)
   end
 end
