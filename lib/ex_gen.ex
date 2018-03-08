@@ -99,7 +99,7 @@ defmodule ExGen do
           "letters, numbers and underscore, got: #{inspect(name)}" <>
           if inferred? do
             ". The application name is inferred from the path, if you'd " <>
-              "like toexplicitly name the application then use the \"--app " <>
+              "like to explicitly name the application then use the \"--app " <>
               "APP\" option"
           else
             ""
