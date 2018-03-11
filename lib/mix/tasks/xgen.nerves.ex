@@ -1,6 +1,8 @@
 defmodule Mix.Tasks.Xgen.Nerves do
   use Mix.Task
 
+  import ExGen.Help
+
   @shortdoc "Generates a Nerves project"
 
   @moduledoc """
@@ -12,28 +14,20 @@ defmodule Mix.Tasks.Xgen.Nerves do
                              [--contrib] [--license <license>] [--todo]
                              [--config <file>]
 
-  A project will be create at the given `<path>`. The application and module
-  names will be inferred from the path, unless you specify them using the
-  `--app` and `--module` options.
+  #{general_description()}
 
   ## Options
 
-    * `--app <app>`: set the OTP application name for the project.
-    * `--module <module>`: set the module name for the project.
-    * `--sup`: add an `Application` module to the project containing a
-      supervision tree. This option also adds the callback in the `mix.exs`.
+    * #{app()}
+    * #{module()}
+    * #{sup()}
     * `--net`: add `nerves_network` to the project with a basic configuration.
-    * `--contrib`: add a `CONTRIBUTING.md` to the project.
-    * `--license <license>`: set the license for the project. If the license is
-      supported, a `LICENSE` file is created with the maintainer name.
-    * `--todo`: add a `TODO` file to the project. This file is also added to
-      the Git excluded files in `.git/info/exclude`.
-    * `--config <file>`: indicate which configuration file to use. Defaults to
-      `~/.xgen.exs`
+    * #{contrib()}
+    * #{license()}
+    * #{todo()}
+    * #{config()}
 
-  ## Supported licenses
-
-  Currently, only the `MIT` license is supported.
+  #{supported_licences()}
   """
 
   @switches [
