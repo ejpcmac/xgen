@@ -21,6 +21,7 @@ defmodule Mix.Tasks.Xgen.Std do
     * #{app()}
     * #{module()}
     * #{sup()}
+    * `--rel`: add a Distillery configuration to the project.
     * #{contrib()}
     * `--package`: add package information in the `mix.exs`.
     * #{license()} If the `--package` option is set, the license is precised in
@@ -36,6 +37,7 @@ defmodule Mix.Tasks.Xgen.Std do
     app: :string,
     module: :string,
     sup: :boolean,
+    rel: :boolean,
     contrib: :boolean,
     package: :boolean,
     license: :string,

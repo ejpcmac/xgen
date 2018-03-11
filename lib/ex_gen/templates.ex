@@ -22,11 +22,13 @@ defmodule ExGen.Templates do
     "base/TODO" => {:text, "TODO"},
 
     # Standard
-    "std/.formatter.exs" => {:text, ".formatter.exs"},
+    "std/.formatter.exs" => {:eex, ".formatter.exs"},
     "std/mix.exs" => {:eex, "mix.exs"},
     "std/config/config.exs" => {:text, "config/config.exs"},
     "std/lib/app_name.ex" => {:eex, "lib/:app.ex"},
     "std/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
+    "std/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
+    "std/rel/config.exs" => {:eex, "rel/config.exs"},
     "std/test/support" => {:keep, "test/support"},
     "std/test/test_helper.exs" => {:text, "test/test_helper.exs"},
     "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"},
@@ -91,6 +93,13 @@ defmodule ExGen.Templates do
   # Standard project optionals
   defp collection(:std_sup), do: ["std/lib/app_name/application.ex"]
 
+  defp collection(:std_rel) do
+    [
+      "std/rel/plugins/.gitignore",
+      "std/rel/config.exs"
+    ]
+  end
+
   # Nerves project
   defp collection(:nerves) do
     [
@@ -144,4 +153,8 @@ defmodule ExGen.Templates do
       end
     end)
   end
+
+  # Helper for generating cookies in templates.
+  @spec cookie :: String.t()
+  defp cookie, do: 48 |> :crypto.strong_rand_bytes() |> Base.encode64()
 end

@@ -96,6 +96,7 @@ defmodule ExGen do
       mod: mod,
       cookie: 48 |> :crypto.strong_rand_bytes() |> Base.encode64(),
       sup: !!opts[:sup],
+      rel: !!opts[:rel],
       net: !!opts[:net],
       contrib: !!opts[:contrib],
       package: !!opts[:package],
@@ -149,6 +150,7 @@ defmodule ExGen do
       []
       |> add_collection(type, true)
       |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
+      |> add_collection(:std_rel, !!opts[:rel] and type in [:std])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
       |> add_collection(:gitsetup, !opts[:no_git])
