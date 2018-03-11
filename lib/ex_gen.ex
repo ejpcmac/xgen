@@ -5,19 +5,90 @@ defmodule ExGen do
 
   import ExGen.Templates
 
+  alias ExGen.Project
+
   @typedoc "Project type"
   @type project_type() :: :std | :nerves
 
   @doc """
-  Generates a project of the given `type`.
+  Generates a project of the given `type` at the given `path`.
   """
-  @spec generate(project_type(), String.t(), String.t(), keyword()) ::
-          :ok | no_return()
-  def generate(type, app, mod, opts) do
-    check_application_name!(app, !!opts[:app])
-    check_mod_name_validity!(mod)
-    check_mod_name_availability!(mod)
+  @spec generate(project_type(), String.t(), keyword()) :: :ok | no_return()
+  def generate(type, path, opts) do
+    type
+    |> Project.new(path, opts)
+    |> validate_project()
+    |> build_assigns()
+    |> build_collection()
+    |> go_to_project_dir()
+    |> copy_files()
+    |> init_git()
+    |> prompt_to_build()
+    |> print_end_message()
+  end
 
+  @spec validate_project(Project.t()) :: Project.t() | no_return()
+  defp validate_project(%Project{} = project) do
+    check_application_name!(project.app, !project.opts[:app])
+    check_mod_name_validity!(project.mod)
+    check_mod_name_availability!(project.mod)
+    check_directory_existence!(project.path)
+
+    project
+  end
+
+  @spec check_application_name!(String.t(), boolean()) :: nil | no_return()
+  defp check_application_name!(name, inferred?) do
+    unless name =~ Regex.recompile!(~r/^[a-z][a-z0-9_]*$/) do
+      Mix.raise(
+        "Application name must start with a letter and have only lowercase " <>
+          "letters, numbers and underscore. Got #{inspect(name)}." <>
+          if inferred? do
+            " The application name is inferred from the path, if you'd " <>
+              "like to explicitly name the application then use the `--app " <>
+              "<app>` option."
+          else
+            ""
+          end
+      )
+    end
+  end
+
+  @spec check_mod_name_validity!(String.t()) :: nil | no_return()
+  defp check_mod_name_validity!(name) do
+    unless name =~ Regex.recompile!(~r/^[A-Z]\w*(\.[A-Z]\w*)*$/) do
+      Mix.raise(
+        "Module name must be a valid Elixir alias (for example: Foo.Bar). " <>
+          "Got #{inspect(name)}."
+      )
+    end
+  end
+
+  @spec check_mod_name_availability!(String.t()) :: nil | no_return()
+  defp check_mod_name_availability!(name) do
+    name = Module.concat(Elixir, name)
+
+    if Code.ensure_loaded?(name) do
+      Mix.raise(
+        "Module name #{inspect(name)} is already taken, please choose " <>
+          "another name."
+      )
+    end
+  end
+
+  @spec check_directory_existence!(String.t()) :: nil | no_return()
+  defp check_directory_existence!(path) do
+    msg =
+      "The directory #{inspect(path)} already exists. Are you sure you want " <>
+        "to continue?"
+
+    if File.dir?(path) and not Mix.shell().yes?(msg) do
+      Mix.raise("Please select another directory for installation")
+    end
+  end
+
+  @spec build_assigns(Project.t()) :: Project.t()
+  defp build_assigns(%Project{app: app, mod: mod, opts: opts} = project) do
     config = fetch_config_file!(opts)
 
     assigns = [
@@ -33,101 +104,7 @@ defmodule ExGen do
       github_account: config[:github_account]
     ]
 
-    collection =
-      []
-      |> add_collection(type, true)
-      |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
-      |> add_collection(:contrib, !!opts[:contrib])
-      |> add_collection(:license_mit, opts[:license] == "MIT")
-      |> add_collection(:todo, !!opts[:todo])
-      |> make_collection()
-
-    copy(collection, assigns)
-    File.chmod!(".gitsetup", 0o755)
-
-    Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
-    System.cmd("git", ["init"])
-    if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
-
-    :ok
-  end
-
-  @doc """
-  Fetches the dependencies and build the project.
-  """
-  @spec build(project_type()) :: boolean()
-  def build(:std) do
-    msg =
-      "\nFetch dependencies and build in dev and test environments in parallel?"
-
-    if Mix.shell().yes?(msg) do
-      run_command("mix", ["deps.get"])
-
-      build_task =
-        Task.async(fn ->
-          run_command("mix", ["compile"])
-          Mix.shell().info([:green, "=> project compilation complete", :reset])
-        end)
-
-      test_task =
-        Task.async(fn ->
-          run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
-          Mix.shell().info([:green, "=> tests compilation complete", :reset])
-        end)
-
-      Task.await(build_task, :infinity)
-      Task.await(test_task, :infinity)
-
-      true
-    end
-  end
-
-  def build(:nerves) do
-    msg = "\nFetch dependencies?"
-
-    if Mix.shell().yes?(msg) do
-      run_command("mix", ["deps.get"])
-      true
-    end
-  end
-
-  @spec check_application_name!(String.t(), boolean()) :: nil | no_return()
-  defp check_application_name!(name, inferred?) do
-    unless name =~ Regex.recompile!(~r/^[a-z][a-z0-9_]*$/) do
-      Mix.raise(
-        "Application name must start with a letter and have only lowercase " <>
-          "letters, numbers and underscore, got: #{inspect(name)}" <>
-          if inferred? do
-            ". The application name is inferred from the path, if you'd " <>
-              "like to explicitly name the application then use the \"--app " <>
-              "APP\" option"
-          else
-            ""
-          end
-      )
-    end
-  end
-
-  @spec check_mod_name_validity!(String.t()) :: nil | no_return()
-  defp check_mod_name_validity!(name) do
-    unless name =~ Regex.recompile!(~r/^[A-Z]\w*(\.[A-Z]\w*)*$/) do
-      Mix.raise(
-        "Module name must be a valid Elixir alias (for example: Foo.Bar), " <>
-          "got: #{inspect(name)}"
-      )
-    end
-  end
-
-  @spec check_mod_name_availability!(String.t()) :: nil | no_return()
-  defp check_mod_name_availability!(name) do
-    name = Module.concat(Elixir, name)
-
-    if Code.ensure_loaded?(name) do
-      Mix.raise(
-        "Module name #{inspect(name)} is already taken, please choose " <>
-          "another name"
-      )
-    end
+    %{project | assigns: assigns}
   end
 
   @spec fetch_config_file!(keyword()) :: keyword() | no_return()
@@ -165,6 +142,175 @@ defmodule ExGen do
 
     config
   end
+
+  @spec build_collection(Project.t()) :: Project.t()
+  defp build_collection(%Project{type: type, opts: opts} = project) do
+    collection =
+      []
+      |> add_collection(type, true)
+      |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
+      |> add_collection(:contrib, !!opts[:contrib])
+      |> add_collection(:license_mit, opts[:license] == "MIT")
+      |> add_collection(:todo, !!opts[:todo])
+      |> make_collection()
+
+    %{project | collection: collection}
+  end
+
+  @spec go_to_project_dir(Project.t()) :: Project.t()
+  defp go_to_project_dir(%Project{} = project) do
+    File.mkdir_p!(project.path)
+    File.cd!(project.path)
+    project
+  end
+
+  @spec copy_files(Project.t()) :: Project.t()
+  defp copy_files(%Project{} = project) do
+    copy(project.collection, project.assigns)
+    File.chmod!(".gitsetup", 0o755)
+    project
+  end
+
+  @spec init_git(Project.t()) :: Project.t()
+  defp init_git(%Project{opts: opts} = project) do
+    Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
+    System.cmd("git", ["init"])
+    if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
+
+    project
+  end
+
+  @spec prompt_to_build(Project.t()) :: Project.t()
+  defp prompt_to_build(%Project{type: :std} = project) do
+    msg =
+      "\nFetch dependencies and build in dev and test environments in parallel?"
+
+    if Mix.shell().yes?(msg) do
+      run_command("mix", ["deps.get"])
+
+      build_task =
+        Task.async(fn ->
+          run_command("mix", ["compile"])
+          Mix.shell().info([:green, "=> project compilation complete", :reset])
+        end)
+
+      test_task =
+        Task.async(fn ->
+          run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
+          Mix.shell().info([:green, "=> tests compilation complete", :reset])
+        end)
+
+      Task.await(build_task, :infinity)
+      Task.await(test_task, :infinity)
+      %{project | build: true}
+    else
+      %{project | build: false}
+    end
+  end
+
+  defp prompt_to_build(%Project{type: :nerves} = project) do
+    if Mix.shell().yes?("\nFetch dependencies?") do
+      run_command("mix", ["deps.get"])
+      %{project | build: true}
+    else
+      %{project | build: false}
+    end
+  end
+
+  @spec print_end_message(Project.t()) :: :ok
+  defp print_end_message(%Project{} = project) do
+    []
+    |> project_created()
+    |> build_instructions(project)
+    |> special_instructions(project)
+    |> gitsetup_instructions()
+    |> Enum.reverse()
+    |> Mix.shell().info()
+  end
+
+  @spec project_created(iolist()) :: iolist()
+  defp project_created(messages) do
+    [
+      """
+
+      Your project has been successfully created.
+      """
+      | messages
+    ]
+  end
+
+  @spec build_instructions(iolist(), Project.t()) :: iolist()
+  defp build_instructions(messages, %Project{
+         type: :std,
+         path: path,
+         build: false
+       }) do
+    [
+      """
+
+      You can now fetch its dependencies and compile it:
+
+          cd #{path}
+          mix deps.get
+          mix compile
+
+      You can also run tests:
+
+          mix test
+      """
+      | messages
+    ]
+  end
+
+  defp build_instructions(messages, %Project{
+         type: :nerves,
+         path: path,
+         build: false
+       }) do
+    [
+      """
+
+      You can now fetch its dependencies:
+
+          cd #{path}
+          mix deps.get
+      """
+      | messages
+    ]
+  end
+
+  defp build_instructions(messages, _), do: messages
+
+  @spec special_instructions(iolist(), Project.t()) :: iolist()
+  defp special_instructions(messages, %Project{type: :nerves, path: path}) do
+    [
+      """
+
+      You can then build a firmware image:
+
+          cd #{path}
+          MIX_ENV=prod MIX_TARGET=rpi3 mix do deps.get, firmware
+      """
+      | messages
+    ]
+  end
+
+  defp special_instructions(messages, _), do: messages
+
+  @spec gitsetup_instructions(iolist()) :: iolist()
+  defp gitsetup_instructions(messages) do
+    [
+      """
+
+      After your first commit, you can setup gitflow:
+
+          ./.gitsetup
+      """
+      | messages
+    ]
+  end
+
+  ## Helpers
 
   @spec run_command(binary(), [binary()], keyword()) ::
           {Collectable.t(), non_neg_integer}

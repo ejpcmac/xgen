@@ -3,6 +3,8 @@ defmodule ExGen.Project do
   A project struct.
   """
 
+  alias ExGen.Templates
+
   @fields quote(
             do: [
               type: ExGen.project_type(),
@@ -11,7 +13,7 @@ defmodule ExGen.Project do
               mod: String.t(),
               opts: keyword(),
               assigns: keyword(),
-              collections: [atom()],
+              collection: Templates.collection(),
               build: boolean()
             ]
           )
@@ -25,7 +27,6 @@ defmodule ExGen.Project do
   """
   @spec new(ExGen.project_type(), String.t(), keyword()) :: t()
   def new(type, path, opts) do
-    path = Path.expand(path)
     app = opts[:app] || Path.basename(path)
     mod = opts[:module] || Macro.camelize(app)
 
@@ -36,7 +37,7 @@ defmodule ExGen.Project do
       mod: mod,
       opts: opts,
       assigns: [],
-      collections: [],
+      collection: [],
       build: false
     }
   end

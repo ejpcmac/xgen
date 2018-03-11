@@ -58,56 +58,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
         )
 
       [path | _] ->
-        nil
-        app = opts[:app] || path |> Path.expand() |> Path.basename()
-        mod = opts[:module] || Macro.camelize(app)
-
-        unless path == "." do
-          check_directory_existence!(path)
-          File.mkdir_p!(path)
-        end
-
-        compiled? =
-          File.cd!(path, fn ->
-            ExGen.generate(:nerves, app, mod, opts)
-            ExGen.build(:nerves)
-          end)
-
-        Mix.shell().info("""
-
-        Your project has been successfully created.
-        """)
-
-        unless compiled? do
-          Mix.shell().info("""
-          You can now fetch its dependencies:
-
-              cd #{path}
-              mix deps.get
-          """)
-        end
-
-        Mix.shell().info("""
-        You can then build a firmware image:
-
-            cd #{path}
-            MIX_ENV=prod MIX_TARGET=rpi3 mix do deps.get, firmware
-
-        After your first commit, you can setup gitflow:
-
-            ./.gitsetup
-        """)
-    end
-  end
-
-  @spec check_directory_existence!(String.t()) :: nil | no_return()
-  defp check_directory_existence!(path) do
-    msg =
-      "The directory #{inspect(path)} already exists. Are you sure you want " <>
-        "to continue?"
-
-    if File.dir?(path) and not Mix.shell().yes?(msg) do
-      Mix.raise("Please select another directory for installation")
+        ExGen.generate(:nerves, path, opts)
     end
   end
 end
