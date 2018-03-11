@@ -151,6 +151,7 @@ defmodule ExGen do
       |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
+      |> add_collection(:gitsetup, !opts[:no_git])
       |> add_collection(:todo, !!opts[:todo])
       |> make_collection()
 
@@ -167,15 +168,22 @@ defmodule ExGen do
   @spec copy_files(Project.t()) :: Project.t()
   defp copy_files(%Project{} = project) do
     copy(project.collection, project.assigns)
-    File.chmod!(".gitsetup", 0o755)
+    unless project.opts[:no_git], do: File.chmod!(".gitsetup", 0o755)
     project
   end
 
   @spec init_git(Project.t()) :: Project.t()
   defp init_git(%Project{opts: opts} = project) do
-    Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
-    System.cmd("git", ["init"])
-    if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
+    unless opts[:no_git] do
+      Mix.shell().info([
+        :green,
+        "* initializing an empty Git repository",
+        :reset
+      ])
+
+      System.cmd("git", ["init"])
+      if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
+    end
 
     project
   end
@@ -223,7 +231,7 @@ defmodule ExGen do
     |> project_created()
     |> build_instructions(project)
     |> special_instructions(project)
-    |> gitsetup_instructions()
+    |> gitsetup_instructions(!project.opts[:no_git])
     |> Enum.reverse()
     |> Mix.shell().info()
   end
@@ -297,8 +305,8 @@ defmodule ExGen do
 
   defp special_instructions(messages, _), do: messages
 
-  @spec gitsetup_instructions(iolist()) :: iolist()
-  defp gitsetup_instructions(messages) do
+  @spec gitsetup_instructions(iolist(), boolean()) :: iolist()
+  defp gitsetup_instructions(messages, true) do
     [
       """
 
@@ -309,6 +317,8 @@ defmodule ExGen do
       | messages
     ]
   end
+
+  defp gitsetup_instructions(messages, false), do: messages
 
   ## Helpers
 

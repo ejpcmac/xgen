@@ -66,6 +66,7 @@ defmodule ExGen.Templates do
   # Base optionals
   defp collection(:contrib), do: ["base/CONTRIBUTING.md"]
   defp collection(:license_mit), do: ["base/LICENSE_MIT"]
+  defp collection(:gitsetup), do: ["base/.gitsetup"]
   defp collection(:todo), do: ["base/TODO"]
 
   # Standard project
@@ -77,7 +78,6 @@ defmodule ExGen.Templates do
       "std/.formatter.exs",
       "base/.credo.exs",
       "base/.dialyzer_ignore",
-      "base/.gitsetup",
       "base/.gitignore",
       "std/mix.exs",
       "std/config/config.exs",
@@ -98,7 +98,6 @@ defmodule ExGen.Templates do
       "base/CHANGELOG.md",
       "base/.editorconfig",
       "nerves/.formatter.exs",
-      "base/.gitsetup",
       "base/.gitignore",
       "nerves/mix.exs",
       "nerves/config/config.exs",

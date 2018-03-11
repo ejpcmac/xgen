@@ -26,6 +26,7 @@ defmodule Mix.Tasks.Xgen.Std do
     * #{license()} If the `--package` option is set, the license is precised in
       the package information.
     * #{todo()}
+    * #{no_git()}
     * #{config()}
 
   #{supported_licences()}
@@ -39,6 +40,7 @@ defmodule Mix.Tasks.Xgen.Std do
     package: :boolean,
     license: :string,
     todo: :boolean,
+    no_git: :boolean,
     config: :string
   ]
 

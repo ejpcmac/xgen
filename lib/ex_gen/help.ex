@@ -57,6 +57,12 @@ defmodule ExGen.Help do
   end
 
   @doc false
+  @spec no_git :: String.t()
+  def no_git do
+    "`--no-git`: do not initialise a Git repository."
+  end
+
+  @doc false
   @spec config :: String.t()
   def config do
     """

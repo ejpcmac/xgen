@@ -25,6 +25,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
     * #{contrib()}
     * #{license()}
     * #{todo()}
+    * #{no_git()}
     * #{config()}
 
   #{supported_licences()}
@@ -38,6 +39,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
     contrib: :boolean,
     license: :string,
     todo: :boolean,
+    no_git: :boolean,
     config: :string
   ]
 
