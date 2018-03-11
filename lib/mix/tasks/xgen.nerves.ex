@@ -52,13 +52,8 @@ defmodule Mix.Tasks.Xgen.Nerves do
     {opts, argv} = OptionParser.parse!(args, strict: @switches)
 
     case argv do
-      [] ->
-        Mix.raise(
-          "Expected <path> to be given. Please use `mix xgen.nerves <path>`."
-        )
-
-      [path | _] ->
-        ExGen.generate(:nerves, path, opts)
+      [] -> Mix.Tasks.Help.run(["xgen.nerves"])
+      [path | _] -> ExGen.generate(:nerves, path, opts)
     end
   end
 end

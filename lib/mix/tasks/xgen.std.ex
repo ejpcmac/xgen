@@ -54,13 +54,8 @@ defmodule Mix.Tasks.Xgen.Std do
     {opts, argv} = OptionParser.parse!(args, strict: @switches)
 
     case argv do
-      [] ->
-        Mix.raise(
-          "Expected <path> to be given. Please use `mix xgen.std <path>`."
-        )
-
-      [path | _] ->
-        ExGen.generate(:std, path, opts)
+      [] -> Mix.Tasks.Help.run(["xgen.std"])
+      [path | _] -> ExGen.generate(:std, path, opts)
     end
   end
 end
