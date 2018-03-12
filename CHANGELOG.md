@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.2.0
+
+### New features
+
+* [xgen.nerves] Add a Nerves project generator
+* [xgen.std] Add an option to add Distillery to the project
+* [xgen.std] Add an opt-out for Git repo initialisation
+
+### Enhancements
+
+* Code refactoring
+
+### Bug fixes
+
+* [xgen.\*] Do not put the Hex version in the `README.md` if `--package` is not
+  set
+
 ## v0.1.2
 
 * Make the generated `.gitsetup` executable
