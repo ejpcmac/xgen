@@ -1,143 +1,40 @@
 defmodule ExGen do
-  @moduledoc false
+  @moduledoc """
+  Helpers for Elixir projects generation.
+  """
 
-  import Mix.Generator
+  import ExGen.Templates
 
-  @type project_type() :: :std
-  @type template_type() :: :text | :eex | :keep
-  @type mapping() :: [{template_type(), String.t(), String.t()}]
+  alias ExGen.Project
 
-  @base [
-    {:eex, "base/README.md", "README.md"},
-    {:text, "base/CHANGELOG.md", "CHANGELOG.md"},
-    {:text, "base/.editorconfig", ".editorconfig"},
-    {:text, "base/.formatter.exs", ".formatter.exs"},
-    {:text, "base/.credo.exs", ".credo.exs"},
-    {:text, "base/.dialyzer_ignore", ".dialyzer_ignore"},
-    {:text, "base/.gitsetup", ".gitsetup"},
-    {:eex, "base/.gitignore", ".gitignore"}
-  ]
+  @typedoc "Project type"
+  @type project_type() :: :std | :nerves
 
-  @base_contrib [{:eex, "base/CONTRIBUTING.md", "CONTRIBUTING.md"}]
-  @base_license_mit [{:eex, "base/LICENSE_MIT", "LICENSE"}]
-  @base_todo [{:text, "base/TODO", "TODO"}]
-
-  @std [
-    {:eex, "std/mix.exs", "mix.exs"},
-    {:text, "std/config/config.exs", "config/config.exs"},
-    {:eex, "std/lib/app_name.ex", "lib/:app.ex"},
-    {:keep, "std/test/support", "test/support"},
-    {:text, "std/test/test_helper.exs", "test/test_helper.exs"},
-    {:eex, "std/test/app_name_test.exs", "test/:app_test.exs"}
-  ]
-
-  @std_sup [
-    {:eex, "std/lib/app_name/application.ex", "lib/:app/application.ex"}
-  ]
-
-  templates = [
-    @base,
-    @base_contrib,
-    @base_license_mit,
-    @base_todo,
-    @std,
-    @std_sup
-  ]
-
-  templates_root = Path.expand("../templates", __DIR__)
-
-  templates
-  |> List.flatten()
-  |> Enum.each(fn {type, source, _target} ->
-    file = Path.join(templates_root, source)
-
-    case type do
-      :text ->
-        def render(unquote(source), _assigns), do: unquote(File.read!(file))
-
-      :eex ->
-        def render(unquote(source), assigns),
-          do: unquote(EEx.compile_file(file))
-
-      :keep ->
-        nil
-    end
-  end)
-
-  @doc false
-  @spec generate(project_type(), String.t(), String.t(), keyword()) ::
-          :ok | no_return()
-  def generate(:std, app, mod, opts) do
-    check_application_name!(app, !!opts[:app])
-    check_mod_name_validity!(mod)
-    check_mod_name_availability!(mod)
-
-    config = fetch_config_file!(opts)
-
-    assigns = [
-      app: app,
-      mod: mod,
-      sup: !!opts[:sup],
-      contrib: !!opts[:contrib],
-      package: !!opts[:package],
-      license: opts[:license],
-      maintainer: config[:name],
-      github_account: config[:github_account]
-    ]
-
-    # Generate base files.
-    copy(@base, assigns)
-    File.chmod!(".gitsetup", 0o755)
-    if opts[:contrib], do: copy(@base_contrib, assigns)
-    if opts[:license] == "MIT", do: copy(@base_license_mit, assigns)
-    if opts[:todo], do: copy(@base_todo, assigns)
-
-    # Generate standard project.
-    copy(@std, assigns)
-    if opts[:sup], do: copy(@std_sup, assigns)
-
-    Mix.shell().info([:green, "* initializing an empty Git repository", :reset])
-    System.cmd("git", ["init"])
-    if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
-
-    :ok
+  @doc """
+  Generates a project of the given `type` at the given `path`.
+  """
+  @spec generate(project_type(), String.t(), keyword()) :: :ok | no_return()
+  def generate(type, path, opts) do
+    type
+    |> Project.new(path, opts)
+    |> validate_project()
+    |> build_assigns()
+    |> build_collection()
+    |> go_to_project_dir()
+    |> copy_files()
+    |> init_git()
+    |> prompt_to_build()
+    |> print_end_message()
   end
 
-  @doc false
-  @spec build(project_type()) :: boolean()
-  def build(:std) do
-    msg =
-      "\nFetch dependencies and build in dev and test environments in parallel?"
+  @spec validate_project(Project.t()) :: Project.t() | no_return()
+  defp validate_project(%Project{} = project) do
+    check_application_name!(project.app, !project.opts[:app])
+    check_mod_name_validity!(project.mod)
+    check_mod_name_availability!(project.mod)
+    check_directory_existence!(project.path)
 
-    if Mix.shell().yes?(msg) do
-      Mix.shell().info([:green, "* running", :reset, " mix deps.get"])
-      System.cmd("mix", ["deps.get"])
-
-      build_task =
-        Task.async(fn ->
-          Mix.shell().info([:green, "* running", :reset, " mix compile"])
-          System.cmd("mix", ["compile"])
-          Mix.shell().info([:green, "=> project compilation complete", :reset])
-        end)
-
-      test_task =
-        Task.async(fn ->
-          Mix.shell().info([
-            :green,
-            "* running",
-            :reset,
-            " MIX_ENV=test mix compile"
-          ])
-
-          System.cmd("mix", ["compile"], env: [{"MIX_ENV", "test"}])
-          Mix.shell().info([:green, "=> tests compilation complete", :reset])
-        end)
-
-      Task.await(build_task, :infinity)
-      Task.await(test_task, :infinity)
-
-      true
-    end
+    project
   end
 
   @spec check_application_name!(String.t(), boolean()) :: nil | no_return()
@@ -145,11 +42,11 @@ defmodule ExGen do
     unless name =~ Regex.recompile!(~r/^[a-z][a-z0-9_]*$/) do
       Mix.raise(
         "Application name must start with a letter and have only lowercase " <>
-          "letters, numbers and underscore, got: #{inspect(name)}" <>
+          "letters, numbers and underscore. Got #{inspect(name)}." <>
           if inferred? do
-            ". The application name is inferred from the path, if you'd " <>
-              "like toexplicitly name the application then use the \"--app " <>
-              "APP\" option"
+            " The application name is inferred from the path, if you'd " <>
+              "like to explicitly name the application then use the `--app " <>
+              "<app>` option."
           else
             ""
           end
@@ -161,8 +58,8 @@ defmodule ExGen do
   defp check_mod_name_validity!(name) do
     unless name =~ Regex.recompile!(~r/^[A-Z]\w*(\.[A-Z]\w*)*$/) do
       Mix.raise(
-        "Module name must be a valid Elixir alias (for example: Foo.Bar), " <>
-          "got: #{inspect(name)}"
+        "Module name must be a valid Elixir alias (for example: Foo.Bar). " <>
+          "Got #{inspect(name)}."
       )
     end
   end
@@ -174,9 +71,41 @@ defmodule ExGen do
     if Code.ensure_loaded?(name) do
       Mix.raise(
         "Module name #{inspect(name)} is already taken, please choose " <>
-          "another name"
+          "another name."
       )
     end
+  end
+
+  @spec check_directory_existence!(String.t()) :: nil | no_return()
+  defp check_directory_existence!(path) do
+    msg =
+      "The directory #{inspect(path)} already exists. Are you sure you want " <>
+        "to continue?"
+
+    if File.dir?(path) and not Mix.shell().yes?(msg) do
+      Mix.raise("Please select another directory for installation")
+    end
+  end
+
+  @spec build_assigns(Project.t()) :: Project.t()
+  defp build_assigns(%Project{app: app, mod: mod, opts: opts} = project) do
+    config = fetch_config_file!(opts)
+
+    assigns = [
+      app: app,
+      mod: mod,
+      cookie: 48 |> :crypto.strong_rand_bytes() |> Base.encode64(),
+      sup: !!opts[:sup],
+      rel: !!opts[:rel],
+      net: !!opts[:net],
+      contrib: !!opts[:contrib],
+      package: !!opts[:package],
+      license: opts[:license],
+      maintainer: config[:name],
+      github_account: config[:github_account]
+    ]
+
+    %{project | assigns: assigns}
   end
 
   @spec fetch_config_file!(keyword()) :: keyword() | no_return()
@@ -215,15 +144,196 @@ defmodule ExGen do
     config
   end
 
-  @spec copy(mapping(), keyword()) :: :ok
-  defp copy(mapping, assigns) do
-    Enum.each(mapping, fn {type, source, target} ->
-      target = String.replace(target, ":app", assigns[:app])
+  @spec build_collection(Project.t()) :: Project.t()
+  defp build_collection(%Project{type: type, opts: opts} = project) do
+    collection =
+      []
+      |> add_collection(type, true)
+      |> add_collection(:std_sup, !!opts[:sup] and type in [:std, :nerves])
+      |> add_collection(:std_rel, !!opts[:rel] and type in [:std])
+      |> add_collection(:contrib, !!opts[:contrib])
+      |> add_collection(:license_mit, opts[:license] == "MIT")
+      |> add_collection(:gitsetup, !opts[:no_git])
+      |> add_collection(:todo, !!opts[:todo])
+      |> make_collection()
 
-      case type do
-        :keep -> create_directory(target)
-        _ -> create_file(target, render(source, assigns))
-      end
-    end)
+    %{project | collection: collection}
+  end
+
+  @spec go_to_project_dir(Project.t()) :: Project.t()
+  defp go_to_project_dir(%Project{} = project) do
+    File.mkdir_p!(project.path)
+    File.cd!(project.path)
+    project
+  end
+
+  @spec copy_files(Project.t()) :: Project.t()
+  defp copy_files(%Project{} = project) do
+    copy(project.collection, project.assigns)
+    unless project.opts[:no_git], do: File.chmod!(".gitsetup", 0o755)
+    project
+  end
+
+  @spec init_git(Project.t()) :: Project.t()
+  defp init_git(%Project{opts: opts} = project) do
+    unless opts[:no_git] do
+      Mix.shell().info([
+        :green,
+        "* initializing an empty Git repository",
+        :reset
+      ])
+
+      System.cmd("git", ["init"])
+      if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
+    end
+
+    project
+  end
+
+  @spec prompt_to_build(Project.t()) :: Project.t()
+  defp prompt_to_build(%Project{type: :std} = project) do
+    msg =
+      "\nFetch dependencies and build in dev and test environments in parallel?"
+
+    if Mix.shell().yes?(msg) do
+      run_command("mix", ["deps.get"])
+
+      build_task =
+        Task.async(fn ->
+          run_command("mix", ["compile"])
+          Mix.shell().info([:green, "=> project compilation complete", :reset])
+        end)
+
+      test_task =
+        Task.async(fn ->
+          run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
+          Mix.shell().info([:green, "=> tests compilation complete", :reset])
+        end)
+
+      Task.await(build_task, :infinity)
+      Task.await(test_task, :infinity)
+      %{project | build: true}
+    else
+      %{project | build: false}
+    end
+  end
+
+  defp prompt_to_build(%Project{type: :nerves} = project) do
+    if Mix.shell().yes?("\nFetch dependencies?") do
+      run_command("mix", ["deps.get"])
+      %{project | build: true}
+    else
+      %{project | build: false}
+    end
+  end
+
+  @spec print_end_message(Project.t()) :: :ok
+  defp print_end_message(%Project{} = project) do
+    []
+    |> project_created()
+    |> build_instructions(project)
+    |> special_instructions(project)
+    |> gitsetup_instructions(!project.opts[:no_git])
+    |> Enum.reverse()
+    |> Mix.shell().info()
+  end
+
+  @spec project_created(iolist()) :: iolist()
+  defp project_created(messages) do
+    [
+      """
+
+      Your project has been successfully created.
+      """
+      | messages
+    ]
+  end
+
+  @spec build_instructions(iolist(), Project.t()) :: iolist()
+  defp build_instructions(messages, %Project{
+         type: :std,
+         path: path,
+         build: false
+       }) do
+    [
+      """
+
+      You can now fetch its dependencies and compile it:
+
+          cd #{path}
+          mix deps.get
+          mix compile
+
+      You can also run tests:
+
+          mix test
+      """
+      | messages
+    ]
+  end
+
+  defp build_instructions(messages, %Project{
+         type: :nerves,
+         path: path,
+         build: false
+       }) do
+    [
+      """
+
+      You can now fetch its dependencies:
+
+          cd #{path}
+          mix deps.get
+      """
+      | messages
+    ]
+  end
+
+  defp build_instructions(messages, _), do: messages
+
+  @spec special_instructions(iolist(), Project.t()) :: iolist()
+  defp special_instructions(messages, %Project{type: :nerves, path: path}) do
+    [
+      """
+
+      You can then build a firmware image:
+
+          cd #{path}
+          MIX_ENV=prod MIX_TARGET=rpi3 mix do deps.get, firmware
+      """
+      | messages
+    ]
+  end
+
+  defp special_instructions(messages, _), do: messages
+
+  @spec gitsetup_instructions(iolist(), boolean()) :: iolist()
+  defp gitsetup_instructions(messages, true) do
+    [
+      """
+
+      After your first commit, you can setup gitflow:
+
+          ./.gitsetup
+      """
+      | messages
+    ]
+  end
+
+  defp gitsetup_instructions(messages, false), do: messages
+
+  ## Helpers
+
+  @spec run_command(binary(), [binary()], keyword()) ::
+          {Collectable.t(), non_neg_integer}
+  defp run_command(cmd, args, opts \\ []) do
+    env = Enum.map(opts[:env] || [], fn {key, value} -> " #{key}=#{value}" end)
+    fmt_args = Enum.join(args, " ")
+
+    Mix.shell().info(
+      [:green, "* running", :reset] ++ env ++ [" #{cmd} ", fmt_args]
+    )
+
+    System.cmd(cmd, args, opts)
   end
 end
