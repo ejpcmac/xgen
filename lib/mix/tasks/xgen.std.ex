@@ -10,9 +10,9 @@ defmodule Mix.Tasks.Xgen.Std do
 
   ## Usage
 
-      mix xgen.std <path> [--app <app>] [--module <module>] [--sup] [--contrib]
-                          [--package] [--license <license>] [--todo]
-                          [--config <file>]
+      mix xgen.std <path> [--app <app>] [--module <module>] [--sup] [--rel]
+                          [--contrib] [--package] [--license <license>] [--todo]
+                          [--no-git] [--config <file>]
 
   #{general_description()}
 

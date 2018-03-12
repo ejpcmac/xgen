@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
 
       mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
                              [--contrib] [--license <license>] [--todo]
-                             [--config <file>]
+                             [--no-git] [--config <file>]
 
   #{general_description()}
 

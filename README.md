@@ -1,8 +1,12 @@
 # ExGen
 
-An opinionated Elixir project generator.
+An opinionated Elixir multi-project generator.
 
 ## Features
+
+ExGen can currently generate standard or Nerves projects.
+
+### Standard projects
 
 Each new project comes with the following dependencies:
 
@@ -14,8 +18,15 @@ Each new project comes with the following dependencies:
 * `stream_data`
 * `ex_doc`
 
-You can choose to add package information, a license, and a `CONTRIBUTING.md` to
-your project.
+You can choose to add a supervision tree, Distillery, package information, a
+license, and a `CONTRIBUTING.md` to your project. A Git repository is
+automatically initialised, with an opt-out option.
+
+### Nerves project
+
+Nerves project are already configured with a release. In addition to the options
+available in a standard project, you can add a network configuration that works
+out of the box.
 
 ## Installation
 
@@ -50,9 +61,17 @@ the correct GitHub links in the generated projects:
 
 ## Usage
 
-    $ mix xgen.std <path> [--app <app>] [--module <module>] [--sup] [--contrib]
-                          [--package] [--license <license>] [--todo]
-                          [--config <file>]
+#### Standard
+
+    $ mix xgen.std <path> [--app <app>] [--module <module>] [--sup] [--rel]
+                          [--contrib] [--package] [--license <license>] [--todo]
+                          [--no-git] [--config <file>]
+
+#### Nerves
+
+    $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
+                             [--contrib] [--license <license>] [--todo]
+                             [--no-git] [--config <file>]
 
 A project will be create at the given `<path>`. The application and module
 names will be inferred from the path, unless you specify them using the
@@ -67,6 +86,10 @@ names will be inferred from the path, unless you specify them using the
 * `--sup`: add an `Application` module to the project containing a supervision
     tree. This option also adds the callback in the `mix.exs`.
 
+* `--rel`: add a Distillery configuration to the project.
+
+* `--net`: add `nerves_network` to the project with a basic configuration.
+
 * `--contrib`: add a `CONTRIBUTING.md` to the project.
 
 * `--package`: add package information in the `mix.exs`.
@@ -78,6 +101,8 @@ names will be inferred from the path, unless you specify them using the
 
 * `--todo`: add a `TODO` file to the project. This file is also added to the
     Git excluded files in `.git/info/exclude`.
+
+* `--no-git`: do not initialise a Git repository.
 
 * `--config <file>`: indicate which configuration file to use. Defaults to
     `~/.xgen.exs`
