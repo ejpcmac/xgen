@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.1
+
+* [nerves] Update `nerves_network` to v0.3.7-rc to fix the static Wi-Fi config
+
 ## v0.2.0
 
 ### New features
