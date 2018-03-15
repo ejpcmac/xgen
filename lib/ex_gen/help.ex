@@ -5,7 +5,7 @@ defmodule ExGen.Help do
   @spec general_description :: String.t()
   def general_description do
     """
-    A project will be create at the given `<path>`. The application and module
+    A project will be created at the given `<path>`. The application and module
     names will be inferred from the path, unless you specify them using the
     `--app` and `--module` options.
     """
