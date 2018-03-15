@@ -22,7 +22,7 @@ You can choose to add a supervision tree, Distillery, package information, a
 license, and a `CONTRIBUTING.md` to your project. A Git repository is
 automatically initialised, with an opt-out option.
 
-### Nerves project
+### Nerves projects
 
 Nerves project are already configured with a release. In addition to the options
 available in a standard project, you can add a network configuration that works
