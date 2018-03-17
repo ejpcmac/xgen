@@ -16,8 +16,8 @@ config :nerves_network, :default,
     domain: "example.com"
   ],
   wlan0: [
-    ssid: "SSID",
-    psk: "Secret",
+    ssid: System.get_env("NERVES_WLAN_SSID"),
+    psk: System.get_env("NERVES_WLAN_PSK"),
     key_mgmt: :"WPA-PSK",
     ipv4_address_method: :dhcp
   ]<% end %>
