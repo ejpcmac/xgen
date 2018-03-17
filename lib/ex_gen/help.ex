@@ -28,7 +28,7 @@ defmodule ExGen.Help do
   def sup do
     """
     `--sup`: add an `Application` module to the project containing a supervision
-    tree. This option also adds the callback in the `mix.exs`.
+    tree. This option also adds the callback in `mix.exs`.
     """
   end
 

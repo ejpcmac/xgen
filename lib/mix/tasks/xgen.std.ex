@@ -23,7 +23,7 @@ defmodule Mix.Tasks.Xgen.Std do
     * #{sup()}
     * `--rel`: add a Distillery configuration to the project.
     * #{contrib()}
-    * `--package`: add package information in the `mix.exs`.
+    * `--package`: add package information in `mix.exs`.
     * #{license()} If the `--package` option is set, the license is precised in
       the package information.
     * #{todo()}
