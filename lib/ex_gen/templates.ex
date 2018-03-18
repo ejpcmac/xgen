@@ -37,6 +37,7 @@ defmodule ExGen.Templates do
     "nerves/.formatter.exs" => {:text, ".formatter.exs"},
     "nerves/mix.exs" => {:eex, "mix.exs"},
     "nerves/config/config.exs" => {:eex, "config/config.exs"},
+    "nerves/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
     "nerves/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
     "nerves/rel/config.exs" => {:eex, "rel/config.exs"},
     "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
@@ -117,6 +118,9 @@ defmodule ExGen.Templates do
       "nerves/test/test_helper.exs"
     ]
   end
+
+  # Nerves project optionals
+  defp collection(:nerves_sup), do: ["nerves/lib/app_name/application.ex"]
 
   @doc """
   Adds a collection `name` to the list of collections conditionally.

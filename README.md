@@ -70,8 +70,8 @@ the correct GitHub links in the generated projects:
 #### Nerves
 
     $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--ntp] [--contrib] [--license <license>] [--todo]
-                             [--no-git] [--config <file>]
+                             [--ntp] [--rtc] [--contrib] [--license <license>]
+                             [--todo] [--no-git] [--config <file>]
 
 A project will be created at the given `<path>`. The application and module
 names will be inferred from the path, unless you specify them using the
@@ -91,6 +91,12 @@ names will be inferred from the path, unless you specify them using the
 * `--net`: add `nerves_network` to the project with a basic configuration.
 
 * `--ntp`: add `nerves_ntp` to the project.
+
+* `--rtc`: add support for a DS3231 RTC. If the `--sup` option is set, a
+    temporary task is generated to set the OS time from the RTC on startup. If
+    both `--sup` and `--ntp` are set, a temporary task is generated to sync the
+    RTC from OS time 15 seconds after the application startup. This lets some
+    time for NTP to sync.
 
 * `--contrib`: add a `CONTRIBUTING.md` to the project.
 
