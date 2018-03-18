@@ -86,7 +86,7 @@ names will be inferred from the path, unless you specify them using the
 * `--sup`: add an `Application` module to the project containing a supervision
     tree. This option also adds the callback in `mix.exs`.
 
-* `--rel`: add a Distillery configuration to the project.
+* `--rel`: add Distillery to the project with a configuration.
 
 * `--net`: add `nerves_network` to the project with a basic configuration.
 
