@@ -55,7 +55,8 @@ defmodule <%= @mod %>.MixProject do
       system(target),
       {:shoehorn, "~> 0.2.0"},
       {:nerves_runtime, "~> 0.5.0"}<%= if @net do %>,
-      {:nerves_network, "~> 0.3.7-rc"}<% end %>
+      {:nerves_network, "~> 0.3.7-rc"}<% end %><%= if @ntp do %>,
+      {:nerves_ntp, github: "evokly/nerves_ntp"}<% end %>
     ]
   end
 <%= for target <- [

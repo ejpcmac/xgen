@@ -98,6 +98,7 @@ defmodule ExGen do
       sup: !!opts[:sup],
       rel: !!opts[:rel],
       net: !!opts[:net],
+      ntp: !!opts[:ntp],
       contrib: !!opts[:contrib],
       package: !!opts[:package],
       license: opts[:license],

@@ -11,7 +11,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
   ## Usage
 
       mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--contrib] [--license <license>] [--todo]
+                             [--ntp ][--contrib] [--license <license>] [--todo]
                              [--no-git] [--config <file>]
 
   #{general_description()}
@@ -22,6 +22,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
     * #{module()}
     * #{sup()}
     * `--net`: add `nerves_network` to the project with a basic configuration.
+    * `--ntp`: add `nerves_ntp` to the project.
     * #{contrib()}
     * #{license()}
     * #{todo()}
@@ -36,6 +37,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
     module: :string,
     sup: :boolean,
     net: :boolean,
+    ntp: :boolean,
     contrib: :boolean,
     license: :string,
     todo: :boolean,
