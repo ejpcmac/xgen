@@ -6,8 +6,8 @@ defmodule <%= @mod %>.Application do
   @impl true
   def start(_type, _args) do
     children = [<%= if @rtc do %>
-      Supervisor.child_spec({Task, [&set_datetime/0]}, id: :set_datetime)<%= if @ntp do %>,
-      Supervisor.child_spec({Task, [&sync_rtc/0]}, id: :sync_rtc)<% end %><% end %>
+      Supervisor.child_spec({Task, &set_datetime/0}, id: :set_datetime)<%= if @ntp do %>,
+      Supervisor.child_spec({Task, &sync_rtc/0}, id: :sync_rtc)<% end %><% end %>
       # <%= @mod %>.Worker1,
       # {<%= @mod %>.Worker2, arg},
     ]
