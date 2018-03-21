@@ -70,8 +70,9 @@ the correct GitHub links in the generated projects:
 #### Nerves
 
     $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--ntp] [--rtc] [--contrib] [--license <license>]
-                             [--todo] [--no-git] [--config <file>]
+                             [--push] [--ntp] [--rtc] [--contrib]
+                             [--license <license>] [--todo] [--no-git]
+                             [--config <file>]
 
 A project will be created at the given `<path>`. The application and module
 names will be inferred from the path, unless you specify them using the
@@ -89,6 +90,9 @@ names will be inferred from the path, unless you specify them using the
 * `--rel`: add Distillery to the project with a configuration.
 
 * `--net`: add `nerves_network` to the project with a basic configuration.
+
+* `--push`: add `nerves_firmware_ssh` to the project to push fwupdates over the
+    air.
 
 * `--ntp`: add `nerves_ntp` to the project.
 

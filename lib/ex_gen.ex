@@ -22,6 +22,7 @@ defmodule ExGen do
     |> build_collection()
     |> go_to_project_dir()
     |> copy_files()
+    |> generate_ssh_key()
     |> init_git()
     |> prompt_to_build()
     |> print_end_message()
@@ -98,6 +99,7 @@ defmodule ExGen do
       sup: !!opts[:sup],
       rel: !!opts[:rel],
       net: !!opts[:net],
+      push: !!opts[:push],
       ntp: !!opts[:ntp],
       rtc: !!opts[:rtc],
       contrib: !!opts[:contrib],
@@ -174,6 +176,30 @@ defmodule ExGen do
   defp copy_files(%Project{} = project) do
     copy(project.collection, project.assigns)
     unless project.opts[:no_git], do: File.chmod!(".gitsetup", 0o755)
+    project
+  end
+
+  @spec generate_ssh_key(Project.t()) :: Project.t()
+  defp generate_ssh_key(%Project{opts: opts} = project) do
+    if opts[:push] do
+      Mix.shell().info([
+        :green,
+        "* generating SSH key for firmware pushes",
+        :reset
+      ])
+
+      File.mkdir_p!(".ssh")
+
+      System.cmd("ssh-keygen", [
+        "-trsa",
+        "-b4046",
+        "-f.ssh/id_rsa",
+        "-N",
+        "",
+        "-q"
+      ])
+    end
+
     project
   end
 

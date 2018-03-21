@@ -11,8 +11,9 @@ defmodule Mix.Tasks.Xgen.Nerves do
   ## Usage
 
       mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--ntp ] [--rtc] [--contrib] [--license <license>]
-                             [--todo] [--no-git] [--config <file>]
+                             [--push] [--ntp ] [--rtc] [--contrib]
+                             [--license <license>] [--todo] [--no-git]
+                             [--config <file>]
 
   #{general_description()}
 
@@ -22,6 +23,8 @@ defmodule Mix.Tasks.Xgen.Nerves do
     * #{module()}
     * #{sup()}
     * `--net`: add `nerves_network` to the project with a basic configuration.
+    * `--push`: add `nerves_firmware_ssh` to the project to push fwupdates over
+      the air.
     * `--ntp`: add `nerves_ntp` to the project.
     * `--rtc`: add support for a DS3231 RTC. If the `--sup` option is set, a
       temporary task is generated to set the OS time from the RTC on startup. If
@@ -42,6 +45,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
     module: :string,
     sup: :boolean,
     net: :boolean,
+    push: :boolean,
     ntp: :boolean,
     rtc: :boolean,
     contrib: :boolean,

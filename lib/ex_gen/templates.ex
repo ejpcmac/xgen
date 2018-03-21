@@ -41,7 +41,8 @@ defmodule ExGen.Templates do
     "nerves/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
     "nerves/rel/config.exs" => {:eex, "rel/config.exs"},
     "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
-    "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"}
+    "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"},
+    "nerves/.gitignore" => {:eex, ".gitignore"}
   }
 
   @templates_root Path.expand("../../templates", __DIR__)
@@ -108,7 +109,7 @@ defmodule ExGen.Templates do
       "base/CHANGELOG.md",
       "base/.editorconfig",
       "nerves/.formatter.exs",
-      "base/.gitignore",
+      "nerves/.gitignore",
       "nerves/mix.exs",
       "nerves/config/config.exs",
       "std/lib/app_name.ex",
