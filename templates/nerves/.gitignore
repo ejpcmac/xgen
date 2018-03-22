@@ -23,4 +23,4 @@ erl_crash.dump
 *.ez<%= if @push do %>
 
 # Where the SSH key for firmware pushes is stored.
-/.ssh/<% end %>
+/priv/ssh/<% end %>

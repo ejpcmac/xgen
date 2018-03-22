@@ -25,7 +25,7 @@ config :nerves_network, :default,
 # Configures the SSH key for firmware pushes.
 config :nerves_firmware_ssh,
   authorized_keys: [
-    "../.ssh/id_rsa.pub" |> Path.expand(__DIR__) |> File.read!()
+    "../priv/ssh/id_rsa.pub" |> Path.expand(__DIR__) |> File.read!()
   ]<% end %>
 
 # Use shoehorn to init critical applications before starting ours.

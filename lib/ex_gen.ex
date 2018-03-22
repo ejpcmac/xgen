@@ -188,12 +188,13 @@ defmodule ExGen do
         :reset
       ])
 
-      File.mkdir_p!(".ssh")
+      File.mkdir_p!("priv/ssh")
 
+      # Generate the user key.
       System.cmd("ssh-keygen", [
         "-trsa",
         "-b4046",
-        "-f.ssh/id_rsa",
+        "-fpriv/ssh/id_rsa",
         "-N",
         "",
         "-q"
