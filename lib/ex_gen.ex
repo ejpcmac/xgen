@@ -182,23 +182,17 @@ defmodule ExGen do
   @spec generate_ssh_key(Project.t()) :: Project.t()
   defp generate_ssh_key(%Project{opts: opts} = project) do
     if opts[:push] do
-      Mix.shell().info([
-        :green,
-        "* generating SSH key for firmware pushes",
-        :reset
-      ])
+      Mix.shell().info([:green, "* generating target SSH key", :reset])
+      File.mkdir_p!("rootfs_overlay/etc/ssh")
 
+      :os.cmd(
+        'ssh-keygen -q -t rsa -b 4096 -N "" ' ++
+          '-f rootfs_overlay/etc/ssh/ssh_host_rsa_key'
+      )
+
+      Mix.shell().info([:green, "* generating user SSH key", :reset])
       File.mkdir_p!("priv/ssh")
-
-      # Generate the user key.
-      System.cmd("ssh-keygen", [
-        "-trsa",
-        "-b4046",
-        "-fpriv/ssh/id_rsa",
-        "-N",
-        "",
-        "-q"
-      ])
+      :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f priv/ssh/id_rsa')
     end
 
     project

@@ -1,10 +1,14 @@
-use Mix.Config
+use Mix.Config<%= if @push do %>
+
+# Adds a rootfs overlay for host SSH key.
+config :nerves, :firmware,
+  rootfs_overlay: "rootfs_overlay"<% else %>
 
 # # Uncomment all or parts of the following to add files to the root
 # # filesystem or modify the firmware archive.
 # config :nerves, :firmware,
 #   rootfs_overlay: "rootfs_overlay",
-#   fwup_conf: "config/fwup.conf"<%= if @net do %>
+#   fwup_conf: "config/fwup.conf"<% end %><%= if @net do %>
 
 # Configures the network.
 config :nerves_network, :default,

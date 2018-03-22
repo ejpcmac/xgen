@@ -22,5 +22,8 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez<%= if @push do %>
 
-# Where the SSH key for firmware pushes is stored.
+# Where the target SSH key is stored.
+/rootfs_overlay/etc/ssh/
+
+# Where the user SSH key is stored.
 /priv/ssh/<% end %>
