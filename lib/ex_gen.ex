@@ -22,7 +22,7 @@ defmodule ExGen do
     |> build_collection()
     |> go_to_project_dir()
     |> copy_files()
-    |> generate_ssh_key()
+    |> generate_ssh_keys()
     |> init_git()
     |> prompt_to_build()
     |> print_end_message()
@@ -179,8 +179,8 @@ defmodule ExGen do
     project
   end
 
-  @spec generate_ssh_key(Project.t()) :: Project.t()
-  defp generate_ssh_key(%Project{opts: opts} = project) do
+  @spec generate_ssh_keys(Project.t()) :: Project.t()
+  defp generate_ssh_keys(%Project{opts: opts} = project) do
     if opts[:push] do
       Mix.shell().info([:green, "* generating target host SSH key", :reset])
       File.mkdir_p!("rootfs_overlay/etc/ssh")
