@@ -1,0 +1,12 @@
+#!/bin/sh
+
+SYSTEM_DIR="rootfs_overlay/etc/ssh"
+USER_DIR="priv/ssh"
+
+echo "=> Generating target host SSH key"
+mkdir -p "$SYSTEM_DIR"
+ssh-keygen -q -t rsa -b 4096 -N "" -f "$SYSTEM_DIR/ssh_host_rsa_key"
+
+echo "=> Generating user SSH key"
+mkdir -p "$USER_DIR"
+ssh-keygen -q -t rsa -b 4096 -N "" -f "$USER_DIR/id_rsa"

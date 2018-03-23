@@ -156,6 +156,7 @@ defmodule ExGen do
       |> add_collection(:std_sup, !!opts[:sup] and type in [:std])
       |> add_collection(:nerves_sup, !!opts[:sup] and type in [:nerves])
       |> add_collection(:std_rel, !!opts[:rel] and type in [:std])
+      |> add_collection(:nerves_ssh, !!opts[:push])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
       |> add_collection(:gitsetup, !opts[:no_git])
@@ -182,17 +183,24 @@ defmodule ExGen do
   @spec generate_ssh_keys(Project.t()) :: Project.t()
   defp generate_ssh_keys(%Project{opts: opts} = project) do
     if opts[:push] do
+      system_dir = "rootfs_overlay/etc/ssh"
+      user_dir = "priv/ssh"
+
+      # Generate target host SSH key.
       Mix.shell().info([:green, "* generating target host SSH key", :reset])
-      File.mkdir_p!("rootfs_overlay/etc/ssh")
+      File.mkdir_p!(system_dir)
 
       :os.cmd(
-        'ssh-keygen -q -t rsa -b 4096 -N "" ' ++
-          '-f rootfs_overlay/etc/ssh/ssh_host_rsa_key'
+        'ssh-keygen -q -t rsa -b 4096 -N "" -f #{system_dir}/ssh_host_rsa_key'
       )
 
+      # Generate user SSH key.
       Mix.shell().info([:green, "* generating user SSH key", :reset])
-      File.mkdir_p!("priv/ssh")
-      :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f priv/ssh/id_rsa')
+      File.mkdir_p!(user_dir)
+      :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
+
+      # Make the generator executable.
+      File.chmod!("gen-ssh-keys", 0o755)
     end
 
     project
