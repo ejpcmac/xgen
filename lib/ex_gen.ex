@@ -182,7 +182,7 @@ defmodule ExGen do
   @spec generate_ssh_key(Project.t()) :: Project.t()
   defp generate_ssh_key(%Project{opts: opts} = project) do
     if opts[:push] do
-      Mix.shell().info([:green, "* generating target SSH key", :reset])
+      Mix.shell().info([:green, "* generating target host SSH key", :reset])
       File.mkdir_p!("rootfs_overlay/etc/ssh")
 
       :os.cmd(
