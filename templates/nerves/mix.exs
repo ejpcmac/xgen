@@ -36,7 +36,7 @@ defmodule <%= @mod %>.MixProject do
   def application(_target) do
     [<%= if @sup do %>
       mod: {<%= @mod %>.Application, []},<% end %>
-      extra_applications: [:logger]
+      extra_applications: [:logger<%= if @ssh do %>, :ssh<% end %>]
     ]
   end
 

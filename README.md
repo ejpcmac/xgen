@@ -70,7 +70,7 @@ the correct GitHub links in the generated projects:
 #### Nerves
 
     $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--push] [--ntp] [--rtc] [--contrib]
+                             [--push] [--ssh] [--ntp] [--rtc] [--contrib]
                              [--license <license>] [--todo] [--no-git]
                              [--config <file>]
 
@@ -93,6 +93,9 @@ names will be inferred from the path, unless you specify them using the
 
 * `--push`: add `nerves_firmware_ssh` to the project to push fwupdates over the
     air.
+
+* `--ssh`: add an SSH server to the project. This enables remote IEx sessions
+    through SSH. (implies `--sup`)
 
 * `--ntp`: add `nerves_ntp` to the project.
 

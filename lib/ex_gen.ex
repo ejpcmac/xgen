@@ -96,10 +96,11 @@ defmodule ExGen do
       app: app,
       mod: mod,
       cookie: 48 |> :crypto.strong_rand_bytes() |> Base.encode64(),
-      sup: !!opts[:sup],
+      sup: !!opts[:sup] or !!opts[:ssh],
       rel: !!opts[:rel],
       net: !!opts[:net],
       push: !!opts[:push],
+      ssh: !!opts[:ssh],
       ntp: !!opts[:ntp],
       rtc: !!opts[:rtc],
       contrib: !!opts[:contrib],
@@ -154,9 +155,13 @@ defmodule ExGen do
       []
       |> add_collection(type, true)
       |> add_collection(:std_sup, !!opts[:sup] and type in [:std])
-      |> add_collection(:nerves_sup, !!opts[:sup] and type in [:nerves])
+      |> add_collection(
+        :nerves_sup,
+        (!!opts[:sup] or !!opts[:ssh]) and type in [:nerves]
+      )
       |> add_collection(:std_rel, !!opts[:rel] and type in [:std])
-      |> add_collection(:nerves_ssh, !!opts[:push])
+      |> add_collection(:nerves_gen_ssh_keys, !!opts[:push] or !!opts[:ssh])
+      |> add_collection(:nerves_ssh, !!opts[:ssh])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
       |> add_collection(:gitsetup, !opts[:no_git])
@@ -182,7 +187,7 @@ defmodule ExGen do
 
   @spec generate_ssh_keys(Project.t()) :: Project.t()
   defp generate_ssh_keys(%Project{opts: opts} = project) do
-    if opts[:push] do
+    if opts[:push] || opts[:ssh] do
       system_dir = "rootfs_overlay/etc/ssh"
       user_dir = "priv/ssh"
 
@@ -198,6 +203,18 @@ defmodule ExGen do
       Mix.shell().info([:green, "* generating user SSH key", :reset])
       File.mkdir_p!(user_dir)
       :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
+
+      # Get the generated user key.
+      local_key = user_dir |> Path.join("id_rsa.pub") |> File.read!()
+
+      # Get the global user key.
+      global_key =
+        System.user_home!() |> Path.join(".ssh/id_rsa.pub") |> File.read!()
+
+      # Add both user keys to the authorized_keys.
+      user_dir
+      |> Path.join("authorized_keys")
+      |> File.write!(local_key <> global_key)
 
       # Make the generator executable.
       File.chmod!("gen-ssh-keys", 0o755)

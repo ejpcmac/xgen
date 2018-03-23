@@ -1,8 +1,7 @@
-use Mix.Config<%= if @push do %>
+use Mix.Config<%= if @push or @ssh do %>
 
 # Adds a rootfs overlay for host SSH key.
-config :nerves, :firmware,
-  rootfs_overlay: "rootfs_overlay"<% else %>
+config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"<% else %>
 
 # # Uncomment all or parts of the following to add files to the root
 # # filesystem or modify the firmware archive.
