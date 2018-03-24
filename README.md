@@ -20,7 +20,7 @@ Each new project comes with the following dependencies:
 
 You can choose to add a supervision tree, Distillery, package information, a
 license, and a `CONTRIBUTING.md` to your project. A Git repository is
-automatically initialised, with an opt-out option.
+automatically initialised, with an opt-out switch if you don’t need it.
 
 ### Nerves projects
 
@@ -70,10 +70,11 @@ the correct GitHub links in the generated projects:
 #### Nerves
 
     $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--contrib] [--license <license>] [--todo]
-                             [--no-git] [--config <file>]
+                             [--push] [--ssh] [--ntp] [--rtc] [--contrib]
+                             [--license <license>] [--todo] [--no-git]
+                             [--config <file>]
 
-A project will be create at the given `<path>`. The application and module
+A project will be created at the given `<path>`. The application and module
 names will be inferred from the path, unless you specify them using the
 `--app` and `--module` options.
 
@@ -84,20 +85,34 @@ names will be inferred from the path, unless you specify them using the
 * `--module <module>`: set the module name for the project.
 
 * `--sup`: add an `Application` module to the project containing a supervision
-    tree. This option also adds the callback in the `mix.exs`.
+    tree. This option also adds the callback in `mix.exs`.
 
-* `--rel`: add a Distillery configuration to the project.
+* `--rel`: add Distillery to the project with a configuration.
 
 * `--net`: add `nerves_network` to the project with a basic configuration.
 
+* `--push`: add `nerves_firmware_ssh` to the project to push fwupdates over the
+    air.
+
+* `--ssh`: add an SSH server to the project. This enables remote IEx sessions
+    through SSH. (implies `--sup`)
+
+* `--ntp`: add `nerves_ntp` to the project.
+
+* `--rtc`: add support for a DS3231 RTC. If the `--sup` option is set, a
+    temporary task is generated to set the OS time from the RTC on startup. If
+    both `--sup` and `--ntp` are set, a temporary task is generated to sync the
+    RTC from OS time 15 seconds after the application startup. This lets some
+    time for NTP to sync.
+
 * `--contrib`: add a `CONTRIBUTING.md` to the project.
 
-* `--package`: add package information in the `mix.exs`.
+* `--package`: add package information in `mix.exs`.
 
-* `--license <license>`: set the license for the project. If the `--package`
-    option is set, the license is precised in the package information. If the
-    license is supported, a `LICENSE` file is created with the maintainer
-    name.
+* `--license <license>`: set the license for the project. If the license is
+    supported, a `LICENSE` file is created with the maintainer name. If the
+    `--package` option is set, the license is precised in the package
+    information.
 
 * `--todo`: add a `TODO` file to the project. This file is also added to the
     Git excluded files in `.git/info/exclude`.
@@ -115,8 +130,7 @@ Currently, only the `MIT` license is supported.
 
 In the future, this generator will be able to generate more complex project,
 like Phoenix applications with a full-featured user management to kickstart
-development, or Nerves applications too. That mainly depends on my needs and the
-time I have.
+development. That mainly depends on my needs and the time I have.
 
 ## [Contributing](CONTRIBUTING.md)
 
@@ -129,4 +143,4 @@ Copyright © 2018 Jean-Philippe Cugnet
 
 This project is licensed under the [MIT license](LICENSE).
 
-Some code have been inspired by the Mix, Phoenix and Nerves generators.
+Some code have been inspired by Mix, Phoenix and Nerves generators.

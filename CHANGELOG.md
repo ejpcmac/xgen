@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.2.2
+
+### New features
+
+* [nerves] Add NTP optional support
+* [nerves] Add DS3231 RTC optional support
+* [nerves] Add optional support for firmware pushes through SSH
+* [nerves] Add optional support for an IEx session via SSH
+
+### Enhancements
+
+* [nerves] Update `nerves_runtime`
+* [nerves] Get default WLAN SSID and PSK from system environment
+
 ## v0.2.1
 
 * [nerves] Update `nerves_network` to v0.3.7-rc to fix the static Wi-Fi config
