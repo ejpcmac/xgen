@@ -26,6 +26,7 @@ defmodule <%= @mod %>.SSHServer do
       :ssh.daemon(
         22,
         shell: {IEx, :start, []},
+        id_string: :random,
         system_dir: system_dir,
         user_dir: user_dir
       )

@@ -56,7 +56,8 @@ defmodule <%= @mod %>.MixProject do
       {:shoehorn, "~> 0.2.0"},
       {:nerves_runtime, "~> 0.6.0"}<%= if @net do %>,
       {:nerves_network, "~> 0.3.7-rc"}<% end %><%= if @push do %>,
-      {:nerves_firmware_ssh, "~> 0.3.0"}<% end %><%= if @ntp do %>,
+      {:nerves_firmware_ssh, "~> 0.3.0"}<% end %><%= if @ssh do %>,
+      {:nerves_runtime_shell, "~> 0.1.0"}<% end %><%= if @ntp do %>,
       {:nerves_ntp, github: "evokly/nerves_ntp"}<% end %><%= if @rtc do %>,
       {:rtc_ds3231, "~> 0.1.0"}<% end %>
     ]
