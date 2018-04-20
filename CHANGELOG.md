@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.3
+
+* [nerves] Put the IEx console on UART instead of HDMI
+
 ## v0.2.2
 
 ### New features
