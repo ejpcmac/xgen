@@ -24,9 +24,9 @@ automatically initialised, with an opt-out switch if you don’t need it.
 
 ### Nerves projects
 
-Nerves project are already configured with a release. In addition to the options
-available in a standard project, you can add a network configuration that works
-out of the box.
+Nerves project are already configured with a release and the IEx console on
+UART. In addition to the options available in a standard project, you can add a
+network configuration that works out of the box.
 
 ## Installation
 
