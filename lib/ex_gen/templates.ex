@@ -44,6 +44,8 @@ defmodule ExGen.Templates do
     "nerves/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
     "nerves/rel/config.exs" => {:eex, "rel/config.exs"},
     "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
+    "nerves/rootfs_overlay/etc/erlinit.config" =>
+      {:text, "rootfs_overlay/etc/erlinit.config"},
     "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"}
   }
 
@@ -118,6 +120,7 @@ defmodule ExGen.Templates do
       "nerves/rel/plugins/.gitignore",
       "nerves/rel/config.exs",
       "nerves/rel/vm.args",
+      "nerves/rootfs_overlay/etc/erlinit.config",
       "nerves/test/test_helper.exs"
     ]
   end
