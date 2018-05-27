@@ -9,7 +9,7 @@ defmodule <%= @mod %>.MixProject do
       version: "0.1.0-dev",
       elixir: "~> 1.6",
       target: @target,
-      archives: [nerves_bootstrap: "~> 0.8"],
+      archives: [nerves_bootstrap: "~> 1.0"],
       deps_path: "deps/#{@target}",
       build_path: "_build/#{@target}",
       lockfile: "mix.lock.#{@target}",
@@ -43,7 +43,7 @@ defmodule <%= @mod %>.MixProject do
   # General dependencies
   defp deps do
     [
-      {:nerves, "~> 1.0-rc", runtime: false}
+      {:nerves, "~> 1.0", runtime: false}
     ] ++ deps(@target)
   end
 
@@ -72,6 +72,6 @@ defmodule <%= @mod %>.MixProject do
           "qemu_arm",
           "x86_64"
         ] do %>
-  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.0-rc", runtime: false}<% end %>
+  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.0", runtime: false}<% end %>
   defp system(target), do: Mix.raise("Unknown MIX_TARGET: #{target}")
 end
