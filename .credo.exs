@@ -113,7 +113,9 @@
         {Credo.Check.Refactor.NegatedConditionsInUnless},
         {Credo.Check.Refactor.NegatedConditionsWithElse},
         {Credo.Check.Refactor.Nesting},
-        {Credo.Check.Refactor.PipeChainStart},
+        {Credo.Check.Refactor.PipeChainStart,
+         excluded_argument_types: [:atom, :binary, :fn, :keyword],
+         excluded_functions: []},
         {Credo.Check.Refactor.UnlessWithElse},
 
         #
@@ -148,11 +150,7 @@
         #
         # Deprecated checks (these will be deleted after a grace period)
         #
-        {Credo.Check.Readability.Specs, false},
-        {Credo.Check.Warning.NameRedeclarationByAssignment, false},
-        {Credo.Check.Warning.NameRedeclarationByCase, false},
-        {Credo.Check.Warning.NameRedeclarationByDef, false},
-        {Credo.Check.Warning.NameRedeclarationByFn, false}
+        {Credo.Check.Readability.Specs, false}
 
         #
         # Custom checks can be created using `mix credo.gen.check`.
