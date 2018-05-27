@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.4
+
+### Enhancements
+
+* [std] Update `credo` to v0.9.2
+* [nerves] Update `nerves` to v1.0
+* [nerves] Use `1.1.1.1` instead of Google DNS
+
 ## v0.2.3
 
 * [nerves] Put the IEx console on UART instead of HDMI
