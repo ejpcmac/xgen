@@ -40,14 +40,14 @@ defmodule <%= @mod %>.MixProject do
     ]
   end
 
-  # General dependencies.
+  # General dependencies
   defp deps do
     [
       {:nerves, "~> 1.0-rc", runtime: false}
     ] ++ deps(@target)
   end
 
-  # Target-specific dependencies.
+  # Target-specific dependencies
   defp deps("host"), do: []
 
   defp deps(target) do
