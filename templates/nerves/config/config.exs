@@ -9,7 +9,7 @@ config :nerves_network, :default,
     ipv4_address_method: :static,
     ipv4_address: "10.0.0.1",
     ipv4_subnet_mask: "255.255.255.0",
-    nameservers: ["8.8.8.8", "8.8.4.4"],
+    nameservers: ["1.1.1.1", "1.0.0.1"],
     domain: "example.com"
   ],
   wlan0: [
