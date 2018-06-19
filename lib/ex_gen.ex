@@ -195,14 +195,15 @@ defmodule ExGen do
       Mix.shell().info([:green, "* generating target host SSH key", :reset])
       File.mkdir_p!(system_dir)
 
-      :os.cmd(
-        'ssh-keygen -q -t rsa -b 4096 -N "" -f #{system_dir}/ssh_host_rsa_key'
-      )
+      _ =
+        :os.cmd(
+          'ssh-keygen -q -t rsa -b 4096 -N "" -f #{system_dir}/ssh_host_rsa_key'
+        )
 
       # Generate user SSH key.
       Mix.shell().info([:green, "* generating user SSH key", :reset])
       File.mkdir_p!(user_dir)
-      :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
+      _ = :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
 
       # Get the generated user key.
       local_key = user_dir |> Path.join("id_rsa.pub") |> File.read!()
@@ -232,7 +233,7 @@ defmodule ExGen do
         :reset
       ])
 
-      System.cmd("git", ["init"])
+      _ = System.cmd("git", ["init"])
       if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
     end
 
@@ -373,8 +374,7 @@ defmodule ExGen do
 
   ## Helpers
 
-  @spec run_command(binary(), [binary()], keyword()) ::
-          {Collectable.t(), non_neg_integer}
+  @spec run_command(binary(), [binary()], keyword()) :: :ok
   defp run_command(cmd, args, opts \\ []) do
     env = Enum.map(opts[:env] || [], fn {key, value} -> " #{key}=#{value}" end)
     fmt_args = Enum.join(args, " ")
@@ -383,6 +383,7 @@ defmodule ExGen do
       [:green, "* running", :reset] ++ env ++ [" #{cmd} ", fmt_args]
     )
 
-    System.cmd(cmd, args, opts)
+    _ = System.cmd(cmd, args, opts)
+    :ok
   end
 end
