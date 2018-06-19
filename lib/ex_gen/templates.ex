@@ -51,10 +51,12 @@ defmodule ExGen.Templates do
 
   @templates_root Path.expand("../../templates", __DIR__)
 
-  # Generates a render/2 function per template.
+  # Declare each template as @external_resource and define a render/2 function.
   @templates
   |> Enum.each(fn {source, {type, _target}} ->
     file = Path.join(@templates_root, source)
+
+    @external_resource file
 
     case type do
       :text ->
