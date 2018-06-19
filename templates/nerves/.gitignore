@@ -1,29 +1,42 @@
-# The directory Mix will write compiled artifacts to.
+##
+## Application artifacts
+##
+
+# Elixir build directory
 /_build/
 
-# Elixir LS artifacts.
-/.elixir_ls/
-
-# If you run "mix test --cover", coverage assets end up here.
-/cover/
-
-# The directory Mix downloads your dependencies sources to.
+# Elixir dependencies
 /deps/
-
-# Where 3rd-party dependencies like ExDoc output generated docs.
-/doc/
-
-# Ignore .fetch files in case you like to edit your project deps locally.
 /.fetch
 
-# If the VM crashes, it generates a dump, let's ignore it too.
-erl_crash.dump
+# Elixir binary files
+*.beam
+*.ez
 
-# Also ignore archive artifacts (built via "mix archive.build").
-*.ez<%= if @push or @ssh do %>
+# Test coverage and documentation
+/cover/
+/doc/
 
-# Where the target host SSH key is stored.
+##
+## Editor artifacts
+##
+
+/.elixir_ls/
+/.history/
+
+##
+## Crash dumps
+##
+
+# Erang VM
+erl_crash.dump<%= if @push or @ssh do %>
+
+##
+## Private data
+##
+
+# Host SSH key
 /rootfs_overlay/etc/ssh/
 
-# Where the user SSH key is stored.
+# User SSH key
 /priv/ssh/<% end %>
