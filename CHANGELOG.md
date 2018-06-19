@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.5
+
+### Enhancements
+
+* Rework the `.gitignore`
+* Declare templates as `@external_resources`
+* Add a work in progress disclaimer in the default `README.md`
+* Update dependencies
+
 ## v0.2.4
 
 ### Enhancements
