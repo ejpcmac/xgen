@@ -15,6 +15,6 @@ defmodule ExGen.MixProject do
   end
 
   defp deps do
-    [{:credo, "~> 0.9.2", only: :dev, runtime: false}]
+    [{:credo, "~> 0.9.3", only: :dev, runtime: false}]
   end
 end
