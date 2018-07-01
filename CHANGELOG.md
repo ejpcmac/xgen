@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.6
+
+### Enhancements
+
+* [std] Make Credo and Dialyxir dev-only dependencies
+* [nerves] Bump the Nerves system version to `~> 1.2`
+
 ## v0.2.5
 
 ### Enhancements
