@@ -53,7 +53,7 @@ defmodule <%= @mod %>.MixProject do
   defp deps(target) do
     [
       system(target),
-      {:shoehorn, "~> 0.2.0"},
+      {:shoehorn, "~> 0.3.0"},
       {:nerves_runtime, "~> 0.6.0"}<%= if @net do %>,
       {:nerves_network, "~> 0.3.7-rc"}<% end %><%= if @push do %>,
       {:nerves_firmware_ssh, "~> 0.3.0"}<% end %><%= if @ssh do %>,

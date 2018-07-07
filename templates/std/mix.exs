@@ -83,8 +83,7 @@ defmodule <%= @mod %>.MixProject do
   end<%= if @package do %>
 
   defp package do
-    [
-      maintainers: ["<%= @maintainer %>"],<%= if @license do %>
+    [<%= if @license do %>
       licenses: ["<%= @license %>"],<% end %>
       links: %{"GitHub" => @repo_url}
     ]
