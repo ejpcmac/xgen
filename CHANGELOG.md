@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.7
+
+### Enhancements
+
+* [std] Remove the `:maintainers` package field
+* [nerves] Upgrade `shoehorn` to v0.3.0
+
 ## v0.2.6
 
 ### Enhancements
