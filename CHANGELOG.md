@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.8
+
+### Enhancements
+
+* [std] Put `distillery` in a new “Release dependencies” section
+
 ## v0.2.7
 
 ### Enhancements
