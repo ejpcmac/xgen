@@ -52,11 +52,13 @@ defmodule <%= @mod %>.MixProject do
       {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
       {:stream_data, "~> 0.4.0", only: :test},
 
-      # Project dependencies<%= if @rel do %>
-      {:distillery, "~> 1.5", runtime: false},<% end %>
+      # Project dependencies
 
       # Documentation dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}<%= if @rel do %>,
+
+      # Release dependencies
+      {:distillery, "~> 1.5", runtime: false}<% end %>
     ]
   end
 
