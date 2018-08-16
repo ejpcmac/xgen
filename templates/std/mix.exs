@@ -45,7 +45,7 @@ defmodule <%= @mod %>.MixProject do
   defp deps do
     [
       # Development and test dependencies
-      {:credo, "~> 0.9.3", only: :dev, runtime: false},
+      {:credo, "~> 0.10.0", only: :dev, runtime: false},
       {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
       {:mix_test_watch, ">= 0.0.0", only: :dev, runtime: false},
@@ -58,7 +58,7 @@ defmodule <%= @mod %>.MixProject do
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}<%= if @rel do %>,
 
       # Release dependencies
-      {:distillery, "~> 1.5", runtime: false}<% end %>
+      {:distillery, "~> 2.0"}<% end %>
     ]
   end
 
