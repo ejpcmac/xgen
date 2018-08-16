@@ -8,7 +8,7 @@ defmodule <%= @mod %>.MixProject do
     [
       app: :<%= @app %>,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -55,7 +55,7 @@ defmodule <%= @mod %>.MixProject do
       # Project dependencies
 
       # Documentation dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}<%= if @rel do %>,
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}<%= if @rel do %>,
 
       # Release dependencies
       {:distillery, "~> 2.0"}<% end %>
