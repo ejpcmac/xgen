@@ -4,7 +4,7 @@ defmodule ExGen.MixProject do
   def project do
     [
       app: :ex_gen,
-      version: "0.2.8",
+      version: "0.2.9",
       elixir: "~> 1.6",
       deps: deps()
     ]
@@ -15,6 +15,6 @@ defmodule ExGen.MixProject do
   end
 
   defp deps do
-    [{:credo, "~> 0.9.3", only: :dev, runtime: false}]
+    [{:credo, "~> 0.10.0", only: :dev, runtime: false}]
   end
 end

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.9
+
+### Enhancements
+
+* Update dependencies
+* [std] Bump Elixir version to 1.7
+
 ## v0.2.8
 
 ### Enhancements

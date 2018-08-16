@@ -29,8 +29,5 @@ end
 
 release :<%= @app %> do
   set version: current_version(:<%= @app %>)
-
-  set applications: [
-        :runtime_tools
-      ]
+  set applications: [:runtime_tools]
 end
