@@ -12,6 +12,8 @@
 # Elixir binary files
 *.beam
 *.ez
+/xgen-*.tar
+/xgen
 
 # Test coverage and documentation
 /cover/

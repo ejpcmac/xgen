@@ -12,7 +12,8 @@
 # Elixir binary files
 *.beam
 *.ez
-<%= @app %>-*.tar
+/<%= @app %>-*.tar
+/<%= @app %>
 
 # Test coverage and documentation
 /cover/
