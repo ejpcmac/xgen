@@ -89,10 +89,13 @@ defmodule XGen do
   end
 
   @spec build_assigns(Project.t()) :: Project.t()
-  defp build_assigns(%Project{app: app, mod: mod, opts: opts} = project) do
+  defp build_assigns(
+         %Project{type: type, app: app, mod: mod, opts: opts} = project
+       ) do
     config = fetch_config_file!(opts)
 
     assigns = [
+      type: type,
       app: app,
       mod: mod,
       cookie: 48 |> :crypto.strong_rand_bytes() |> Base.encode64(),
@@ -349,6 +352,7 @@ defmodule XGen do
       You can then build a firmware image:
 
           cd #{path}
+          direnv allow
           MIX_ENV=prod MIX_TARGET=rpi3 mix do deps.get, firmware
       """
       | messages

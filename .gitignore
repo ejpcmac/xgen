@@ -2,6 +2,9 @@
 ## Application artifacts
 ##
 
+# direnv cache for Nix shells
+/.direnv/
+
 # Elixir build directory
 /_build/
 

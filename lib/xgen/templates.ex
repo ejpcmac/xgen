@@ -14,6 +14,8 @@ defmodule XGen.Templates do
     "base/CHANGELOG.md" => {:text, "CHANGELOG.md"},
     "base/CONTRIBUTING.md" => {:eex, "CONTRIBUTING.md"},
     "base/LICENSE_MIT" => {:eex, "LICENSE"},
+    "base/shell.nix" => {:eex, "shell.nix"},
+    "base/.envrc" => {:text, ".envrc"},
     "base/.editorconfig" => {:text, ".editorconfig"},
     "base/.credo.exs" => {:text, ".credo.exs"},
     "base/.dialyzer_ignore" => {:text, ".dialyzer_ignore"},
@@ -85,6 +87,8 @@ defmodule XGen.Templates do
     [
       "base/README.md",
       "base/CHANGELOG.md",
+      "base/shell.nix",
+      "base/.envrc",
       "base/.editorconfig",
       "std/.formatter.exs",
       "base/.credo.exs",
@@ -114,6 +118,8 @@ defmodule XGen.Templates do
     [
       "base/README.md",
       "base/CHANGELOG.md",
+      "base/shell.nix",
+      "base/.envrc",
       "base/.editorconfig",
       "nerves/.formatter.exs",
       "base/.gitignore",
