@@ -7,7 +7,7 @@ defmodule <%= @mod %>.MixProject do
     [
       app: :<%= @app %>,
       version: "0.1.0-dev",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       target: @target,
       archives: [nerves_bootstrap: "~> 1.0"],
       deps_path: "deps/#{@target}",
@@ -43,7 +43,7 @@ defmodule <%= @mod %>.MixProject do
   # General dependencies
   defp deps do
     [
-      {:nerves, "~> 1.0", runtime: false}
+      {:nerves, "~> 1.3", runtime: false}
     ] ++ deps(@target)
   end
 
@@ -53,7 +53,8 @@ defmodule <%= @mod %>.MixProject do
   defp deps(target) do
     [
       system(target),
-      {:shoehorn, "~> 0.3.0"},
+      {:shoehorn, "~> 0.4.0"},
+      {:ring_logger, "~> 0.4.0"},
       {:nerves_runtime, "~> 0.6.0"}<%= if @net do %>,
       {:nerves_network, "~> 0.3.7-rc"}<% end %><%= if @push do %>,
       {:nerves_firmware_ssh, "~> 0.3.0"}<% end %><%= if @ssh do %>,
@@ -69,9 +70,8 @@ defmodule <%= @mod %>.MixProject do
           "rpi3",
           "bbb",
           "ev3",
-          "qemu_arm",
           "x86_64"
         ] do %>
-  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.3", runtime: false}<% end %>
+  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.4", runtime: false}<% end %>
   defp system(target), do: Mix.raise("Unknown MIX_TARGET: #{target}")
 end

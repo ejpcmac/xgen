@@ -45,6 +45,8 @@ defmodule XGen.Templates do
     "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
     "nerves/rootfs_overlay/etc/erlinit.config" =>
       {:text, "rootfs_overlay/etc/erlinit.config"},
+    "nerves/rootfs_overlay/etc/iex.exs" =>
+      {:text, "rootfs_overlay/etc/iex.exs"},
     "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"}
   }
 
@@ -122,6 +124,7 @@ defmodule XGen.Templates do
       "nerves/rel/config.exs",
       "nerves/rel/vm.args",
       "nerves/rootfs_overlay/etc/erlinit.config",
+      "nerves/rootfs_overlay/etc/iex.exs",
       "nerves/test/test_helper.exs"
     ]
   end

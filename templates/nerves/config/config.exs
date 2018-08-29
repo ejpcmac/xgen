@@ -25,6 +25,9 @@ config :nerves_firmware_ssh,
     "../priv/ssh/id_rsa.pub" |> Path.expand(__DIR__) |> File.read!()
   ]<% end %>
 
+# Use RingLogger as the logger backend.
+config :logger, backends: [RingLogger]
+
 # Use shoehorn to init critical applications before starting ours.
 config :shoehorn,
   init: [:nerves_runtime<%= if @net do %>, :nerves_network<% end %>],
