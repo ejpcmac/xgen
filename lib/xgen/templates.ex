@@ -35,7 +35,6 @@ defmodule XGen.Templates do
 
     # Nerves
     "nerves/.formatter.exs" => {:text, ".formatter.exs"},
-    "nerves/.gitignore" => {:eex, ".gitignore"},
     "nerves/gen-ssh-keys" => {:text, "gen-ssh-keys"},
     "nerves/mix.exs" => {:eex, "mix.exs"},
     "nerves/config/config.exs" => {:eex, "config/config.exs"},
@@ -115,7 +114,7 @@ defmodule XGen.Templates do
       "base/CHANGELOG.md",
       "base/.editorconfig",
       "nerves/.formatter.exs",
-      "nerves/.gitignore",
+      "base/.gitignore",
       "nerves/mix.exs",
       "nerves/config/config.exs",
       "std/lib/app_name.ex",
