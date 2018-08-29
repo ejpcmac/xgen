@@ -15,6 +15,9 @@ defmodule XGen.MixProject do
   end
 
   defp deps do
-    [{:credo, "~> 0.10.0", only: :dev, runtime: false}]
+    [
+      {:credo, "~> 0.10.0", only: :dev, runtime: false},
+      {:typed_struct, "~> 0.1.1", runtime: false}
+    ]
   end
 end

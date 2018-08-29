@@ -3,24 +3,20 @@ defmodule XGen.Project do
   A project struct.
   """
 
+  use TypedStruct
+
   alias XGen.Templates
 
-  @fields quote(
-            do: [
-              type: XGen.project_type(),
-              path: String.t(),
-              app: String.t(),
-              mod: String.t(),
-              opts: keyword(),
-              assigns: keyword(),
-              collection: Templates.collection(),
-              build: boolean()
-            ]
-          )
-
-  defstruct Keyword.keys(@fields)
-
-  @type t() :: %__MODULE__{unquote_splicing(@fields)}
+  typedstruct do
+    field :type, XGen.project_type(), enforce: true
+    field :path, String.t(), enforce: true
+    field :app, String.t(), enforce: true
+    field :mod, String.t(), enforce: true
+    field :opts, keyword(), default: []
+    field :assigns, keyword(), default: []
+    field :collection, Templates.collection(), default: []
+    field :build, boolean(), default: false
+  end
 
   @doc """
   Creates a new project.
@@ -35,10 +31,7 @@ defmodule XGen.Project do
       path: path,
       app: app,
       mod: mod,
-      opts: opts,
-      assigns: [],
-      collection: [],
-      build: false
+      opts: opts
     }
   end
 end
