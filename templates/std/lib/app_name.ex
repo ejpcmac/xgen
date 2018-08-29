@@ -8,7 +8,7 @@ defmodule <%= @mod %> do
 
   ## Examples
 
-      iex> <%= @mod %>.hello
+      iex> <%= @mod %>.hello()
       :world
 
   """
