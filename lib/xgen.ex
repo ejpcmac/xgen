@@ -1,11 +1,11 @@
-defmodule ExGen do
+defmodule XGen do
   @moduledoc """
   Helpers for Elixir projects generation.
   """
 
-  import ExGen.Templates
+  import XGen.Templates
 
-  alias ExGen.Project
+  alias XGen.Project
 
   @typedoc "Project type"
   @type project_type() :: :std | :nerves

@@ -1,10 +1,10 @@
 defmodule Mix.Tasks.Local.Xgen do
   use Mix.Task
 
-  @shortdoc "Updates ExGen locally"
+  @shortdoc "Updates xgen locally"
 
   @moduledoc """
-  Updates ExGen locally.
+  Updates xgen locally.
 
   ## Usage
 
@@ -13,10 +13,10 @@ defmodule Mix.Tasks.Local.Xgen do
   Accepts the same command line options as `archive.install`.
   """
 
-  @url "https://ejpcmac.net/bin/ex_gen.ez"
+  @repo "ejpcmac/xgen"
 
   @impl true
   def run(args) do
-    Mix.Task.run("archive.install", [@url | args])
+    Mix.Task.run("archive.install", ["github", @repo] ++ args)
   end
 end

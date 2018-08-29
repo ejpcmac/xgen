@@ -1,4 +1,4 @@
-defmodule ExGen.Templates do
+defmodule XGen.Templates do
   @moduledoc """
   Helpers for building template collections.
   """

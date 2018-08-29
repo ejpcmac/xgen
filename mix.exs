@@ -1,9 +1,9 @@
-defmodule ExGen.MixProject do
+defmodule XGen.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ex_gen,
+      app: :xgen,
       version: "0.2.9",
       elixir: "~> 1.6",
       deps: deps()

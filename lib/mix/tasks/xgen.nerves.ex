@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Xgen.Nerves do
   use Mix.Task
 
-  import ExGen.Help
+  import XGen.Help
 
   @shortdoc "Generates a Nerves project"
 
@@ -64,7 +64,7 @@ defmodule Mix.Tasks.Xgen.Nerves do
 
     case argv do
       [] -> Mix.Tasks.Help.run(["xgen.nerves"])
-      [path | _] -> ExGen.generate(:nerves, path, opts)
+      [path | _] -> XGen.generate(:nerves, path, opts)
     end
   end
 end

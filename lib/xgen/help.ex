@@ -1,4 +1,4 @@
-defmodule ExGen.Help do
+defmodule XGen.Help do
   @moduledoc false
 
   @doc false

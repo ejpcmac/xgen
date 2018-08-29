@@ -1,10 +1,10 @@
-# ExGen
+# xgen
 
-An opinionated Elixir multi-project generator.
+An opinionated project generator.
 
 ## Features
 
-ExGen can currently generate standard or Nerves projects.
+`xgen` can currently generate standard Elixir or Nerves projects.
 
 ### Standard projects
 
@@ -30,29 +30,17 @@ network configuration that works out of the box.
 
 ## Installation
 
-### From archive
+To install `xgen`:
 
-You can install ExGen directly from a compiled archive:
+    $ mix archive.install github ejpcmac/xgen
 
-    $ mix archive.install https://ejpcmac.net/bin/ex_gen.ez
-
-To update an already installed ExGen:
+To update an already installed `xgen`:
 
     $ mix local.xgen
 
-### From source
-
-1. Clone this repository
-
-        $ git clone https://github.com/ejpcmac/ex_gen.git
-
-2. Build and install the archive:
-
-        $ MIX_ENV=prod mix archive.install
-
 ## Configuration
 
-You will need to generate a configuration file for ExGen to put your name and
+You will need to generate a configuration file for `xgen` to put your name and
 the correct GitHub links in the generated projects:
 
     $ mix xgen.config.create

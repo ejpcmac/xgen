@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Xgen.Std do
   use Mix.Task
 
-  import ExGen.Help
+  import XGen.Help
 
   @shortdoc "Generates a standard Elixir project"
 
@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Xgen.Std do
 
     case argv do
       [] -> Mix.Tasks.Help.run(["xgen.std"])
-      [path | _] -> ExGen.generate(:std, path, opts)
+      [path | _] -> XGen.generate(:std, path, opts)
     end
   end
 end

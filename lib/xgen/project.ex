@@ -1,13 +1,13 @@
-defmodule ExGen.Project do
+defmodule XGen.Project do
   @moduledoc """
   A project struct.
   """
 
-  alias ExGen.Templates
+  alias XGen.Templates
 
   @fields quote(
             do: [
-              type: ExGen.project_type(),
+              type: XGen.project_type(),
               path: String.t(),
               app: String.t(),
               mod: String.t(),
@@ -25,7 +25,7 @@ defmodule ExGen.Project do
   @doc """
   Creates a new project.
   """
-  @spec new(ExGen.project_type(), String.t(), keyword()) :: t()
+  @spec new(XGen.project_type(), String.t(), keyword()) :: t()
   def new(type, path, opts) do
     app = opts[:app] || Path.basename(path)
     mod = opts[:module] || Macro.camelize(app)
