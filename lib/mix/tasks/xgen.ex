@@ -7,7 +7,7 @@ defmodule Mix.Tasks.Xgen do
   Runs the interactive project generator.
   """
 
-  alias XGen.Wizards.ConfigCreator
+  alias XGen.Wizards.{ConfigCreator, Std}
 
   import XGen.Wizard
 
@@ -34,15 +34,12 @@ defmodule Mix.Tasks.Xgen do
       ConfigCreator.run(file: config_file)
     end
 
-    type = choose("Which kind of project do you want to start?", @project_types)
+    case choose("Which kind of project do you want to start?", @project_types) do
+      :std ->
+        Std.run(config: config_file)
 
-    info([
-      :blue,
-      """
-
-      When the Wizard will exist, a project of type #{inspect(type)} will be
-      generated.
-      """
-    ])
+      :nerves ->
+        info([:blue, "\nThe wizard for Nerves projects is not available yet.\n"])
+    end
   end
 end
