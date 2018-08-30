@@ -28,26 +28,6 @@ defmodule XGen do
     |> print_end_message()
   end
 
-  @doc """
-  Returns the user home or exits with an error.
-  """
-  @spec user_home :: String.t() | no_return()
-  def user_home do
-    case System.user_home() do
-      nil ->
-        Mix.shell().info([
-          :red,
-          "Error: the current user has no home directory!",
-          :reset
-        ])
-
-        System.halt(1)
-
-      home ->
-        home
-    end
-  end
-
   @spec validate_project(Project.t()) :: Project.t() | no_return()
   defp validate_project(%Project{} = project) do
     check_application_name!(project.app, !project.opts[:app])
