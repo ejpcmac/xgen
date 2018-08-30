@@ -16,8 +16,8 @@ defmodule XGen.Wizards.ConfigCreator do
     """)
 
     config = [
-      name: ask_name(),
-      github_account: ask_github_account()
+      name: prompt_mandatory("Full name"),
+      github_account: prompt_mandatory("GitHub account")
     ]
 
     file = opts[:file] || user_home() |> Path.join(".xgen.exs")
@@ -32,30 +32,6 @@ defmodule XGen.Wizards.ConfigCreator do
 
       {:error, reason} ->
         halt("\nAn error has occured while writing to #{file}: #{reason}")
-    end
-  end
-
-  @spec ask_name :: String.t()
-  defp ask_name do
-    case prompt("Full name:") do
-      "" ->
-        error("Please enter a name.\n")
-        ask_name()
-
-      name ->
-        name
-    end
-  end
-
-  @spec ask_github_account :: String.t()
-  defp ask_github_account do
-    case prompt("GitHub account:") do
-      "" ->
-        error("Please enter a GitHub account.\n")
-        ask_github_account()
-
-      account ->
-        account
     end
   end
 end

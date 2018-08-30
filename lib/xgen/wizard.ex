@@ -57,8 +57,39 @@ defmodule XGen.Wizard do
   The result string is trimmed.
   """
   @spec prompt(String.t()) :: String.t()
-  def prompt(message) do
-    (message <> " ") |> IO.gets() |> String.trim()
+  @spec prompt(String.t(), String.t()) :: String.t()
+  def prompt(message, default \\ "") do
+    message
+    |> format_prompt(default)
+    |> IO.gets()
+    |> String.trim()
+    |> case do
+      "" -> default
+      value -> value
+    end
+  end
+
+  @spec format_prompt(String.t(), String.t()) :: String.t()
+  defp format_prompt(message, ""), do: message <> ": "
+  defp format_prompt(message, default), do: message <> " [#{default}]: "
+
+  @doc """
+  Prints the given `message` and prompts a user for a mandatory input.
+
+  If the input is empty, `error_message` is printed and the user is prompted
+  again. The restult string is trimmed.
+  """
+  @spec prompt_mandatory(String.t()) :: String.t()
+  @spec prompt_mandatory(String.t(), String.t()) :: String.t()
+  def prompt_mandatory(message, error_message \\ "You must provide a value!") do
+    case prompt(message) do
+      "" ->
+        error(error_message <> "\n")
+        prompt_mandatory(message, error_message)
+
+      value ->
+        value
+    end
   end
 
   @doc """
@@ -76,6 +107,7 @@ defmodule XGen.Wizard do
     |> Enum.with_index(1)
     |> Enum.each(fn {elem, i} -> IO.puts("  #{i}. #{elem}") end)
 
+    info("")
     index = list |> length() |> get_choice()
 
     list
@@ -85,16 +117,15 @@ defmodule XGen.Wizard do
 
   @spec get_choice(pos_integer()) :: pos_integer()
   defp get_choice(max) do
-    with entry when entry != "" <- prompt("\nChoice:"),
-         {choice, _} when choice in 1..max <- Integer.parse(entry) do
-      choice
-    else
-      "" ->
-        error("You must make a choice!")
-        get_choice(max)
+    "Choice"
+    |> prompt_mandatory("You must make a choice!")
+    |> Integer.parse()
+    |> case do
+      {choice, _} when choice in 1..max ->
+        choice
 
       _ ->
-        error("The choice must be an integer between 1 and #{max}.")
+        error("The choice must be an integer between 1 and #{max}.\n")
         get_choice(max)
     end
   end
