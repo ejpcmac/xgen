@@ -38,16 +38,24 @@ defmodule XGen.Wizards.ConfigCreator do
   @spec ask_name :: String.t()
   defp ask_name do
     case prompt("Full name:") do
-      "" -> ask_name()
-      name -> name
+      "" ->
+        error("Please enter a name.\n")
+        ask_name()
+
+      name ->
+        name
     end
   end
 
   @spec ask_github_account :: String.t()
   defp ask_github_account do
     case prompt("GitHub account:") do
-      "" -> ask_github_account()
-      account -> account
+      "" ->
+        error("Please enter a GitHub account.\n")
+        ask_github_account()
+
+      account ->
+        account
     end
   end
 end
