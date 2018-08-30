@@ -38,9 +38,10 @@ let
 in
 
 mkShell {
-  buildInputs = [ elixir git<%= if @type == :nerves do %> coreutils-prefixed fwup squashfsTools file<% end %> ]
+  buildInputs = [ elixir git<%= if @type == :nerves do %> fwup squashfsTools file<% end %> ]
     ++ optional stdenv.isLinux libnotify # For ExUnit Notifier on Linux.
     ++ optional stdenv.isDarwin terminal-notifier # For ExUnit Notifier on macOS.<%= if @type == :nerves do %>
+    ++ optional stdenv.isDarwin coreutils-prefixed # For Nerves on macOS.
     ++ optional stdenv.isLinux x11_ssh_askpass # For Nerves on Linux.<% end %>
     ++ optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
       # For file_system on macOS.
