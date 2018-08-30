@@ -26,6 +26,14 @@ defmodule XGen.Wizard do
   end
 
   @doc """
+  Prints the given ANSI-formatted `message` in green.
+  """
+  @spec green_info(ANSI.ansidata()) :: :ok
+  def green_info(message) do
+    info([:green, message])
+  end
+
+  @doc """
   Prints the given ANSI-formatted error `message` on `:stderr`.
   """
   @spec error(ANSI.ansidata()) :: :ok

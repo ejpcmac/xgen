@@ -24,7 +24,7 @@ defmodule XGen.Wizards.ConfigCreator do
 
     case File.write(file, Macro.to_string(quote(do: unquote(config)))) do
       :ok ->
-        info("""
+        green_info("""
 
         Your initial configuration has been successfully written to #{file}.
         You can edit this file to update your configuration as needed.
