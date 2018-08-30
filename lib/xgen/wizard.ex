@@ -10,6 +10,8 @@ defmodule XGen.Wizard do
   """
   @callback run(opts :: keyword()) :: term() | no_return()
 
+  @yes ["y", "Y", "yes", "YES", "Yes"]
+
   defmacro __using__(_opts) do
     quote do
       @behaviour XGen.Wizard
@@ -91,6 +93,26 @@ defmodule XGen.Wizard do
         value
     end
   end
+
+  @doc """
+  Asks the user a yes-no `question`.
+  """
+  @spec yes?(String.t()) :: boolean()
+  @spec yes?(String.t(), boolean()) :: boolean()
+  def yes?(message, default \\ true) do
+    (message <> format_yesno(default))
+    |> IO.gets()
+    |> String.trim()
+    |> check_yesno(default)
+  end
+
+  @spec format_yesno(boolean()) :: String.t()
+  defp format_yesno(true), do: " [Yn] "
+  defp format_yesno(false), do: " [yN] "
+
+  @spec check_yesno(String.t(), boolean()) :: boolean()
+  defp check_yesno(value, true), do: value in ["" | @yes]
+  defp check_yesno(value, false), do: value in @yes
 
   @doc """
   Asks the user to choose between a list of elements.
