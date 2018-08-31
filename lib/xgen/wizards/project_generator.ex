@@ -5,7 +5,7 @@ defmodule XGen.Wizards.ProjectGenerator do
 
   use XGen.Wizard
 
-  alias XGen.Wizards.Std
+  alias XGen.Wizards.{Std, Nerves}
 
   @project_types [
     std: "Standard Elixir project",
@@ -19,11 +19,8 @@ defmodule XGen.Wizards.ProjectGenerator do
     config_file = opts[:config] || user_home() |> Path.join(".xgen.exs")
 
     case choose("Which kind of project do you want to start?", @project_types) do
-      :std ->
-        Std.run(config: config_file)
-
-      :nerves ->
-        info([:blue, "\nThe wizard for Nerves projects is not available yet.\n"])
+      :std -> Std.run(config: config_file)
+      :nerves -> Nerves.run(config: config_file)
     end
   end
 end
