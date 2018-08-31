@@ -4,6 +4,7 @@ defmodule XGen do
   """
 
   import XGen.Templates
+  import XGen.Wizard
 
   alias XGen.Project
 
@@ -41,7 +42,7 @@ defmodule XGen do
   @spec check_application_name!(String.t(), boolean()) :: nil | no_return()
   defp check_application_name!(name, inferred?) do
     unless name =~ Regex.recompile!(~r/^[a-z][a-z0-9_]*$/) do
-      Mix.raise(
+      halt(
         "Application name must start with a letter and have only lowercase " <>
           "letters, numbers and underscore. Got #{inspect(name)}." <>
           if inferred? do
@@ -58,7 +59,7 @@ defmodule XGen do
   @spec check_mod_name_validity!(String.t()) :: nil | no_return()
   defp check_mod_name_validity!(name) do
     unless name =~ Regex.recompile!(~r/^[A-Z]\w*(\.[A-Z]\w*)*$/) do
-      Mix.raise(
+      halt(
         "Module name must be a valid Elixir alias (for example: Foo.Bar). " <>
           "Got #{inspect(name)}."
       )
@@ -70,7 +71,7 @@ defmodule XGen do
     name = Module.concat(Elixir, name)
 
     if Code.ensure_loaded?(name) do
-      Mix.raise(
+      halt(
         "Module name #{inspect(name)} is already taken, please choose " <>
           "another name."
       )
@@ -83,8 +84,8 @@ defmodule XGen do
       "The directory #{inspect(path)} already exists. Are you sure you want " <>
         "to continue?"
 
-    if File.dir?(path) and not Mix.shell().yes?(msg) do
-      Mix.raise("Please select another directory for installation")
+    if File.dir?(path) and not yes?(msg, :no) do
+      halt("Please select another directory for installation")
     end
   end
 
@@ -121,7 +122,7 @@ defmodule XGen do
     file = opts[:config] || System.user_home!() |> Path.join(".xgen.exs")
 
     unless File.regular?(file) do
-      Mix.raise("""
+      halt("""
       #{file} does not exist.
 
       You must provide a configuration file. Either create a global one using
@@ -133,17 +134,17 @@ defmodule XGen do
     {config, _} = Code.eval_file(file)
 
     unless Keyword.keyword?(config) do
-      Mix.raise("The config file must contain a keyword list.")
+      halt("The config file must contain a keyword list.")
     end
 
     unless config[:name] |> String.valid?() do
-      Mix.raise("""
+      halt("""
       The configuration file must contain a `:name` key and it must be a string.
       """)
     end
 
     unless config[:github_account] |> String.valid?() do
-      Mix.raise("""
+      halt("""
       The configuration file must contain a `:github_account` key and it must be
       a string.
       """)
@@ -195,7 +196,7 @@ defmodule XGen do
       user_dir = "priv/ssh"
 
       # Generate target host SSH key.
-      Mix.shell().info([:green, "* generating target host SSH key", :reset])
+      green_info("* generating target host SSH key")
       File.mkdir_p!(system_dir)
 
       _ =
@@ -204,7 +205,7 @@ defmodule XGen do
         )
 
       # Generate user SSH key.
-      Mix.shell().info([:green, "* generating user SSH key", :reset])
+      green_info("* generating user SSH key")
       File.mkdir_p!(user_dir)
       _ = :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
 
@@ -230,11 +231,7 @@ defmodule XGen do
   @spec init_git(Project.t()) :: Project.t()
   defp init_git(%Project{opts: opts} = project) do
     if opts[:git] do
-      Mix.shell().info([
-        :green,
-        "* initializing an empty Git repository",
-        :reset
-      ])
+      green_info("* initializing an empty Git repository")
 
       _ = System.cmd("git", ["init"])
       if opts[:todo], do: File.write!(".git/info/exclude", "/TODO\n")
@@ -248,19 +245,19 @@ defmodule XGen do
     msg =
       "\nFetch dependencies and build in dev and test environments in parallel?"
 
-    if Mix.shell().yes?(msg) do
+    if yes?(msg, :yes) do
       run_command("mix", ["deps.get"])
 
       build_task =
         Task.async(fn ->
           run_command("mix", ["compile"])
-          Mix.shell().info([:green, "=> project compilation complete", :reset])
+          green_info("=> project compilation complete")
         end)
 
       test_task =
         Task.async(fn ->
           run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
-          Mix.shell().info([:green, "=> tests compilation complete", :reset])
+          green_info("=> tests compilation complete")
         end)
 
       Task.await(build_task, :infinity)
@@ -272,7 +269,7 @@ defmodule XGen do
   end
 
   defp prompt_to_build(%Project{type: :nerves} = project) do
-    if Mix.shell().yes?("\nFetch dependencies?") do
+    if yes?("\nFetch dependencies?", :yes) do
       run_command("mix", ["deps.get"])
       %{project | build: true}
     else
@@ -288,7 +285,7 @@ defmodule XGen do
     |> special_instructions(project)
     |> gitsetup_instructions(!!project.opts[:git])
     |> Enum.reverse()
-    |> Mix.shell().info()
+    |> info()
   end
 
   @spec project_created(iolist()) :: iolist()
@@ -385,9 +382,7 @@ defmodule XGen do
     env = Enum.map(opts[:env] || [], fn {key, value} -> " #{key}=#{value}" end)
     fmt_args = Enum.join(args, " ")
 
-    Mix.shell().info(
-      [:green, "* running", :reset] ++ env ++ [" #{cmd} ", fmt_args]
-    )
+    info([:green, "* running", :reset] ++ env ++ [" #{cmd} ", fmt_args])
 
     _ = System.cmd(cmd, args, opts)
     :ok
