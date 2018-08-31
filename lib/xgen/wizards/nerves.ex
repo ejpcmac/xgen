@@ -23,9 +23,9 @@ defmodule XGen.Wizards.Nerves do
       rtc: rtc?(),
       contrib: contrib?(),
       license: LicenseChooser.run(),
-      todo: yes?("Create a TODO file?", false),
+      todo: yes?("Create a TODO file?", :no),
       # TODO: Remove double negation.
-      no_git: !yes?("Initialise a git repository?")
+      no_git: !yes?("Initialise a git repository?", :yes)
     ]
 
     info("\nGenerating the project...")
@@ -42,7 +42,7 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add networking support?")
+    yes?("Add networking support?", :yes)
   end
 
   defp push? do
@@ -60,7 +60,7 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add support to pushing firware updates via SSH?", false)
+    yes?("Add support to pushing firware updates via SSH?", :no)
   end
 
   defp ssh? do
@@ -74,7 +74,7 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add SSH support with remote IEx sessions?", false)
+    yes?("Add SSH support with remote IEx sessions?", :no)
   end
 
   defp ntp? do
@@ -87,7 +87,7 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add NTP support?", false)
+    yes?("Add NTP support?", :no)
   end
 
   defp rtc? do
@@ -107,7 +107,7 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add support for a DS3231 RTC?", false)
+    yes?("Add support for a DS3231 RTC?", :no)
   end
 
   defp contrib? do
@@ -122,6 +122,6 @@ defmodule XGen.Wizards.Nerves do
       """
     )
 
-    yes?("Add a CONTRIBUTING.md?", false)
+    yes?("Add a CONTRIBUTING.md?", :no)
   end
 end

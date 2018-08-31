@@ -36,6 +36,6 @@ defmodule XGen.Wizards.LicenseChooser do
       """
     )
 
-    yes?("Add a license?", false)
+    yes?("Add a license?", :no)
   end
 end

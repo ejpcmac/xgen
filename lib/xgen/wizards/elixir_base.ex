@@ -32,6 +32,6 @@ defmodule XGen.Wizards.ElixirBase do
       """
     )
 
-    yes?("Generate a supervision tree?", false)
+    yes?("Generate a supervision tree?", :no)
   end
 end

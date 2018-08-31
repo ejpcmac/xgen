@@ -10,7 +10,11 @@ defmodule XGen.Wizard do
   """
   @callback run(opts :: keyword()) :: term() | no_return()
 
-  @yes ["y", "Y", "yes", "YES", "Yes"]
+  @typedoc "Answer to a yes-no question"
+  @type yesno() :: :yes | :no | nil
+
+  @yes ~w(y Y yes YES Yes)
+  @no ~w(n N no NO No)
 
   defmacro __using__(_opts) do
     quote do
@@ -106,21 +110,32 @@ defmodule XGen.Wizard do
   Asks the user a yes-no `question`.
   """
   @spec yes?(String.t()) :: boolean()
-  @spec yes?(String.t(), boolean()) :: boolean()
-  def yes?(message, default \\ true) do
+  @spec yes?(String.t(), yesno()) :: boolean()
+  def yes?(message, default \\ nil) when default in [:yes, :no, nil] do
     (message <> format_yesno(default))
     |> IO.gets()
     |> String.trim()
-    |> check_yesno(default)
+    |> parse_yesno(default)
+    |> case do
+      nil ->
+        error("You must answer yes or no.\n")
+        yes?(message, default)
+
+      answer ->
+        answer == :yes
+    end
   end
 
-  @spec format_yesno(boolean()) :: String.t()
-  defp format_yesno(true), do: " [Yn] "
-  defp format_yesno(false), do: " [yN] "
+  @spec format_yesno(yesno()) :: String.t()
+  defp format_yesno(:yes), do: " [Y/n] "
+  defp format_yesno(:no), do: " [y/N] "
+  defp format_yesno(nil), do: " (y/n) "
 
-  @spec check_yesno(String.t(), boolean()) :: boolean()
-  defp check_yesno(value, true), do: value in ["" | @yes]
-  defp check_yesno(value, false), do: value in @yes
+  @spec parse_yesno(String.t(), yesno()) :: yesno()
+  defp parse_yesno(value, _default) when value in @yes, do: :yes
+  defp parse_yesno(value, _default) when value in @no, do: :no
+  defp parse_yesno("", default), do: default
+  defp parse_yesno(_, _default), do: nil
 
   @doc """
   Asks the user to choose between a list of elements.

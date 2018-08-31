@@ -20,9 +20,9 @@ defmodule XGen.Wizards.Std do
       contrib: contrib?(),
       package: package?(),
       license: LicenseChooser.run(),
-      todo: yes?("Create a TODO file?", false),
+      todo: yes?("Create a TODO file?", :no),
       # TODO: Remove double negation.
-      no_git: !yes?("Initialise a git repository?")
+      no_git: !yes?("Initialise a git repository?", :yes)
     ]
 
     info("\nGenerating the project...")
@@ -38,7 +38,7 @@ defmodule XGen.Wizards.Std do
       """
     )
 
-    yes?("Generate a release configuration?", false)
+    yes?("Generate a release configuration?", :no)
   end
 
   defp contrib? do
@@ -51,7 +51,7 @@ defmodule XGen.Wizards.Std do
       """
     )
 
-    yes?("Add a CONTRIBUTING.md?", false)
+    yes?("Add a CONTRIBUTING.md?", :no)
   end
 
   defp package? do
@@ -64,6 +64,6 @@ defmodule XGen.Wizards.Std do
       """
     )
 
-    yes?("Add package information?", false)
+    yes?("Add package information?", :no)
   end
 end
