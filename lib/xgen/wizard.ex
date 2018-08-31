@@ -69,45 +69,46 @@ defmodule XGen.Wizard do
   Prints the given `message` and prompts a user for input.
 
   The result string is trimmed.
+
+  ## Options
+
+    * `default` - default value for empty replies (printed in the prompt if set)
+    * `mandatory` - wether a non-empty input is mandatory (default: `false`)
+    * `error_message` - the message to print if a mandatory input is missing
   """
   @spec prompt(String.t()) :: String.t()
-  @spec prompt(String.t(), String.t()) :: String.t()
-  def prompt(message, default \\ "") do
-    message
-    |> format_prompt(default)
+  @spec prompt(String.t(), keyword()) :: String.t()
+  def prompt(message, opts \\ []) do
+    (message <> format_prompt(opts[:default]))
     |> IO.gets()
     |> String.trim()
+    |> parse_response(opts[:default], !!opts[:mandatory])
     |> case do
-      "" -> default
-      value -> value
-    end
-  end
-
-  @spec format_prompt(String.t(), String.t()) :: String.t()
-  defp format_prompt(message, ""), do: message <> ": "
-  defp format_prompt(message, default), do: message <> " [#{default}]: "
-
-  @doc """
-  Prints the given `message` and prompts a user for a mandatory input.
-
-  If the input is empty, `error_message` is printed and the user is prompted
-  again. The restult string is trimmed.
-  """
-  @spec prompt_mandatory(String.t()) :: String.t()
-  @spec prompt_mandatory(String.t(), String.t()) :: String.t()
-  def prompt_mandatory(message, error_message \\ "You must provide a value!") do
-    case prompt(message) do
-      "" ->
+      nil ->
+        error_message = opts[:error_message] || "You must provide a value!"
         error(error_message <> "\n")
-        prompt_mandatory(message, error_message)
+        prompt(message, opts)
 
       value ->
         value
     end
   end
 
+  @spec format_prompt(String.t() | nil) :: String.t()
+  defp format_prompt(nil), do: ": "
+  defp format_prompt(default), do: " [#{default}]: "
+
+  @spec parse_response(String.t(), String.t() | nil, boolean()) ::
+          String.t() | nil
+  defp parse_response("", nil, true), do: nil
+  defp parse_response("", default, _) when not is_nil(default), do: default
+  defp parse_response(value, _default, _), do: value
+
   @doc """
   Asks the user a yes-no `question`.
+
+  If there is no default value, the user must type an answer. Otherwise hitting
+  enter chooses the default answer.
   """
   @spec yes?(String.t()) :: boolean()
   @spec yes?(String.t(), yesno()) :: boolean()
@@ -163,7 +164,7 @@ defmodule XGen.Wizard do
   @spec get_choice(pos_integer()) :: pos_integer()
   defp get_choice(max) do
     "Choice"
-    |> prompt_mandatory("You must make a choice!")
+    |> prompt(mandatory: true, error_message: "You must make a choice!")
     |> Integer.parse()
     |> case do
       {choice, _} when choice in 1..max ->
