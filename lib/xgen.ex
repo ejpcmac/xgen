@@ -167,7 +167,7 @@ defmodule XGen do
       |> add_collection(:nerves_ssh, !!opts[:ssh])
       |> add_collection(:contrib, !!opts[:contrib])
       |> add_collection(:license_mit, opts[:license] == "MIT")
-      |> add_collection(:gitsetup, !opts[:no_git])
+      |> add_collection(:gitsetup, !!opts[:git])
       |> add_collection(:todo, !!opts[:todo])
       |> make_collection()
 
@@ -184,7 +184,7 @@ defmodule XGen do
   @spec copy_files(Project.t()) :: Project.t()
   defp copy_files(%Project{} = project) do
     copy(project.collection, project.assigns)
-    unless project.opts[:no_git], do: File.chmod!(".gitsetup", 0o755)
+    if project.opts[:git], do: File.chmod!(".gitsetup", 0o755)
     project
   end
 
@@ -229,7 +229,7 @@ defmodule XGen do
 
   @spec init_git(Project.t()) :: Project.t()
   defp init_git(%Project{opts: opts} = project) do
-    unless opts[:no_git] do
+    if opts[:git] do
       Mix.shell().info([
         :green,
         "* initializing an empty Git repository",
@@ -286,7 +286,7 @@ defmodule XGen do
     |> project_created()
     |> build_instructions(project)
     |> special_instructions(project)
-    |> gitsetup_instructions(!project.opts[:no_git])
+    |> gitsetup_instructions(!!project.opts[:git])
     |> Enum.reverse()
     |> Mix.shell().info()
   end

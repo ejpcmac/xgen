@@ -21,8 +21,7 @@ defmodule XGen.Wizards.Std do
       package: package?(),
       license: LicenseChooser.run(),
       todo: yes?("Create a TODO file?", :no),
-      # TODO: Remove double negation.
-      no_git: !yes?("Initialise a git repository?", :yes)
+      git: yes?("Initialise a git repository?", :yes)
     ]
 
     info("\nGenerating the project...")
