@@ -5,6 +5,11 @@ defmodule Mix.Tasks.Xgen do
 
   @moduledoc """
   Runs the interactive project generator.
+
+  ## Options
+
+    * `--config <file>`: indicate which configuration file to use. Defaults to
+      `~/.xgen.exs`
   """
 
   alias XGen.Wizards.{ConfigCreator, ProjectGenerator}
