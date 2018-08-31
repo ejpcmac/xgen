@@ -7,17 +7,11 @@ defmodule Mix.Tasks.Xgen do
   Runs the interactive project generator.
   """
 
-  alias XGen.Wizards.{ConfigCreator, Std}
+  alias XGen.Wizards.{ConfigCreator, ProjectGenerator}
 
   import XGen.Wizard
 
   @version Mix.Project.config()[:version]
-
-  @project_types [
-    std: "Standard Elixir project",
-    nerves: "Nerves project"
-  ]
-
   @switches [
     config: :string
   ]
@@ -34,12 +28,6 @@ defmodule Mix.Tasks.Xgen do
       ConfigCreator.run(file: config_file)
     end
 
-    case choose("Which kind of project do you want to start?", @project_types) do
-      :std ->
-        Std.run(config: config_file)
-
-      :nerves ->
-        info([:blue, "\nThe wizard for Nerves projects is not available yet.\n"])
-    end
+    ProjectGenerator.run(config: config_file)
   end
 end
