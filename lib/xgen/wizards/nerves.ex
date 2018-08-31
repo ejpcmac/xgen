@@ -24,7 +24,7 @@ defmodule XGen.Wizards.Nerves do
       contrib: contrib?(),
       license: LicenseChooser.run(),
       todo: yes?("Create a TODO file?", :no),
-      git: yes?("Initialise a git repository?", :yes)
+      git: yes?("Initialise a Git repository?", :yes)
     ]
 
     info("\nGenerating the project...")

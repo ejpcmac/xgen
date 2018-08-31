@@ -5,7 +5,7 @@ defmodule XGen.Wizards.ProjectGenerator do
 
   use XGen.Wizard
 
-  alias XGen.Wizards.{Std, Nerves}
+  alias XGen.Wizards.{Nerves, Std}
 
   @project_types [
     std: "Standard Elixir project",
