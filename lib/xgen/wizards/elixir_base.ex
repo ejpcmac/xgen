@@ -6,13 +6,32 @@ defmodule XGen.Wizards.ElixirBase do
   use XGen.Wizard
 
   @impl true
-  @spec run :: {String.t(), [app: String.t(), module: String.t()]}
-  @spec run(keyword()) :: {String.t(), [app: String.t(), module: String.t()]}
+  @spec run :: {String.t(), keyword()}
+  @spec run(keyword()) :: {String.t(), keyword()}
   def run(_opts \\ []) do
     path = prompt_mandatory("Project directory")
     app = prompt("OTP application name", Path.basename(path))
     module = prompt("Module name", Macro.camelize(app))
 
-    {path, [app: app, module: module]}
+    elixir_opts = [
+      app: app,
+      module: module,
+      sup: sup?(module)
+    ]
+
+    {path, elixir_opts}
+  end
+
+  defp sup?(module) do
+    doc(
+      "Supervision tree",
+      """
+      xgen can generate for you the module #{module}.Application containing a
+      supervision tree. It also updates the application configuration in the
+      mix.exs.
+      """
+    )
+
+    yes?("Generate a supervision tree?", false)
   end
 end

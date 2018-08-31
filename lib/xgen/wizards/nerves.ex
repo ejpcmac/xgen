@@ -11,12 +11,11 @@ defmodule XGen.Wizards.Nerves do
   @spec run :: :ok
   @spec run(keyword()) :: :ok
   def run(opts \\ []) do
-    info([:bright, "\n*** Nerves project ***\n"])
+    info([:bright, "\n=== Nerves project ===\n"])
 
     {path, elixir_opts} = ElixirBase.run()
 
     user_opts = [
-      sup: yes?("Generate a supervision tree?", false),
       net: yes?("Add networking support?"),
       push: yes?("Add support to push firware updates via SSH?", false),
       ssh: yes?("Add SSH support with remote IEx sessions?", false),

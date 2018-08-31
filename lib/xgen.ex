@@ -294,10 +294,7 @@ defmodule XGen do
   @spec project_created(iolist()) :: iolist()
   defp project_created(messages) do
     [
-      """
-
-      Your project has been successfully created.
-      """
+      [:green, "\nYour project has been successfully created.\n", :reset]
       | messages
     ]
   end
