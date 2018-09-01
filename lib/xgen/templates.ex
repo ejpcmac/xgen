@@ -5,54 +5,13 @@ defmodule XGen.Templates do
 
   import XGen.Wizard
 
+  alias __MODULE__.TemplateLister
+
   @typedoc "A template collection"
   @type collection() :: [String.t()]
 
-  @templates %{
-    # Base
-    "base/README.md" => {:eex, "README.md"},
-    "base/CHANGELOG.md" => {:text, "CHANGELOG.md"},
-    "base/CONTRIBUTING.md" => {:eex, "CONTRIBUTING.md"},
-    "base/LICENSE_MIT" => {:eex, "LICENSE"},
-    "base/shell.nix" => {:eex, "shell.nix"},
-    "base/.envrc" => {:text, ".envrc"},
-    "base/.editorconfig" => {:text, ".editorconfig"},
-    "base/.credo.exs" => {:text, ".credo.exs"},
-    "base/.dialyzer_ignore" => {:text, ".dialyzer_ignore"},
-    "base/.gitsetup" => {:text, ".gitsetup"},
-    "base/.gitignore" => {:eex, ".gitignore"},
-    "base/TODO" => {:text, "TODO"},
-
-    # Standard
-    "std/.formatter.exs" => {:eex, ".formatter.exs"},
-    "std/mix.exs" => {:eex, "mix.exs"},
-    "std/config/config.exs" => {:text, "config/config.exs"},
-    "std/lib/app_name.ex" => {:eex, "lib/:app.ex"},
-    "std/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
-    "std/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
-    "std/rel/config.exs" => {:eex, "rel/config.exs"},
-    "std/test/support" => {:keep, "test/support"},
-    "std/test/test_helper.exs" => {:text, "test/test_helper.exs"},
-    "std/test/app_name_test.exs" => {:eex, "test/:app_test.exs"},
-
-    # Nerves
-    "nerves/.formatter.exs" => {:text, ".formatter.exs"},
-    "nerves/gen-ssh-keys" => {:text, "gen-ssh-keys"},
-    "nerves/mix.exs" => {:eex, "mix.exs"},
-    "nerves/config/config.exs" => {:eex, "config/config.exs"},
-    "nerves/lib/app_name/application.ex" => {:eex, "lib/:app/application.ex"},
-    "nerves/lib/app_name/ssh_server.ex" => {:eex, "lib/:app/ssh_server.ex"},
-    "nerves/rel/plugins/.gitignore" => {:text, "rel/plugins/.gitignore"},
-    "nerves/rel/config.exs" => {:eex, "rel/config.exs"},
-    "nerves/rel/vm.args" => {:eex, "rel/vm.args"},
-    "nerves/rootfs_overlay/etc/erlinit.config" =>
-      {:text, "rootfs_overlay/etc/erlinit.config"},
-    "nerves/rootfs_overlay/etc/iex.exs" =>
-      {:text, "rootfs_overlay/etc/iex.exs"},
-    "nerves/test/test_helper.exs" => {:text, "test/test_helper.exs"}
-  }
-
   @templates_root Path.expand("../../templates", __DIR__)
+  @templates TemplateLister.build_templates_map(@templates_root)
 
   # Declare each template as @external_resource and define a render/2 function.
   @templates
@@ -77,58 +36,58 @@ defmodule XGen.Templates do
   ## Collections
 
   # Base optionals
-  defp collection(:contrib), do: ["base/CONTRIBUTING.md"]
-  defp collection(:license_mit), do: ["base/LICENSE_MIT"]
+  defp collection(:contrib), do: ["base/CONTRIBUTING.md.eex"]
+  defp collection(:license_mit), do: ["base/LICENSE+MIT.eex"]
   defp collection(:gitsetup), do: ["base/.gitsetup"]
   defp collection(:todo), do: ["base/TODO"]
 
   # Standard project
   defp collection(:std) do
     [
-      "base/README.md",
+      "base/README.md.eex",
       "base/CHANGELOG.md",
-      "base/shell.nix",
+      "base/shell.nix.eex",
       "base/.envrc",
       "base/.editorconfig",
-      "std/.formatter.exs",
+      "std/.formatter.exs.eex",
       "base/.credo.exs",
       "base/.dialyzer_ignore",
-      "base/.gitignore",
-      "std/mix.exs",
+      "base/.gitignore.eex",
+      "std/mix.exs.eex",
       "std/config/config.exs",
-      "std/lib/app_name.ex",
-      "std/test/support",
+      "std/lib/@app@.ex.eex",
+      "std/test/support/",
       "std/test/test_helper.exs",
-      "std/test/app_name_test.exs"
+      "std/test/@app@_test.exs.eex"
     ]
   end
 
   # Standard project optionals
-  defp collection(:std_sup), do: ["std/lib/app_name/application.ex"]
+  defp collection(:std_sup), do: ["std/lib/@app@/application.ex.eex"]
 
   defp collection(:std_rel) do
     [
       "std/rel/plugins/.gitignore",
-      "std/rel/config.exs"
+      "std/rel/config.exs.eex"
     ]
   end
 
   # Nerves project
   defp collection(:nerves) do
     [
-      "base/README.md",
+      "base/README.md.eex",
       "base/CHANGELOG.md",
-      "base/shell.nix",
+      "base/shell.nix.eex",
       "base/.envrc",
       "base/.editorconfig",
       "nerves/.formatter.exs",
-      "base/.gitignore",
-      "nerves/mix.exs",
-      "nerves/config/config.exs",
-      "std/lib/app_name.ex",
+      "base/.gitignore.eex",
+      "nerves/mix.exs.eex",
+      "nerves/config/config.exs.eex",
+      "std/lib/@app@.ex.eex",
       "nerves/rel/plugins/.gitignore",
-      "nerves/rel/config.exs",
-      "nerves/rel/vm.args",
+      "nerves/rel/config.exs.eex",
+      "nerves/rel/vm.args.eex",
       "nerves/rootfs_overlay/etc/erlinit.config",
       "nerves/rootfs_overlay/etc/iex.exs",
       "nerves/test/test_helper.exs"
@@ -136,9 +95,9 @@ defmodule XGen.Templates do
   end
 
   # Nerves project optionals
-  defp collection(:nerves_sup), do: ["nerves/lib/app_name/application.ex"]
+  defp collection(:nerves_sup), do: ["nerves/lib/@app@/application.ex.eex"]
   defp collection(:nerves_gen_ssh_keys), do: ["nerves/gen-ssh-keys"]
-  defp collection(:nerves_ssh), do: ["nerves/lib/app_name/ssh_server.ex"]
+  defp collection(:nerves_ssh), do: ["nerves/lib/@app@/ssh_server.ex.eex"]
 
   @doc """
   Adds a collection `name` to the list of collections conditionally.
@@ -167,7 +126,7 @@ defmodule XGen.Templates do
   def copy(collection, assigns) do
     Enum.each(collection, fn template ->
       {type, target} = @templates[template]
-      target = String.replace(target, ":app", assigns[:app])
+      target = String.replace(target, "@app@", assigns[:app])
 
       case type do
         :keep -> create_directory(target)
