@@ -3,7 +3,7 @@ defmodule XGen.Templates do
   Helpers for building template collections.
   """
 
-  import Mix.Generator
+  import XGen.Wizard
 
   @typedoc "A template collection"
   @type collection() :: [String.t()]
@@ -179,4 +179,37 @@ defmodule XGen.Templates do
   # Helper for generating cookies in templates.
   @spec cookie :: String.t()
   defp cookie, do: 48 |> :crypto.strong_rand_bytes() |> Base.encode64()
+
+  ##
+  ## De-Mixed helpers inspired by Mix.Generator
+  ##
+
+  @spec create_directory(Path.t()) :: any()
+  defp create_directory(path) when is_binary(path) do
+    info([:green, "* creating ", :reset, Path.relative_to_cwd(path)])
+    File.mkdir_p!(path)
+  end
+
+  @spec create_file(Path.t(), iodata()) :: any()
+  defp create_file(path, content) when is_binary(path) do
+    info([:green, "* creating ", :reset, Path.relative_to_cwd(path)])
+
+    if can_write?(path) do
+      File.mkdir_p!(Path.dirname(path))
+      File.write!(path, content)
+    end
+  end
+
+  @spec can_write?(Path.t()) :: boolean()
+  defp can_write?(path) do
+    if File.exists?(path) do
+      path
+      |> Path.expand()
+      |> Path.relative_to_cwd()
+      |> Kernel.<>(" already exists, overwrite?")
+      |> yes?(:yes)
+    else
+      true
+    end
+  end
 end
