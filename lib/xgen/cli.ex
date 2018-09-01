@@ -1,10 +1,6 @@
-defmodule Mix.Tasks.Xgen do
-  use Mix.Task
-
-  @shortdoc "Runs the interactive project generator."
-
+defmodule XGen.CLI do
   @moduledoc """
-  Runs the interactive project generator.
+  Command-line interface for XGen.
 
   ## Options
 
@@ -21,9 +17,12 @@ defmodule Mix.Tasks.Xgen do
     config: :string
   ]
 
-  @impl true
-  @spec run([binary()]) :: :ok | no_return()
-  def run(args) do
+  @spec main([binary()]) :: :ok | no_return()
+  def main(args) do
+    # Enable ANSI printing. This could cause issues on Windows, but it is not
+    # supported yet.
+    Application.put_env(:elixir, :ansi_enabled, true)
+
     info("xgen #{@version}\n")
 
     {opts, _argv} = OptionParser.parse!(args, strict: @switches)
