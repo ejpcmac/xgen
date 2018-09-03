@@ -5,16 +5,16 @@ defmodule XGen.Wizard do
 
   alias IO.ANSI
 
-  @doc """
-  Runs the wizard.
-  """
-  @callback run(opts :: keyword()) :: term() | no_return()
-
   @typedoc "Answer to a yes-no question"
   @type yesno() :: :yes | :no | nil
 
   @yes ~w(y Y yes YES Yes)
   @no ~w(n N no NO No)
+
+  @doc """
+  Runs the wizard.
+  """
+  @callback run(opts :: keyword()) :: term() | no_return()
 
   defmacro __using__(_opts) do
     quote do
