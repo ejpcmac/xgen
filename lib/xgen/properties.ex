@@ -150,6 +150,7 @@ defmodule XGen.Properties do
 
     * `doc` - documentation for the property. It is prefixed by *Returns* in the
       callback documentation and *Sets* in the macro documentation.
+    * `optional` - if set to `true`, makes the property optional.
 
   ## Example
 
@@ -162,6 +163,7 @@ defmodule XGen.Properties do
   """
   defmacro defproperty(name, type, opts \\ []) do
     doc = opts[:doc]
+    optional = !!opts[:optional]
 
     quote do
       if unquote(doc) do
@@ -169,6 +171,10 @@ defmodule XGen.Properties do
       end
 
       @callback unquote(name)() :: unquote(type)
+
+      if unquote(optional) do
+        @optional_callbacks {unquote(name), 0}
+      end
 
       if unquote(doc) do
         @doc "Sets #{unquote(doc)}."
