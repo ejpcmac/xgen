@@ -17,8 +17,14 @@ defmodule XGen.MixProject do
 
   defp deps do
     [
+      # Development dependencies
       {:credo, "~> 0.10.0", only: :dev, runtime: false},
-      {:typed_struct, "~> 0.1.1", runtime: false}
+
+      # Project dependencies
+      {:typed_struct, "~> 0.1.1", runtime: false},
+
+      # Documentation dependencies
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 end
