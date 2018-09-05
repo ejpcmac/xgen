@@ -21,7 +21,7 @@ defmodule XGen.MixProject do
       {:credo, "~> 0.10.0", only: :dev, runtime: false},
 
       # Project dependencies
-      {:typed_struct, "~> 0.1.1", runtime: false},
+      {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}

@@ -7,11 +7,11 @@ defmodule XGen.Project do
 
   alias XGen.Templates
 
-  typedstruct do
-    field :type, XGen.project_type(), enforce: true
-    field :path, String.t(), enforce: true
-    field :app, String.t(), enforce: true
-    field :mod, String.t(), enforce: true
+  typedstruct enforce: true do
+    field :type, XGen.project_type()
+    field :path, String.t()
+    field :app, String.t()
+    field :mod, String.t()
     field :opts, keyword(), default: []
     field :assigns, keyword(), default: []
     field :collection, Templates.collection(), default: []
