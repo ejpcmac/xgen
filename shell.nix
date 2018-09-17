@@ -11,8 +11,9 @@ let
   };
 
   elixir = (beam.packages.erlangR21.override { inherit erlang; }).elixir_1_7;
+  gitflow = gitAndTools.gitflow;
 in
 
 mkShell {
-  buildInputs = [ elixir git ];
+  buildInputs = [ elixir git gitflow ];
 }

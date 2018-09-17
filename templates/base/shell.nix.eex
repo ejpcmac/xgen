@@ -11,10 +11,11 @@ let
   };
 
   elixir = (beam.packages.erlangR21.override { inherit erlang; }).elixir_1_7;
+  gitflow = gitAndTools.gitflow;
 in
 
 mkShell {
-  buildInputs = [ elixir git<%= if @type == :nerves do %> fwup squashfsTools file<% end %> ]
+  buildInputs = [ elixir git gitflow<%= if @type == :nerves do %> fwup squashfsTools file<% end %> ]
     ++ optional stdenv.isLinux libnotify # For ExUnit Notifier on Linux.
     ++ optional stdenv.isLinux inotify-tools # For file_system on Linux.
     ++ optional stdenv.isDarwin terminal-notifier # For ExUnit Notifier on macOS.<%= if @type == :nerves do %>
