@@ -6,9 +6,9 @@ defmodule XGen.Templates.TemplateLister do
   @doc false
   @spec build_templates_map(Path.t()) :: map()
   def build_templates_map(templates_root) do
-    list_templates(templates_root)
-    |> Enum.map(&parse_path/1)
-    |> Enum.into(%{})
+    templates_root
+    |> list_templates()
+    |> Enum.into(%{}, &parse_path/1)
   end
 
   @spec list_templates(Path.t()) :: [String.t()]
