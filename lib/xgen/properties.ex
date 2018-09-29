@@ -1,10 +1,11 @@
 defmodule XGen.Properties do
-  @moduledoc """
+  @moduledoc ~S"""
   Helpers to create domain-specific behaviours with properties to set.
 
-  *Properties* are defined as constant functions. A module using
-  `XGen.Properties` can define property callbacks and helper macros to implement
-  the functions without writing boilerplate code.
+  *Properties* are defined as pure functions returning either a constant or a
+  dynamic value built from assigns. A module using `XGen.Properties` can define
+  property callbacks and helper macros to implement the functions without
+  writing boilerplate code.
 
   ## Example
 
@@ -16,6 +17,7 @@ defmodule XGen.Properties do
         # Each defined property results in a @callback and a macro.
         defproperty :name, String.t()
         defproperty :options, keyword()
+        defproperty :default, String.t()
       end
 
   Then, it is possible do define modules setting those properties:
@@ -26,7 +28,17 @@ defmodule XGen.Properties do
         # Macros named from properties help implement the callbacks.
         name "My implementation"
         options an_option: :great, a_string: "Yay!"
+
+        # You can also use assigns to create dynamic properties.
+        default Macro.camelize(@some_assign)
       end
+
+  You can get the properties by calling the generated functions:
+
+      iex> MyImplementation.name()
+      "My implementation"
+      iex> MyImplementation.default(some_assign: "some_value")
+      "SomeValue"
 
   ## Behind the scenes
 
@@ -55,23 +67,28 @@ defmodule XGen.Properties do
 
       ## Generates
 
-      @callback name :: String.t()
+      @callback name(assigns :: keyword() | map()) :: String.t()
 
       defmacro name(value) do
         quote do
           @impl true
-          def name, do: unquote(value)
+          def name(var!(assigns) \\ []) do
+            _ = var!(assigns)
+            unquote(XGen.Properties.__handle_assigns__(value))
+          end
         end
       end
 
   This way, when you define an implementation of this behaviour, you can write:
 
-      name "Example"
+      name "Example: #{@variable}"
 
   instead of:
 
       @impl true
-      def name, do: "Example"
+      def name(assigns \\ []) do
+        "Example: #{Access.get(assigns, :variable)}"
+      end
   """
 
   @doc false
@@ -141,7 +158,7 @@ defmodule XGen.Properties do
   @doc """
   Defines a property.
 
-  A property is a constant function to be defined by modules implementing the
+  A property is a pure function to be defined by modules implementing the
   behaviour. This macro defines a callback and a macro to help define its
   implementation. This aims to provide a domain-specific language to create
   domain-specific modules.
@@ -170,10 +187,10 @@ defmodule XGen.Properties do
         @doc "Returns #{unquote(doc)}."
       end
 
-      @callback unquote(name)() :: unquote(type)
+      @callback unquote(name)(assigns :: keyword() | map()) :: unquote(type)
 
       if unquote(optional) do
-        @optional_callbacks {unquote(name), 0}
+        @optional_callbacks {unquote(name), 1}
       end
 
       if unquote(doc) do
@@ -182,12 +199,29 @@ defmodule XGen.Properties do
 
       defmacro unquote(name)(value) do
         name = unquote(name)
+        dynamic_value = unquote(__MODULE__).__handle_assigns__(value)
 
         quote do
           @impl true
-          def unquote(name)(), do: unquote(value)
+          def unquote(name)(var!(assigns) \\ []) do
+            _ = var!(assigns)
+            unquote(dynamic_value)
+          end
         end
       end
     end
   end
+
+  @doc false
+  def __handle_assigns__(block) do
+    Macro.prewalk(block, &parse/1)
+  end
+
+  defp parse({:@, _meta, [{name, _, _atom}]}) when is_atom(name) do
+    quote do
+      Access.get(var!(assigns), unquote(name))
+    end
+  end
+
+  defp parse(block), do: block
 end
