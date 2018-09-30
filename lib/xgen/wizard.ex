@@ -73,8 +73,8 @@ defmodule XGen.Wizard do
   ## Options
 
     * `default` - default value for empty replies (printed in the prompt if set)
-    * `mandatory` - wether a non-empty input is mandatory (default: `false`)
-    * `error_message` - the message to print if a mandatory input is missing
+    * `required` - wether a non-empty input is required (default: `false`)
+    * `error_message` - the message to print if a required input is missing
   """
   @spec prompt(String.t()) :: String.t()
   @spec prompt(String.t(), keyword()) :: String.t()
@@ -82,7 +82,7 @@ defmodule XGen.Wizard do
     (message <> format_prompt(opts[:default]))
     |> IO.gets()
     |> String.trim()
-    |> parse_response(opts[:default], !!opts[:mandatory])
+    |> parse_response(opts[:default], !!opts[:required])
     |> case do
       nil ->
         error_message = opts[:error_message] || "You must provide a value!"
@@ -164,7 +164,7 @@ defmodule XGen.Wizard do
   @spec get_choice(pos_integer()) :: pos_integer()
   defp get_choice(max) do
     "Choice"
-    |> prompt(mandatory: true, error_message: "You must make a choice!")
+    |> prompt(required: true, error_message: "You must make a choice!")
     |> Integer.parse()
     |> case do
       {choice, _} when choice in 1..max ->

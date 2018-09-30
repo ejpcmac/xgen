@@ -9,7 +9,7 @@ defmodule XGen.Wizards.ElixirBase do
   @spec run :: {String.t(), keyword()}
   @spec run(keyword()) :: {String.t(), keyword()}
   def run(_opts \\ []) do
-    path = prompt("Project directory", mandatory: true)
+    path = prompt("Project directory", required: true)
     app = prompt("OTP application name", default: Path.basename(path))
     module = prompt("Module name", default: Macro.camelize(app))
 

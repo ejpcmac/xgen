@@ -16,8 +16,8 @@ defmodule XGen.Wizards.ConfigCreator do
     """)
 
     config = [
-      name: prompt("Full name", mandatory: true),
-      github_account: prompt("GitHub account", mandatory: true)
+      name: prompt("Full name", required: true),
+      github_account: prompt("GitHub account", required: true)
     ]
 
     file = opts[:file] || user_home() |> Path.join(".xgen.exs")
