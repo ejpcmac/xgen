@@ -79,7 +79,7 @@ defmodule XGen.Wizard do
   @spec prompt(String.t()) :: String.t()
   @spec prompt(String.t(), keyword()) :: String.t()
   def prompt(message, opts \\ []) do
-    (message <> format_prompt(opts[:default]))
+    (message <> format_default(opts[:default]))
     |> IO.gets()
     |> String.trim()
     |> parse_response(opts[:default], !!opts[:required])
@@ -94,9 +94,9 @@ defmodule XGen.Wizard do
     end
   end
 
-  @spec format_prompt(String.t() | nil) :: String.t()
-  defp format_prompt(nil), do: ": "
-  defp format_prompt(default), do: " [#{default}]: "
+  @spec format_default(String.t() | nil) :: String.t()
+  defp format_default(nil), do: ": "
+  defp format_default(default), do: " [#{default}]: "
 
   @spec parse_response(String.t(), String.t() | nil, boolean()) ::
           String.t() | nil
