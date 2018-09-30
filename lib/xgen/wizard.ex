@@ -193,7 +193,7 @@ defmodule XGen.Wizard do
     )
     |> Integer.parse()
     |> case do
-      {choice, _} when choice in 1..max ->
+      {choice, ""} when choice in 1..max ->
         choice
 
       _ ->
