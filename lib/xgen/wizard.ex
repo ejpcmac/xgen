@@ -145,7 +145,8 @@ defmodule XGen.Wizard do
   key of the chosen one returned.
   """
   @spec choose(String.t(), keyword()) :: atom()
-  def choose(message, list) do
+  @spec choose(String.t(), keyword(), atom()) :: atom()
+  def choose(message, list, default \\ nil) do
     info(message <> "\n")
 
     list
@@ -154,17 +155,27 @@ defmodule XGen.Wizard do
     |> Enum.each(fn {elem, i} -> IO.puts("  #{i}. #{elem}") end)
 
     info("")
-    index = list |> length() |> get_choice()
+
+    default_index =
+      with v when not is_nil(v) <- default,
+           i when not is_nil(i) <- Enum.find_index(list, &(elem(&1, 0) == v)),
+           do: Integer.to_string(i + 1)
+
+    index = list |> length() |> get_choice(default_index)
 
     list
     |> Enum.at(index - 1)
     |> elem(0)
   end
 
-  @spec get_choice(pos_integer()) :: pos_integer()
-  defp get_choice(max) do
+  @spec get_choice(pos_integer(), pos_integer() | nil) :: pos_integer()
+  defp get_choice(max, default) do
     "Choice"
-    |> prompt(required: true, error_message: "You must make a choice!")
+    |> prompt(
+      default: default,
+      required: true,
+      error_message: "You must make a choice!"
+    )
     |> Integer.parse()
     |> case do
       {choice, _} when choice in 1..max ->
@@ -172,7 +183,7 @@ defmodule XGen.Wizard do
 
       _ ->
         error("The choice must be an integer between 1 and #{max}.\n")
-        get_choice(max)
+        get_choice(max, default)
     end
   end
 
