@@ -75,11 +75,12 @@ defmodule XGen.Wizard do
     * `default` - default value for empty replies (printed in the prompt if set)
     * `required` - wether a non-empty input is required (default: `false`)
     * `error_message` - the message to print if a required input is missing
+    * `length` - the range of acceptable string length
   """
   @spec prompt(String.t()) :: String.t()
   @spec prompt(String.t(), keyword()) :: String.t()
   def prompt(message, opts \\ []) do
-    (message <> format_default(opts[:default]))
+    (message <> format_length(opts[:length]) <> format_default(opts[:default]))
     |> IO.gets()
     |> String.trim()
     |> parse_response(opts[:default], !!opts[:required])
@@ -90,9 +91,19 @@ defmodule XGen.Wizard do
         prompt(message, opts)
 
       value ->
-        value
+        if valid_length?(value, opts[:length]) do
+          value
+        else
+          min..max = opts[:length]
+          error("The value must be #{min} to #{max} characters long.\n")
+          prompt(message, opts)
+        end
     end
   end
+
+  @spec format_length(Range.t() | nil) :: String.t()
+  defp format_length(nil), do: ""
+  defp format_length(min..max), do: " (#{min}-#{max} characters)"
 
   @spec format_default(String.t() | nil) :: String.t()
   defp format_default(nil), do: ": "
@@ -103,6 +114,10 @@ defmodule XGen.Wizard do
   defp parse_response("", nil, true), do: nil
   defp parse_response("", default, _) when not is_nil(default), do: default
   defp parse_response(value, _default, _), do: value
+
+  @spec valid_length?(String.t(), Range.t() | nil) :: boolean()
+  defp valid_length?(_value, nil), do: true
+  defp valid_length?(value, min..max), do: String.length(value) in min..max
 
   @doc """
   Asks the user a yes-no `question`.
