@@ -66,7 +66,7 @@ defmodule XGen.Wizard do
   end
 
   @doc """
-  Prints the given `message` and prompts a user for input.
+  Prints the given `message` and prompts the user for input.
 
   The result string is trimmed.
 
@@ -118,6 +118,46 @@ defmodule XGen.Wizard do
   @spec valid_length?(String.t(), Range.t() | nil) :: boolean()
   defp valid_length?(_value, nil), do: true
   defp valid_length?(value, min..max), do: String.length(value) in min..max
+
+  @doc """
+  Prints the given `message` and prompts the user for an integer.
+
+  ## Options
+
+    * `default` - default value for empty replies (printed in the prompt if set)
+    * `range` - the acceptable range
+  """
+  @spec prompt_integer(String.t()) :: integer()
+  @spec prompt_integer(String.t(), keyword()) :: integer()
+  def prompt_integer(message, opts \\ []) do
+    default = if opts[:default], do: opts[:default] |> Integer.to_string()
+
+    (message <> format_range(opts[:range]))
+    |> prompt(default: default, required: true)
+    |> Integer.parse()
+    |> case do
+      {choice, ""} ->
+        if in_range?(choice, opts[:range]) do
+          choice
+        else
+          min..max = opts[:range]
+          error("The value must be between #{min} and #{max}.\n")
+          prompt_integer(message, opts)
+        end
+
+      _ ->
+        error("The value must be an integer.\n")
+        prompt_integer(message, opts)
+    end
+  end
+
+  @spec format_range(Range.t() | nil) :: String.t()
+  defp format_range(nil), do: ""
+  defp format_range(min..max), do: " (#{min}-#{max})"
+
+  @spec in_range?(integer(), Range.t() | nil) :: boolean()
+  defp in_range?(_value, nil), do: true
+  defp in_range?(value, min..max), do: value in min..max
 
   @doc """
   Asks the user a yes-no `question`.
