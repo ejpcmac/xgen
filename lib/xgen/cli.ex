@@ -26,7 +26,7 @@ defmodule XGen.CLI do
     info("xgen #{@version}\n")
 
     {opts, _argv} = OptionParser.parse!(args, strict: @switches)
-    config_file = opts[:config] || user_home() |> Path.join(".xgen.exs")
+    config_file = opts[:config] || System.user_home() |> Path.join(".xgen.exs")
 
     unless File.regular?(config_file) do
       ConfigCreator.run(file: config_file)

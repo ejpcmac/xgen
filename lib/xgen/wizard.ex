@@ -186,15 +186,4 @@ defmodule XGen.Wizard do
         get_choice(max, default)
     end
   end
-
-  @doc """
-  Returns the user’s home or exits with an error.
-  """
-  @spec user_home :: String.t() | no_return()
-  def user_home do
-    case System.user_home() do
-      nil -> error("Error: the current user has no home directory!")
-      home -> home
-    end
-  end
 end

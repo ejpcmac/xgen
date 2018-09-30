@@ -16,7 +16,7 @@ defmodule XGen.Wizards.ProjectGenerator do
   @spec run :: :ok
   @spec run(keyword()) :: :ok
   def run(opts \\ []) do
-    config_file = opts[:config] || user_home() |> Path.join(".xgen.exs")
+    config_file = opts[:config] || System.user_home() |> Path.join(".xgen.exs")
 
     case choose("Which kind of project do you want to start?", @project_types) do
       :std -> Std.run(config: config_file)

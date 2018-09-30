@@ -20,7 +20,7 @@ defmodule XGen.Wizards.ConfigCreator do
       github_account: prompt("GitHub account", required: true)
     ]
 
-    file = opts[:file] || user_home() |> Path.join(".xgen.exs")
+    file = opts[:file] || System.user_home() |> Path.join(".xgen.exs")
 
     case File.write(file, Macro.to_string(quote(do: unquote(config)))) do
       :ok ->
