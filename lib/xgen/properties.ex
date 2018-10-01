@@ -74,7 +74,7 @@ defmodule XGen.Properties do
           @impl true
           def name(var!(assigns) \\ []) do
             _ = var!(assigns)
-            unquote(XGen.Properties.__handle_assigns__(value))
+            unquote(Macro.prewalk(value, &EEx.Engine.handle_assign/1))
           end
         end
       end
@@ -87,7 +87,7 @@ defmodule XGen.Properties do
 
       @impl true
       def name(assigns \\ []) do
-        "Example: #{Access.get(assigns, :variable)}"
+        "Example: #{Access.fetch!(assigns, :variable)}"
       end
   """
 
@@ -199,7 +199,7 @@ defmodule XGen.Properties do
 
       defmacro unquote(name)(value) do
         name = unquote(name)
-        dynamic_value = unquote(__MODULE__).__handle_assigns__(value)
+        dynamic_value = Macro.prewalk(value, &EEx.Engine.handle_assign/1)
 
         quote do
           @impl true
@@ -211,17 +211,4 @@ defmodule XGen.Properties do
       end
     end
   end
-
-  @doc false
-  def __handle_assigns__(block) do
-    Macro.prewalk(block, &parse/1)
-  end
-
-  defp parse({:@, _meta, [{name, _, _atom}]}) when is_atom(name) do
-    quote do
-      Access.get(var!(assigns), unquote(name))
-    end
-  end
-
-  defp parse(block), do: block
 end
