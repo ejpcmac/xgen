@@ -122,7 +122,7 @@ defmodule XGen.Templates do
   @doc """
   Copies templates from `collection` to the project directory.
   """
-  @spec copy(collection(), keyword()) :: :ok
+  @spec copy(collection(), keyword() | map()) :: :ok
   def copy(collection, assigns) do
     Enum.each(collection, fn template ->
       {type, target} = @templates[template]

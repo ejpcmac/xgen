@@ -225,11 +225,11 @@ defmodule XGen.Option do
 
   alias XGen.Wizard
 
-  @typedoc "The possible types for options"
-  @type type() :: :string | :integer | :yesno | :choice
-
   @typedoc "A generator option"
   @type t() :: module()
+
+  @typedoc "The possible types for options"
+  @type type() :: :string | :integer | :yesno | :choice
 
   defproperty :key, atom(), doc: "the option key"
   defproperty :type, type(), doc: "the option type"
@@ -286,12 +286,12 @@ defmodule XGen.Option do
   To resolve a list of option, you can use this function in conjonction with
   `Enum.reduce/3`:
 
-      iex> Enum.reduce([AnOption, AnotherOption], [], &XGen.Option.resolve/2)
+      iex> Enum.reduce([AnOption, AnotherOption], %{}, &XGen.Option.resolve/2)
       Value: some value
       Number of things (1-10): 7
-      [another_option: 7, an_option: "some value"]
+      %{an_option: "some value", another_option: 7}
   """
-  @spec resolve(t(), keyword()) :: keyword()
+  @spec resolve(t(), map()) :: map()
   def resolve(option, opts) do
     properties = option.__info__(:functions)
 
@@ -310,15 +310,18 @@ defmodule XGen.Option do
 
     # Yes/no question can lead to more options being resolved.
     if type == :yesno and value and is_list(options[:if_yes]) do
-      [{key, value}] ++ Enum.reduce(options[:if_yes], [], &resolve/2) ++ opts
+      opts
+      |> Map.merge(Enum.reduce(options[:if_yes], %{}, &resolve/2))
+      |> Map.put(key, value)
     else
-      [{key, value} | opts]
+      Map.put(opts, key, value)
     end
   end
 
   @spec get_value(String.t(), type(), term(), function(), keyword()) :: term()
   defp get_value(prompt, type, default, validator, opts) do
-    case type do
+    type
+    |> case do
       :string -> Wizard.prompt(prompt, [default: default] ++ opts)
       :integer -> Wizard.prompt_integer(prompt, [default: default] ++ opts)
       :yesno -> Wizard.yes?(prompt, default)
