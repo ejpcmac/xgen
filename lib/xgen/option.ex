@@ -3,9 +3,9 @@ defmodule XGen.Option do
   Helpers to create and work with generator options.
 
   An option is a module with some [*properties*](XGen.Properties.html) to define
-  through macros:
+  in a domain-specific language. The given properties are:
 
-    * `key` - the key to add in the resolved options keyword list
+    * `key` - the key to add in the options map after resolution
     * `type` - the option type
     * `default` - a default value *(optional)*
     * `options` - some options *(optional, see [Types and their
@@ -14,7 +14,10 @@ defmodule XGen.Option do
     * `prompt` - the user prompt
     * `documentation` - documentation for the option *(optional)*
 
-  If set, `name` and `documentation` need to come together.
+  If set, `name` and `documentation` need to be defined together.
+
+  In addition to these properties, an option can define an optional [validator
+  callback](#module-validators).
 
   ## Examples
 
@@ -208,17 +211,17 @@ defmodule XGen.Option do
   This function returns an updated keyword list with the value of the newly
   resolved option:
 
-      iex> XGen.Option.resolve(AnOption, [previous: "value"])
+      iex> XGen.Option.resolve(AnOption, %{previous: "value"})
       Validate the option? (y/n) y
-      [an_option: true, previous: "value"]
+      %{an_option: true, previous: "value"}
 
   Adding the new value to the keyword list makes possible to chain options. For
   instance, you can use `Enum.reduce/3` to resolve more options:
 
-      iex> Enum.reduce([AnOption, AnotherOption], [], &XGen.Option.resolve/2)
+      iex> Enum.reduce([AnOption, AnotherOption], %{}, &XGen.Option.resolve/2)
       Number of files (1-10): 5
       Confirm? [Y/n]
-      [another_option: true, an_option: 5]
+      %{an_option: 5, another_option: true}
   """
 
   use XGen.Properties
@@ -228,7 +231,7 @@ defmodule XGen.Option do
   @typedoc "A generator option"
   @type t() :: module()
 
-  @typedoc "The possible types for options"
+  @typedoc "Option types"
   @type type() :: :string | :integer | :yesno | :choice
 
   defproperty :key, atom(), doc: "the option key"
@@ -244,6 +247,13 @@ defmodule XGen.Option do
 
   @doc """
   Validates the user input.
+
+  If the value is valid, a validator must return `{:ok, validated_value}`. The
+  validated value may be the same as `value` or may be transformed to match a
+  given format.
+
+  If the value is invalid, `{:error, message}` must be returned. The message
+  will be printed to the user.
   """
   @callback validator(value :: term()) ::
               {:ok, validated_value :: term()}
