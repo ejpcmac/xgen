@@ -118,7 +118,7 @@ defmodule XGen do
   end
 
   @spec fetch_config_file!(keyword()) :: keyword() | no_return()
-  defp fetch_config_file!(opts) do
+  def fetch_config_file!(opts) do
     file = opts[:config] || System.user_home!() |> Path.join(".xgen.exs")
 
     unless File.regular?(file) do

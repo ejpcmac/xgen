@@ -1,4 +1,4 @@
-defmodule <%= @mod %>.SSHServer do
+defmodule <%= @module %>.SSHServer do
   @moduledoc """
   SSH server for the Nerves application.
   """

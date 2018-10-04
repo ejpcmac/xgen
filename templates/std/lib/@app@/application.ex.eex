@@ -1,4 +1,4 @@
-defmodule <%= @mod %>.Application do
+defmodule <%= @module %>.Application do
   @moduledoc false
 
   use Application
@@ -6,11 +6,11 @@ defmodule <%= @mod %>.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # <%= @mod %>.Worker1,
-      # {<%= @mod %>.Worker2, arg},
+      # <%= @module %>.Worker1,
+      # {<%= @module %>.Worker2, arg},
     ]
 
-    opts = [strategy: :one_for_one, name: <%= @mod %>.Supervisor]
+    opts = [strategy: :one_for_one, name: <%= @module %>.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

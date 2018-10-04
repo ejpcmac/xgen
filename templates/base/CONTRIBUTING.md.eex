@@ -1,4 +1,4 @@
-# Contributing to <%= @mod %>
+# Contributing to <%= @module %>
 
 This project uses [git-flow](https://github.com/petervanderdoes/gitflow-avh).
 The `master` branch is reserved to releases: the development process occurs on

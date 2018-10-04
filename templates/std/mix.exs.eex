@@ -1,8 +1,8 @@
-defmodule <%= @mod %>.MixProject do
+defmodule <%= @module %>.MixProject do
   use Mix.Project
 
   @version "0.1.0-dev"
-  <%= unless @package, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
+  <%= unless @package?, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
 
   def project do
     [
@@ -20,20 +20,20 @@ defmodule <%= @mod %>.MixProject do
 
       # Docs
       docs: [
-        main: "<%= @mod %>"<%= if @package, do: "," %>
-        <%= unless @package, do: "# " %>source_url: @repo_url,
-        <%= unless @package, do: "# " %>source_ref: "v#{@version}"
-      ]<%= if @package do %>,
+        main: "<%= @module %>"<%= if @package?, do: "," %>
+        <%= unless @package?, do: "# " %>source_url: @repo_url,
+        <%= unless @package?, do: "# " %>source_ref: "v#{@version}"
+      ]<%= if @package? do %>,
 
       # Package
       package: package(),
-      description: "Description for <%= @mod %>."<% end %>
+      description: "Description for <%= @module %>."<% end %>
     ]
   end
 
   def application do
-    [<%= if @sup do %>
-      mod: {<%= @mod %>.Application, []},<% end %>
+    [<%= if @sup? do %>
+      mod: {<%= @module %>.Application, []},<% end %>
       extra_applications: [:logger]
     ]
   end
@@ -55,7 +55,7 @@ defmodule <%= @mod %>.MixProject do
       # Project dependencies
 
       # Documentation dependencies
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}<%= if @rel do %>,
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}<%= if @release? do %>,
 
       # Release dependencies
       {:distillery, "~> 2.0"}<% end %>
@@ -82,7 +82,7 @@ defmodule <%= @mod %>.MixProject do
       "coveralls.detail": :test,
       "coveralls.html": :test
     ]
-  end<%= if @package do %>
+  end<%= if @package? do %>
 
   defp package do
     [<%= if @license do %>

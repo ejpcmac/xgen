@@ -34,7 +34,7 @@
 ##
 
 # Erang VM
-erl_crash.dump<%= if @push or @ssh do %>
+erl_crash.dump<%= if @type == :nerves and (@push? or @ssh?) do %>
 
 ##
 ## Private data

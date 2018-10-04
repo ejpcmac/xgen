@@ -1,6 +1,6 @@
-defmodule <%= @mod %> do
+defmodule <%= @module %> do
   @moduledoc """
-  Documentation for <%= @mod %>.
+  Documentation for <%= @module %>.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule <%= @mod %> do
 
   ## Examples
 
-      iex> <%= @mod %>.hello()
+      iex> <%= @module %>.hello()
       :world
 
   """
