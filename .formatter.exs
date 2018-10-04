@@ -17,6 +17,12 @@
     name: 1,
     documentation: 1,
     prompt: 1,
-    options: 1
+    options: 1,
+
+    # Generators
+    pregen: 1,
+    postgen: 1,
+    collection: 1,
+    collection: 2
   ]
 ]
