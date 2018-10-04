@@ -2,8 +2,7 @@ defmodule XGen.Option do
   @moduledoc """
   Helpers to create and resolve generator options.
 
-  An option is a module with some [*properties*](XGen.Properties.html) to define
-  in a domain-specific language. The given properties are:
+  Options have some properties do define:
 
     * `key` - the key to add in the options map after resolution
     * `type` - the option type
@@ -16,8 +15,10 @@ defmodule XGen.Option do
 
   If set, `name` and `documentation` need to be defined together.
 
-  In addition to these properties, an option can define an optional [validator
+  In addition to these properties, options can define an optional [validator
   callback](#module-validators).
+
+  Options are declared as modules using a domain-specific language.
 
   ## Examples
 
@@ -34,10 +35,10 @@ defmodule XGen.Option do
         name "An option"
         prompt "Activate the option?"
 
-        documentation \"\"\"
+        documentation \"""
         This option enables the achievement of great things. If you choose to
         activate it (the default behaviour), you will not regret it.
-        \"\"\"
+        \"""
       end
 
   If you want to define multiple options in a module as a collection, you can
@@ -47,8 +48,11 @@ defmodule XGen.Option do
       defmodule OptionCollection do
         @moduledoc false
 
+        # `collection: true` imports only the defoption/2 macro and avoids
+        # defining OptionCollection as an option.
         use XGen.Option, collection: true
 
+        # `defoption` defines a module use-ing XGen.Option.
         defoption AnOption do
           key :an_option
           type :string
