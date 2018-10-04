@@ -1,6 +1,6 @@
 defmodule XGen.Option do
   @moduledoc """
-  Helpers to create and work with generator options.
+  Helpers to create and resolve generator options.
 
   An option is a module with some [*properties*](XGen.Properties.html) to define
   in a domain-specific language. The given properties are:
