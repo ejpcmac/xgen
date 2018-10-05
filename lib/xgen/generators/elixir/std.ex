@@ -7,6 +7,7 @@ defmodule XGen.Generators.Elixir.Std do
 
   import XGen.Generator.CallbackHelpers
   import XGen.Generator.StandardCallbacks
+  import XGen.Generators.Elixir.Callbacks
 
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
@@ -27,6 +28,8 @@ defmodule XGen.Generators.Elixir.Std do
     Base.License,
     Base.Git
   ]
+
+  pregen :cookie_generator
 
   collection do
     [

@@ -16,7 +16,7 @@ environment :dev do
   set include_erts: false
 
   set cookie:
-        :"<%= cookie() %>"
+        :"<%= @cookie_generator.() %>"
 end
 
 environment :prod do
@@ -24,7 +24,7 @@ environment :prod do
   set include_src: false
 
   set cookie:
-        :"<%= cookie() %>"
+        :"<%= @cookie_generator.() %>"
 end
 
 release :<%= @app %> do

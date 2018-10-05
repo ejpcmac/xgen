@@ -49,10 +49,6 @@ defmodule XGen.Templates do
     end)
   end
 
-  # Helper for generating cookies in templates.
-  @spec cookie :: String.t()
-  defp cookie, do: 48 |> :crypto.strong_rand_bytes() |> Base.encode64()
-
   ##
   ## De-Mixed helpers inspired by Mix.Generator
   ##

@@ -6,13 +6,11 @@ use Mix.Releases.Config,
 # https://hexdocs.pm/distillery/configuration.html
 
 environment :dev do
-  set cookie:
-        :"<%= @cookie %>"
+  set cookie: :"Unused with nerves. See vm.args."
 end
 
 environment :prod do
-  set cookie:
-        :"<%= @cookie %>"
+  set cookie: :"Unused with nerves. See vm.args."
 end
 
 # Release for the Nerves system.

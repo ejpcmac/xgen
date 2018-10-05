@@ -17,7 +17,23 @@ defmodule XGen.Generators.Elixir.Callbacks do
   """
   @spec cookie(map()) :: map()
   def cookie(opts) do
-    cookie = 48 |> :crypto.strong_rand_bytes() |> Base.encode64()
-    Map.put(opts, :cookie, cookie)
+    Map.put(opts, :cookie, generate_cookie())
+  end
+
+  @doc """
+  Adds a cookie generator to the options.
+  """
+  @spec cookie_generator(map()) :: map()
+  def cookie_generator(opts) do
+    Map.put(opts, :cookie_generator, &generate_cookie/0)
+  end
+
+  ##
+  ## Helpers
+  ##
+
+  @spec generate_cookie :: String.t()
+  defp generate_cookie do
+    48 |> :crypto.strong_rand_bytes() |> Base.encode64()
   end
 end
