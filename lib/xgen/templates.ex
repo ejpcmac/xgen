@@ -41,6 +41,7 @@ defmodule XGen.Templates do
     Enum.each(collection, fn template ->
       {type, target} = @templates[template]
 
+      # Replace @assing@ by the assign value in the target path.
       target =
         ~r/@(\w*)@/u
         |> Regex.scan(target, capture: :all_but_first)
