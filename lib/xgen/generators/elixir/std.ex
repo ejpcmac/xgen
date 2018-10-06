@@ -34,36 +34,36 @@ defmodule XGen.Generators.Elixir.Std do
 
   collection do
     [
-      "base/README.md.eex",
-      "base/CHANGELOG.md",
-      "base/shell.nix.eex",
-      "base/.envrc",
-      "base/.editorconfig",
-      "std/.formatter.exs.eex",
-      "base/.credo.exs",
-      "base/.dialyzer_ignore",
-      "base/.gitignore.eex",
-      "std/mix.exs.eex",
-      "std/config/config.exs",
-      "std/lib/@module_path@.ex.eex",
-      "std/test/support/",
-      "std/test/test_helper.exs",
-      "std/test/@module_path@_test.exs.eex"
+      "_base_/README.md.eex",
+      "_base_/CHANGELOG.md",
+      "_elixir_/_base_/shell.nix.eex",
+      "_base_/.envrc",
+      "_base_/.editorconfig",
+      "_elixir_/_std_/.formatter.exs.eex",
+      "_elixir_/_base_/.credo.exs",
+      "_elixir_/_base_/.dialyzer_ignore",
+      "_elixir_/_base_/.gitignore.eex",
+      "_elixir_/_std_/mix.exs.eex",
+      "_elixir_/_std_/config/config.exs",
+      "_elixir_/_std_/lib/@module_path@.ex.eex",
+      "_elixir_/_std_/test/support/",
+      "_elixir_/_std_/test/test_helper.exs",
+      "_elixir_/_std_/test/@module_path@_test.exs.eex"
     ]
   end
 
-  collection @sup?, do: ["std/lib/@module_path@/application.ex.eex"]
+  collection @sup?, do: ["_elixir_/_std_/lib/@module_path@/application.ex.eex"]
 
   collection @release? do
     [
-      "std/rel/plugins/.gitignore",
-      "std/rel/config.exs.eex"
+      "_elixir_/_std_/rel/plugins/.gitignore",
+      "_elixir_/_std_/rel/config.exs.eex"
     ]
   end
 
-  collection @contributing?, do: ["base/CONTRIBUTING.md.eex"]
-  collection @license?, do: ["base/LICENSE+#{@license}.eex"]
-  collection @git?, do: ["base/.gitsetup"]
+  collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
+  collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]
+  collection @git?, do: ["_base_/.gitsetup"]
 
   postgen :init_git
   postgen :prompt_to_build

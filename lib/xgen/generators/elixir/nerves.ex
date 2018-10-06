@@ -38,31 +38,35 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   collection do
     [
-      "base/README.md.eex",
-      "base/CHANGELOG.md",
-      "base/shell.nix.eex",
-      "base/.envrc",
-      "base/.editorconfig",
-      "nerves/.formatter.exs",
-      "base/.gitignore.eex",
-      "nerves/mix.exs.eex",
-      "nerves/config/config.exs.eex",
-      "std/lib/@module_path@.ex.eex",
-      "nerves/rel/plugins/.gitignore",
-      "nerves/rel/config.exs.eex",
-      "nerves/rel/vm.args.eex",
-      "nerves/rootfs_overlay/etc/erlinit.config",
-      "nerves/rootfs_overlay/etc/iex.exs",
-      "nerves/test/test_helper.exs"
+      "_base_/README.md.eex",
+      "_base_/CHANGELOG.md",
+      "_elixir_/_base_/shell.nix.eex",
+      "_base_/.envrc",
+      "_base_/.editorconfig",
+      "_elixir_/_nerves_/.formatter.exs",
+      "_elixir_/_base_/.gitignore.eex",
+      "_elixir_/_nerves_/mix.exs.eex",
+      "_elixir_/_nerves_/config/config.exs.eex",
+      "_elixir_/_std_/lib/@module_path@.ex.eex",
+      "_elixir_/_nerves_/rel/plugins/.gitignore",
+      "_elixir_/_nerves_/rel/config.exs.eex",
+      "_elixir_/_nerves_/rel/vm.args.eex",
+      "_elixir_/_nerves_/rootfs_overlay/etc/erlinit.config",
+      "_elixir_/_nerves_/rootfs_overlay/etc/iex.exs",
+      "_elixir_/_nerves_/test/test_helper.exs"
     ]
   end
 
-  collection @sup?, do: ["nerves/lib/@module_path@/application.ex.eex"]
-  collection @push? or @ssh?, do: ["nerves/gen-ssh-keys"]
-  collection @ssh?, do: ["nerves/lib/@module_path@/ssh_server.ex.eex"]
-  collection @contributing?, do: ["base/CONTRIBUTING.md.eex"]
-  collection @license?, do: ["base/LICENSE+#{@license}.eex"]
-  collection @git?, do: ["base/.gitsetup"]
+  collection @sup?,
+    do: ["_elixir_/_nerves_/lib/@module_path@/application.ex.eex"]
+
+  collection @ssh?,
+    do: ["_elixir_/_nerves_/lib/@module_path@/ssh_server.ex.eex"]
+
+  collection @push? or @ssh?, do: ["_elixir_/_nerves_/gen-ssh-keys"]
+  collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
+  collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]
+  collection @git?, do: ["_base_/.gitsetup"]
 
   postgen :generate_ssh_keys
   postgen :init_git

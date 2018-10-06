@@ -39,14 +39,14 @@ defmodule XGen.Templates.TemplateLister do
         _ -> :text
       end
 
-    # Remove the first directory which represents the generator and special
-    # extentions.
+    # Removes leading directories with underscores which represents generators
+    # and special extentions.
     target =
       path
-      |> String.replace(~r(^[^/]+/), "")
+      |> String.replace(~r|^(_[^/]+_/)*|, "")
       |> String.trim_trailing(".eex")
       |> String.trim_trailing(".xgenkeep")
-      |> String.replace(~r(\+.*), "")
+      |> String.replace(~r|\+.*|, "")
 
     {source, {type, target}}
   end
