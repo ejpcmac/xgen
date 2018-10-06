@@ -7,7 +7,7 @@ defmodule XGen.Templates do
 
   alias __MODULE__.TemplateLister
 
-  @typedoc "A template collection"
+  @typedoc "A collection of templates"
   @type collection() :: [String.t()]
 
   @templates_root Path.expand("../../templates", __DIR__)

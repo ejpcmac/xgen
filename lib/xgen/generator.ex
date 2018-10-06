@@ -167,9 +167,6 @@ defmodule XGen.Generator do
   @typedoc "A project generator"
   @type t() :: module()
 
-  @typedoc "A collection of templates"
-  @type collection() :: [String.t()]
-
   defproperty :type, atom(), doc: "the project type"
   defproperty :name, String.t(), doc: "the generator name"
   defproperty :options, [Option.t()], doc: "the list of options"
@@ -241,7 +238,7 @@ defmodule XGen.Generator do
 
     quote do
       @doc false
-      @spec __build_collection__(map()) :: unquote(__MODULE__).collection()
+      @spec __build_collection__(map()) :: XGen.Templates.collection()
       def __build_collection__(opts) do
         Enum.flat_map(0..@collection_num, &get_collection(&1, opts))
       end
