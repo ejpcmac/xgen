@@ -9,7 +9,7 @@ defmodule XGen.Generators.Elixir.Callbacks do
   @spec module_path(map()) :: map()
   def module_path(%{module: module} = opts) do
     name = Macro.underscore(module)
-    Map.put(opts, :module_file, name)
+    Map.put(opts, :module_path, name)
   end
 
   @doc """

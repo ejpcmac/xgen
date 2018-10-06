@@ -29,6 +29,7 @@ defmodule XGen.Generators.Elixir.Std do
     Base.Git
   ]
 
+  pregen :module_path
   pregen :cookie_generator
 
   collection do
@@ -44,14 +45,14 @@ defmodule XGen.Generators.Elixir.Std do
       "base/.gitignore.eex",
       "std/mix.exs.eex",
       "std/config/config.exs",
-      "std/lib/@app@.ex.eex",
+      "std/lib/@module_path@.ex.eex",
       "std/test/support/",
       "std/test/test_helper.exs",
-      "std/test/@app@_test.exs.eex"
+      "std/test/@module_path@_test.exs.eex"
     ]
   end
 
-  collection @sup?, do: ["std/lib/@app@/application.ex.eex"]
+  collection @sup?, do: ["std/lib/@module_path@/application.ex.eex"]
 
   collection @release? do
     [

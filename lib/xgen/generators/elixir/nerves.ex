@@ -32,6 +32,7 @@ defmodule XGen.Generators.Elixir.Nerves do
     Base.Git
   ]
 
+  pregen :module_path
   pregen :cookie
   pregen :supervision_for_ssh
 
@@ -46,7 +47,7 @@ defmodule XGen.Generators.Elixir.Nerves do
       "base/.gitignore.eex",
       "nerves/mix.exs.eex",
       "nerves/config/config.exs.eex",
-      "std/lib/@app@.ex.eex",
+      "std/lib/@module_path@.ex.eex",
       "nerves/rel/plugins/.gitignore",
       "nerves/rel/config.exs.eex",
       "nerves/rel/vm.args.eex",
@@ -56,9 +57,9 @@ defmodule XGen.Generators.Elixir.Nerves do
     ]
   end
 
-  collection @sup?, do: ["nerves/lib/@app@/application.ex.eex"]
+  collection @sup?, do: ["nerves/lib/@module_path@/application.ex.eex"]
   collection @push? or @ssh?, do: ["nerves/gen-ssh-keys"]
-  collection @ssh?, do: ["nerves/lib/@app@/ssh_server.ex.eex"]
+  collection @ssh?, do: ["nerves/lib/@module_path@/ssh_server.ex.eex"]
   collection @contributing?, do: ["base/CONTRIBUTING.md.eex"]
   collection @license?, do: ["base/LICENSE+#{@license}.eex"]
   collection @git?, do: ["base/.gitsetup"]
