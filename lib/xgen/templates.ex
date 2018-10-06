@@ -40,7 +40,16 @@ defmodule XGen.Templates do
   def copy(collection, assigns) do
     Enum.each(collection, fn template ->
       {type, target} = @templates[template]
-      target = String.replace(target, "@app@", assigns[:app])
+
+      target =
+        ~r/@(\w*)@/u
+        |> Regex.scan(target, capture: :all_but_first)
+        |> List.flatten()
+        |> Enum.dedup()
+        |> Enum.reduce(target, fn assign, path ->
+          key = String.to_existing_atom(assign)
+          String.replace(path, "@#{assign}@", assigns[key])
+        end)
 
       case type do
         :keep -> create_directory(target)
