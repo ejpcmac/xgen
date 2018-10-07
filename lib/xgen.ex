@@ -13,7 +13,7 @@ defmodule XGen do
   alias XGen.Generators.Elixir.{Nerves, Std}
   alias XGen.Options.Config
 
-  import XGen.Wizard
+  import XGen.Prompt
 
   @version Mix.Project.config()[:version]
   @switches [

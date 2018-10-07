@@ -1,6 +1,6 @@
-defmodule XGen.Wizard do
+defmodule XGen.Prompt do
   @moduledoc """
-  Helpers to create wizards for project generation.
+  xgen prompt helpers.
   """
 
   alias IO.ANSI
@@ -10,18 +10,6 @@ defmodule XGen.Wizard do
 
   @yes ~w(y Y yes YES Yes)
   @no ~w(n N no NO No)
-
-  @doc """
-  Runs the wizard.
-  """
-  @callback run(opts :: keyword()) :: term() | no_return()
-
-  defmacro __using__(_opts) do
-    quote do
-      @behaviour XGen.Wizard
-      import XGen.Wizard
-    end
-  end
 
   @doc """
   Prints the given ANSI-formatted `message`.

@@ -28,7 +28,7 @@ defmodule XGen.Generator do
 
         # Some standard options are defined here.
         alias XGen.Options.Base
-        alias XGen.Wizard
+        alias XGen.Prompt
 
         # Sets the project type. This value is then accessible via the @type
         # assign in templates. It can sometimes be useful when templates are
@@ -131,7 +131,7 @@ defmodule XGen.Generator do
         @spec build_instructions(map()) :: map()
         defp build_instructions(opts) do
           if opts[:build_script?] do
-            Wizard.info(\"""
+            Prompt.info(\"""
             You can now build the project:
 
                 cd \#{opts.path}
@@ -162,7 +162,7 @@ defmodule XGen.Generator do
 
   alias XGen.Option
   alias XGen.Templates
-  alias XGen.Wizard
+  alias XGen.Prompt
 
   @typedoc "A project generator"
   @type t() :: module()
@@ -274,7 +274,7 @@ defmodule XGen.Generator do
   """
   @spec run(t(), map()) :: :ok
   def run(generator, %{} = config) do
-    Wizard.info([:bright, "\n=== #{generator.name()} ===\n"])
+    Prompt.info([:bright, "\n=== #{generator.name()} ===\n"])
 
     # Always ask for the project directory.
     options = [XGen.Options.Base.Path | generator.options()]
@@ -287,7 +287,7 @@ defmodule XGen.Generator do
 
     collection = generator.__build_collection__(opts)
 
-    Wizard.info("\nGenerating the project...")
+    Prompt.info("\nGenerating the project...")
 
     File.mkdir_p!(opts.path)
     File.cd!(opts.path)

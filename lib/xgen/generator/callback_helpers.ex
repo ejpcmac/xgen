@@ -3,7 +3,7 @@ defmodule XGen.Generator.CallbackHelpers do
   Helpers to create generator callbacks.
   """
 
-  import XGen.Wizard
+  import XGen.Prompt
 
   @doc """
   Runs a command.

@@ -3,7 +3,7 @@ defmodule XGen.Options.Base do
 
   use XGen.Option, collection: true
 
-  alias XGen.Wizard
+  alias XGen.Prompt
 
   defoption Path do
     key :path
@@ -19,7 +19,7 @@ defmodule XGen.Options.Base do
           "want to continue?"
 
       # Abort the project creation if the answer is no.
-      if File.dir?(path) and not Wizard.yes?(msg, :no) do
+      if File.dir?(path) and not Prompt.yes?(msg, :no) do
         System.halt()
       end
 
