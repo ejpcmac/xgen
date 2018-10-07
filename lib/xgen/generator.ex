@@ -161,8 +161,8 @@ defmodule XGen.Generator do
   use XGen.Properties
 
   alias XGen.Option
-  alias XGen.Templates
   alias XGen.Prompt
+  alias XGen.Templates
 
   @typedoc "A project generator"
   @type t() :: module()
