@@ -46,7 +46,7 @@ defmodule XGen do
     |> run(@generators)
   end
 
-  @spec run(map(), [Generator.t()]) :: :ok
+  @spec run(map(), [Generator.t()]) :: :ok | no_return()
   defp run(config, generators) do
     project_types = generators |> Enum.map(&{&1, &1.name()})
 

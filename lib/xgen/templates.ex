@@ -1,6 +1,6 @@
 defmodule XGen.Templates do
   @moduledoc """
-  Helpers for building template collections.
+  Helpers for working with templates.
   """
 
   import XGen.Wizard
