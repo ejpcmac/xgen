@@ -19,6 +19,7 @@ defmodule XGen.MixProject do
     [
       # Development dependencies
       {:credo, "~> 0.10.0", only: :dev, runtime: false},
+      {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
 
       # Project dependencies
       {:typed_struct, "~> 0.1.3", runtime: false},
