@@ -2,6 +2,11 @@ defmodule XGen do
   @moduledoc """
   An opinionated project generator.
 
+  ## Commands
+
+    * `generate`: executes the project generator *(default)*
+    * `config`: configures xgen
+
   ## Options
 
     * `--config <file>`: indicate which configuration file to use. Defaults to
@@ -42,10 +47,8 @@ defmodule XGen do
     description "Generates a project"
 
     run context do
-      info("xgen #{@version}\n")
-
       context
-      |> Map.get(:config, System.user_home() |> Path.join(".xgen.exs"))
+      |> get_config_file()
       |> Configuration.resolve(@config_options)
       |> generate(@generators)
     end
@@ -60,12 +63,33 @@ defmodule XGen do
     |> Generator.run(config)
   end
 
+  command :config do
+    description "Configures xgen"
+
+    run context do
+      context
+      |> get_config_file()
+      |> Configuration.resolve(@config_options, always_update: true)
+    end
+  end
+
   @doc false
   @spec main([binary()]) :: any()
   def main(args) do
     # Enable ANSI printing. This could cause issues on Windows, but it is not
     # supported yet.
     Application.put_env(:elixir, :ansi_enabled, true)
+
+    info("xgen #{@version}\n")
     ExCLI.run!(__MODULE__, args)
+  end
+
+  ##
+  ## Helpers
+  ##
+
+  @spec get_config_file(map()) :: Path.t()
+  defp get_config_file(context) do
+    Map.get(context, :config, System.user_home() |> Path.join(".xgen.exs"))
   end
 end

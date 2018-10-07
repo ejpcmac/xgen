@@ -31,8 +31,9 @@ defmodule XGen.Configuration do
   configuration it is saved on the disk.
   """
   @spec resolve(Path.t(), [Option.t()]) :: map() | no_return()
-  def resolve(file, options) do
-    %Context{file: file, options: options}
+  @spec resolve(Path.t(), [Option.t()], keyword()) :: map() | no_return()
+  def resolve(file, options, opts \\ []) do
+    %Context{file: file, options: options, update: !!opts[:always_update]}
     |> get_current_config()
     |> maybe_convert_to_map()
     |> add_missing_options()
@@ -86,7 +87,7 @@ defmodule XGen.Configuration do
 
   @spec check_config_completeness(Context.t()) :: Context.t()
   defp check_config_completeness(%Context{first_run: true} = context) do
-    %{context | update: true, write: true}
+    %{context | update: true}
   end
 
   defp check_config_completeness(%Context{first_run: false} = context) do
@@ -96,7 +97,7 @@ defmodule XGen.Configuration do
       update your configuration by answering the questions below.
       """)
 
-      %{context | update: true, write: true}
+      %{context | update: true}
     else
       context
     end
@@ -108,7 +109,11 @@ defmodule XGen.Configuration do
   defp maybe_update_config(
          %Context{update: true, config: config, options: options} = context
        ) do
-    %{context | config: Enum.reduce(options, config, &Option.resolve/2)}
+    %{
+      context
+      | config: Enum.reduce(options, config, &Option.resolve/2),
+        write: true
+    }
   end
 
   @spec maybe_write_config(Context.t()) :: map() | no_return()
