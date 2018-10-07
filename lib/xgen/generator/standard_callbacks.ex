@@ -3,7 +3,7 @@ defmodule XGen.Generator.StandardCallbacks do
   Standard callbacks to use in generators.
   """
 
-  import XGen.Prompt
+  import Marcus
 
   @doc """
   Initialises a Git repository and sets correct permissions on the `.gitsetup`

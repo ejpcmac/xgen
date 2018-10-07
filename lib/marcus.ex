@@ -1,6 +1,6 @@
-defmodule XGen.Prompt do
+defmodule Marcus do
   @moduledoc """
-  xgen prompt helpers.
+  Yet another prompt library.
   """
 
   alias IO.ANSI

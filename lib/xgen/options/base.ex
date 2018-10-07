@@ -3,8 +3,6 @@ defmodule XGen.Options.Base do
 
   use XGen.Option, collection: true
 
-  alias XGen.Prompt
-
   defoption Path do
     key :path
     type :string
@@ -19,7 +17,7 @@ defmodule XGen.Options.Base do
           "want to continue?"
 
       # Abort the project creation if the answer is no.
-      if File.dir?(path) and not Prompt.yes?(msg, :no) do
+      if File.dir?(path) and not Marcus.yes?(msg, :no) do
         System.halt()
       end
 

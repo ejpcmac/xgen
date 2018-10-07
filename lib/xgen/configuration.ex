@@ -3,7 +3,7 @@ defmodule XGen.Configuration do
   xgen configuration management.
   """
 
-  import XGen.Prompt
+  import Marcus
 
   alias XGen.Option
 

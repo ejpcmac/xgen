@@ -12,7 +12,6 @@ defmodule XGen.Generators.Elixir.Std do
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
   alias XGen.Options.Elixir.Std, as: ElixirStd
-  alias XGen.Prompt
 
   type :elixir_std
 
@@ -80,19 +79,19 @@ defmodule XGen.Generators.Elixir.Std do
     msg =
       "\nFetch dependencies and build in dev and test environments in parallel?"
 
-    if Prompt.yes?(msg, :yes) do
+    if Marcus.yes?(msg, :yes) do
       run_command("mix", ["deps.get"])
 
       build_task =
         Task.async(fn ->
           run_command("mix", ["compile"])
-          Prompt.green_info("=> project compilation complete")
+          Marcus.green_info("=> project compilation complete")
         end)
 
       test_task =
         Task.async(fn ->
           run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
-          Prompt.green_info("=> tests compilation complete")
+          Marcus.green_info("=> tests compilation complete")
         end)
 
       Task.await(build_task, :infinity)
@@ -106,7 +105,7 @@ defmodule XGen.Generators.Elixir.Std do
   @spec build_instructions(map()) :: map()
   defp build_instructions(opts) do
     unless opts[:built?] do
-      Prompt.info("""
+      Marcus.info("""
       You can now fetch its dependencies and compile it:
 
           cd #{opts.path}

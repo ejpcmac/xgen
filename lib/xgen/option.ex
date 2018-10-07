@@ -230,8 +230,6 @@ defmodule XGen.Option do
 
   use XGen.Properties
 
-  alias XGen.Prompt
-
   @typedoc "A generator option"
   @type t() :: module()
 
@@ -317,7 +315,7 @@ defmodule XGen.Option do
     validator = if {:validator, 1} in properties, do: &option.validator/1
 
     if {:name, 1} in properties and {:documentation, 1} in properties do
-      Prompt.doc(option.name(opts), option.documentation(opts))
+      Marcus.doc(option.name(opts), option.documentation(opts))
     end
 
     value = get_value(prompt, type, default, validator, options)
@@ -336,10 +334,10 @@ defmodule XGen.Option do
   defp get_value(prompt, type, default, validator, opts) do
     type
     |> case do
-      :string -> Prompt.prompt(prompt, [default: default] ++ opts)
-      :integer -> Prompt.prompt_integer(prompt, [default: default] ++ opts)
-      :yesno -> Prompt.yes?(prompt, default)
-      :choice -> Prompt.choose(prompt, opts[:choices], default)
+      :string -> Marcus.prompt(prompt, [default: default] ++ opts)
+      :integer -> Marcus.prompt_integer(prompt, [default: default] ++ opts)
+      :yesno -> Marcus.yes?(prompt, default)
+      :choice -> Marcus.choose(prompt, opts[:choices], default)
     end
     |> validate(validator)
     |> case do
@@ -347,7 +345,7 @@ defmodule XGen.Option do
         value
 
       {:error, message} ->
-        Prompt.error(message <> "\n")
+        Marcus.error(message <> "\n")
         get_value(prompt, type, default, validator, opts)
     end
   end

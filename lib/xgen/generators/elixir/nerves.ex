@@ -12,7 +12,6 @@ defmodule XGen.Generators.Elixir.Nerves do
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
   alias XGen.Options.Elixir.Nerves
-  alias XGen.Prompt
 
   type :nerves
 
@@ -90,7 +89,7 @@ defmodule XGen.Generators.Elixir.Nerves do
       user_dir = "priv/ssh"
 
       # Generate target host SSH key.
-      Prompt.green_info("* generating target host SSH key")
+      Marcus.green_info("* generating target host SSH key")
       File.mkdir_p!(system_dir)
 
       _ =
@@ -99,7 +98,7 @@ defmodule XGen.Generators.Elixir.Nerves do
         )
 
       # Generate user SSH key.
-      Prompt.green_info("* generating user SSH key")
+      Marcus.green_info("* generating user SSH key")
       File.mkdir_p!(user_dir)
       _ = :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
 
@@ -128,7 +127,7 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   @spec prompt_to_build(map()) :: map()
   defp prompt_to_build(opts) do
-    if Prompt.yes?("\nFetch dependencies?", :yes) do
+    if Marcus.yes?("\nFetch dependencies?", :yes) do
       run_command("mix", ["deps.get"])
       Map.put(opts, :built?, true)
     else
@@ -139,7 +138,7 @@ defmodule XGen.Generators.Elixir.Nerves do
   @spec build_instructions(map()) :: map()
   defp build_instructions(opts) do
     unless opts[:built?] do
-      Prompt.info("""
+      Marcus.info("""
       You can now fetch its dependencies:
 
           cd #{opts.path}
@@ -147,7 +146,7 @@ defmodule XGen.Generators.Elixir.Nerves do
       """)
     end
 
-    Prompt.info("""
+    Marcus.info("""
     You can then build a firmware image:
 
         cd #{opts.path}

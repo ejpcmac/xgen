@@ -20,7 +20,7 @@ defmodule XGen do
   alias XGen.Generators.Elixir.{Nerves, Std}
   alias XGen.Options.Config
 
-  import XGen.Prompt
+  import Marcus
 
   @repo "ejpcmac/xgen"
   @version Mix.Project.config()[:version]

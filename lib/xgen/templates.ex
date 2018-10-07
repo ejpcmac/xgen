@@ -3,7 +3,7 @@ defmodule XGen.Templates do
   Helpers for working with templates.
   """
 
-  import XGen.Prompt
+  import Marcus
 
   alias __MODULE__.TemplateLister
 
