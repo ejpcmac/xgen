@@ -8,7 +8,7 @@ defmodule XGen.CLI do
       `~/.xgen.exs`
   """
 
-  alias XGen.Wizards.{ConfigCreator, ProjectGenerator}
+  alias XGen.Wizards.{ConfigUpdater, ProjectGenerator}
 
   import XGen.Wizard
 
@@ -28,10 +28,7 @@ defmodule XGen.CLI do
     {opts, _argv} = OptionParser.parse!(args, strict: @switches)
     config_file = opts[:config] || System.user_home() |> Path.join(".xgen.exs")
 
-    unless File.regular?(config_file) do
-      ConfigCreator.run(file: config_file)
-    end
-
+    ConfigUpdater.run(file: config_file)
     ProjectGenerator.run(config: config_file)
   end
 end
