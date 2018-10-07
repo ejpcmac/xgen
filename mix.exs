@@ -22,6 +22,7 @@ defmodule XGen.MixProject do
       {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
 
       # Project dependencies
+      {:ex_cli, "~> 0.1.4"},
       {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies

@@ -8,6 +8,8 @@ defmodule XGen do
       `~/.xgen.exs`
   """
 
+  use ExCLI.DSL
+
   alias XGen.Configuration
   alias XGen.Generator
   alias XGen.Generators.Elixir.{Nerves, Std}
@@ -16,9 +18,6 @@ defmodule XGen do
   import XGen.Prompt
 
   @version Mix.Project.config()[:version]
-  @switches [
-    config: :string
-  ]
 
   @config_options [
     Config.Name,
@@ -30,28 +29,43 @@ defmodule XGen do
     Nerves
   ]
 
-  @spec main([binary()]) :: :ok | no_return()
-  def main(args) do
-    # Enable ANSI printing. This could cause issues on Windows, but it is not
-    # supported yet.
-    Application.put_env(:elixir, :ansi_enabled, true)
+  name "xgen"
+  description "An opinionated project generator"
 
-    info("xgen #{@version}\n")
+  option :config,
+    help: "Sets a config file",
+    aliases: [:c]
 
-    {opts, _argv} = OptionParser.parse!(args, strict: @switches)
+  default_command :generate
 
-    opts
-    |> Keyword.get(:config, System.user_home() |> Path.join(".xgen.exs"))
-    |> Configuration.resolve(@config_options)
-    |> run(@generators)
+  command :generate do
+    description "Generates a project"
+
+    run context do
+      info("xgen #{@version}\n")
+
+      context
+      |> Map.get(:config, System.user_home() |> Path.join(".xgen.exs"))
+      |> Configuration.resolve(@config_options)
+      |> generate(@generators)
+    end
   end
 
-  @spec run(map(), [Generator.t()]) :: :ok | no_return()
-  defp run(config, generators) do
+  @spec generate(map(), [Generator.t()]) :: :ok | no_return()
+  defp generate(config, generators) do
     project_types = generators |> Enum.map(&{&1, &1.name()})
 
     "Which kind of project do you want to start?"
     |> choose(project_types)
     |> Generator.run(config)
+  end
+
+  @doc false
+  @spec main([binary()]) :: any()
+  def main(args) do
+    # Enable ANSI printing. This could cause issues on Windows, but it is not
+    # supported yet.
+    Application.put_env(:elixir, :ansi_enabled, true)
+    ExCLI.run!(__MODULE__, args)
   end
 end

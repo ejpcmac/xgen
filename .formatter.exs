@@ -23,6 +23,15 @@
     pregen: 1,
     postgen: 1,
     collection: 1,
-    collection: 2
+    collection: 2,
+
+    # ExCLI.DSL
+    aliases: 1,
+    argument: 2,
+    description: 1,
+    long_description: 1,
+    name: 1,
+    option: 2,
+    default_command: 1
   ]
 ]
