@@ -22,6 +22,7 @@ defmodule XGen do
 
   import XGen.Prompt
 
+  @repo "ejpcmac/xgen"
   @version Mix.Project.config()[:version]
 
   @config_options [
@@ -70,6 +71,23 @@ defmodule XGen do
       context
       |> get_config_file()
       |> Configuration.resolve(@config_options, always_update: true)
+    end
+  end
+
+  command :update do
+    description "Updates xgen"
+
+    run _context do
+      case System.find_executable("mix") do
+        nil ->
+          halt("""
+          xgen needs Mix to fetch and build its update.
+          Mix does not seem to be installed on your machine. Aborting.
+          """)
+
+        mix ->
+          System.cmd(mix, ["escript.install", "github", @repo])
+      end
     end
   end
 
