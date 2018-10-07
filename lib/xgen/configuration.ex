@@ -1,7 +1,11 @@
-defmodule XGen.Wizards.ConfigUpdater do
+defmodule XGen.Configuration do
   @moduledoc """
-  A wizard for configuration management.
+  xgen configuration management.
   """
+
+  import XGen.Wizard
+
+  alias XGen.Option
 
   defmodule Context do
     @moduledoc false
@@ -10,29 +14,25 @@ defmodule XGen.Wizards.ConfigUpdater do
 
     typedstruct do
       field :file, Path.t(), required: true
-      field :config, map(), required: true
+      field :options, [Option.t()], required: true
+      field :config, map() | term(), default: %{}
       field :first_run, boolean(), default: false
       field :update, boolean(), default: false
       field :write, boolean(), default: false
     end
   end
 
-  use XGen.Wizard
+  @doc """
+  Resolves the configuration.
 
-  alias XGen.Option
-  alias XGen.Options.Config
-
-  @config_options [
-    Config.Name,
-    Config.GitHubAccount
-  ]
-
-  @impl true
-  @spec run :: :ok | no_return()
-  @spec run(keyword()) :: :ok | no_return()
-  def run(opts \\ []) do
-    opts
-    |> Keyword.fetch!(:file)
+  The configuration is resolved by reading the current configuration from the
+  configuration file, merging it with the expected options and optionnally
+  prompting the user for an update. If any modification is done to the
+  configuration it is saved on the disk.
+  """
+  @spec resolve(Path.t(), [Option.t()]) :: map() | no_return()
+  def resolve(file, options) do
+    %Context{file: file, options: options}
     |> get_current_config()
     |> maybe_convert_to_map()
     |> add_missing_options()
@@ -41,13 +41,10 @@ defmodule XGen.Wizards.ConfigUpdater do
     |> maybe_write_config()
   end
 
-  @spec get_current_config(Path.t()) :: Context.t()
-  defp get_current_config(file) do
+  @spec get_current_config(Context.t()) :: Context.t()
+  defp get_current_config(%{file: file} = context) do
     if File.regular?(file) do
-      %Context{
-        file: file,
-        config: file |> Code.eval_file() |> elem(0)
-      }
+      %{context | config: file |> Code.eval_file() |> elem(0)}
     else
       info("""
       No configuration has been found. Please configure xgen by answering the
@@ -55,11 +52,7 @@ defmodule XGen.Wizards.ConfigUpdater do
       information in your projects templates.
       """)
 
-      %Context{
-        file: file,
-        config: %{},
-        first_run: true
-      }
+      %{context | first_run: true}
     end
   end
 
@@ -79,9 +72,16 @@ defmodule XGen.Wizards.ConfigUpdater do
   end
 
   @spec add_missing_options(Context.t()) :: Context.t()
-  defp add_missing_options(%Context{config: config} = context) do
-    empty_config = Enum.into(@config_options, %{}, &{&1.key(), nil})
-    %{context | config: Map.merge(empty_config, config)}
+  defp add_missing_options(
+         %Context{
+           config: config,
+           options: options
+         } = context
+       ) do
+    %{
+      context
+      | config: options |> Enum.into(%{}, &{&1.key(), nil}) |> Map.merge(config)
+    }
   end
 
   @spec check_config_completeness(Context.t()) :: Context.t()
@@ -105,12 +105,14 @@ defmodule XGen.Wizards.ConfigUpdater do
   @spec maybe_update_config(Context.t()) :: Context.t()
   defp maybe_update_config(%Context{update: false} = context), do: context
 
-  defp maybe_update_config(%Context{update: true, config: config} = context) do
-    %{context | config: Enum.reduce(@config_options, config, &Option.resolve/2)}
+  defp maybe_update_config(
+         %Context{update: true, config: config, options: options} = context
+       ) do
+    %{context | config: Enum.reduce(options, config, &Option.resolve/2)}
   end
 
-  @spec maybe_write_config(Context.t()) :: :ok | no_return()
-  defp maybe_write_config(%Context{write: false}), do: :ok
+  @spec maybe_write_config(Context.t()) :: map() | no_return()
+  defp maybe_write_config(%Context{write: false, config: config}), do: config
 
   defp maybe_write_config(%Context{write: true, file: file, config: config}) do
     case File.write(file, Macro.to_string(quote(do: unquote(config)))) do
@@ -120,6 +122,8 @@ defmodule XGen.Wizards.ConfigUpdater do
         Your configuration has been successfully written to #{file}.
         You can edit this file to update your configuration as needed.
         """)
+
+        config
 
       {:error, reason} ->
         halt("\nAn error has occured while writing to #{file}: #{reason}")

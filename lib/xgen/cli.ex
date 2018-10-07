@@ -8,13 +8,20 @@ defmodule XGen.CLI do
       `~/.xgen.exs`
   """
 
-  alias XGen.Wizards.{ConfigUpdater, ProjectGenerator}
+  alias XGen.Configuration
+  alias XGen.Options.Config
+  alias XGen.Wizards.ProjectGenerator
 
   import XGen.Wizard
 
   @version Mix.Project.config()[:version]
   @switches [
     config: :string
+  ]
+
+  @config_options [
+    Config.Name,
+    Config.GitHubAccount
   ]
 
   @spec main([binary()]) :: :ok | no_return()
@@ -28,7 +35,7 @@ defmodule XGen.CLI do
     {opts, _argv} = OptionParser.parse!(args, strict: @switches)
     config_file = opts[:config] || System.user_home() |> Path.join(".xgen.exs")
 
-    ConfigUpdater.run(file: config_file)
+    _ = Configuration.resolve(config_file, @config_options)
     ProjectGenerator.run(config: config_file)
   end
 end
