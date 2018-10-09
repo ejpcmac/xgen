@@ -189,7 +189,7 @@ defmodule Marcus do
   """
   @spec choose(String.t(), keyword()) :: atom()
   @spec choose(String.t(), keyword(), atom()) :: atom()
-  def choose(message, list, default \\ nil) do
+  def choose(message, [_ | _] = list, default \\ nil) do
     info(message <> "\n")
 
     list
