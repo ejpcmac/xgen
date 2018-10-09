@@ -79,7 +79,7 @@ defmodule XGen.Generators.Elixir.Std do
     msg =
       "\nFetch dependencies and build in dev and test environments in parallel?"
 
-    if Marcus.yes?(msg, :yes) do
+    if Marcus.yes?(msg, default: :yes) do
       run_command("mix", ["deps.get"])
 
       build_task =

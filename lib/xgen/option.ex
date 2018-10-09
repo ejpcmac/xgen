@@ -336,8 +336,8 @@ defmodule XGen.Option do
     |> case do
       :string -> Marcus.prompt(prompt, [default: default] ++ opts)
       :integer -> Marcus.prompt_integer(prompt, [default: default] ++ opts)
-      :yesno -> Marcus.yes?(prompt, default)
-      :choice -> Marcus.choose(prompt, opts[:choices], default)
+      :yesno -> Marcus.yes?(prompt, default: default)
+      :choice -> Marcus.choose(prompt, opts[:choices], default: default)
     end
     |> validate(validator)
     |> case do

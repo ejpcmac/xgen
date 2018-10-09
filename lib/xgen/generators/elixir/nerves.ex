@@ -127,7 +127,7 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   @spec prompt_to_build(map()) :: map()
   defp prompt_to_build(opts) do
-    if Marcus.yes?("\nFetch dependencies?", :yes) do
+    if Marcus.yes?("\nFetch dependencies?", default: :yes) do
       run_command("mix", ["deps.get"])
       Map.put(opts, :built?, true)
     else

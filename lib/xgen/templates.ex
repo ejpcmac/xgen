@@ -86,7 +86,7 @@ defmodule XGen.Templates do
       |> Path.expand()
       |> Path.relative_to_cwd()
       |> Kernel.<>(" already exists, overwrite?")
-      |> yes?(:yes)
+      |> yes?(default: :yes)
     else
       true
     end

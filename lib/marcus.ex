@@ -152,18 +152,23 @@ defmodule Marcus do
 
   If there is no default value, the user must type an answer. Otherwise hitting
   enter chooses the default answer.
+
+  ## Options
+
+    * `default` - default value for empty replies (`:yes` or `:no`, hilighted in
+        the prompt if set)
   """
   @spec yes?(String.t()) :: boolean()
-  @spec yes?(String.t(), yesno()) :: boolean()
-  def yes?(message, default \\ nil) when default in [:yes, :no, nil] do
-    (message <> format_yesno(default))
+  @spec yes?(String.t(), keyword()) :: boolean()
+  def yes?(message, opts \\ []) do
+    (message <> format_yesno(opts[:default]))
     |> IO.gets()
     |> String.trim()
-    |> parse_yesno(default)
+    |> parse_yesno(opts[:default])
     |> case do
       nil ->
         error("You must answer yes or no.\n")
-        yes?(message, default)
+        yes?(message, opts)
 
       answer ->
         answer == :yes
@@ -186,10 +191,14 @@ defmodule Marcus do
 
   The given `list` must be a keyword list. The values will be printed and the
   key of the chosen one returned.
+
+  ## Options
+
+    * `default` - default key for empty replies (printed in the prompt if set)
   """
   @spec choose(String.t(), keyword()) :: atom()
-  @spec choose(String.t(), keyword(), atom()) :: atom()
-  def choose(message, [_ | _] = list, default \\ nil) do
+  @spec choose(String.t(), keyword(), keyword()) :: atom()
+  def choose(message, [_ | _] = list, opts \\ []) do
     info(message <> "\n")
 
     list
@@ -200,7 +209,7 @@ defmodule Marcus do
     info("")
 
     default_index =
-      with v when not is_nil(v) <- default,
+      with v when not is_nil(v) <- opts[:default],
            i when not is_nil(i) <- Enum.find_index(list, &(elem(&1, 0) == v)),
            do: Integer.to_string(i + 1)
 

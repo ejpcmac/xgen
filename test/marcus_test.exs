@@ -288,14 +288,14 @@ defmodule MarcusTest do
 
     property "hilights the default yes" do
       check all message <- string(:printable) do
-        assert capture_io("\n", fn -> yes?(message, :yes) end) ==
+        assert capture_io("\n", fn -> yes?(message, default: :yes) end) ==
                  message <> " [Y/n] "
       end
     end
 
     property "hilights the default no" do
       check all message <- string(:printable) do
-        assert capture_io("\n", fn -> yes?(message, :no) end) ==
+        assert capture_io("\n", fn -> yes?(message, default: :no) end) ==
                  message <> " [y/N] "
       end
     end
@@ -319,7 +319,7 @@ defmodule MarcusTest do
     property "returns the default value on empty inputs" do
       check all default <- member_of([:yes, :no]) do
         capture_io("\n", fn ->
-          assert yes?("", default) == (default == :yes)
+          assert yes?("", default: default) == (default == :yes)
         end)
       end
     end
@@ -329,7 +329,7 @@ defmodule MarcusTest do
       check all default <- member_of([:yes, :no]),
                 input <- member_of(~w(y n)) do
         capture_io(input <> "\n", fn ->
-          assert yes?("", default) == (input == "y")
+          assert yes?("", default: default) == (input == "y")
         end)
       end
     end
@@ -395,7 +395,7 @@ defmodule MarcusTest do
           |> Integer.to_string()
 
         assert capture_io("1\n", fn ->
-                 choose(message, choices, default)
+                 choose(message, choices, default: default)
                end) ==
                  message <>
                    "\n\n" <>
@@ -419,7 +419,7 @@ defmodule MarcusTest do
                 choices <- choice_list(),
                 default <- member_of(Keyword.keys(choices)) do
         capture_io("\n", fn ->
-          assert choose(message, choices, default) == default
+          assert choose(message, choices, default: default) == default
         end)
       end
     end
@@ -431,7 +431,7 @@ defmodule MarcusTest do
                 default <- member_of(Keyword.keys(choices)),
                 input <- integer(1..length(choices)) do
         capture_io("#{input}\n", fn ->
-          assert choose(message, choices, default) ==
+          assert choose(message, choices, default: default) ==
                    choices |> Enum.at(input - 1) |> elem(0)
         end)
       end
