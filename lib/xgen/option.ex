@@ -315,7 +315,7 @@ defmodule XGen.Option do
     validator = if {:validator, 1} in properties, do: &option.validator/1
 
     if {:name, 1} in properties and {:documentation, 1} in properties do
-      Marcus.doc(option.name(opts), option.documentation(opts))
+      doc(option.name(opts), option.documentation(opts))
     end
 
     value = get_value(prompt, type, default, validator, options)
@@ -328,6 +328,11 @@ defmodule XGen.Option do
     else
       Map.put(opts, key, value)
     end
+  end
+
+  @spec doc(String.t(), ANSI.ansidata()) :: :ok
+  defp doc(title, content) do
+    Marcus.info([:blue, :bright, "\n  #{title}\n\n", :normal, content])
   end
 
   @spec get_value(String.t(), type(), term(), function(), keyword()) :: term()

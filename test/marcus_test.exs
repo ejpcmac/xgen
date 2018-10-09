@@ -31,27 +31,6 @@ defmodule MarcusTest do
     end
   end
 
-  describe "doc/2" do
-    property "prints the given title" do
-      check all title <- string(:printable) do
-        assert capture_io(fn -> doc(title, "") end) =~ title
-      end
-    end
-
-    property "prints the given content" do
-      check all content <- string(:printable) do
-        assert capture_io(fn -> doc("", content) end) =~ content
-      end
-    end
-
-    property "formats the content" do
-      check all content <- string(:printable) do
-        assert capture_io(fn -> doc("", [:bright, content]) end) =~
-                 ANSI.bright() <> content <> ANSI.reset() <> "\n"
-      end
-    end
-  end
-
   describe "error/1" do
     property "prints the given message in bright red on stderr" do
       check all message <- string(:printable) do

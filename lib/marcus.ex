@@ -28,14 +28,6 @@ defmodule Marcus do
   end
 
   @doc """
-  Prints documentation with a `title` and `content`.
-  """
-  @spec doc(String.t(), ANSI.ansidata()) :: :ok
-  def doc(title, content) do
-    info([:blue, :bright, "\n  #{title}\n\n", :normal, content])
-  end
-
-  @doc """
   Prints the given ANSI-formatted error `message` on `:stderr`.
   """
   @spec error(ANSI.ansidata()) :: :ok
