@@ -15,12 +15,12 @@ defmodule XGen do
 
   use ExCLI.DSL
 
+  import Marcus
+
   alias XGen.Configuration
   alias XGen.Generator
   alias XGen.Generators.Elixir.{Nerves, Std}
   alias XGen.Options.Config
-
-  import Marcus
 
   @repo "ejpcmac/xgen"
   @version Mix.Project.config()[:version]

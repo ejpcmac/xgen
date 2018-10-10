@@ -5,7 +5,7 @@ defmodule Marcus do
 
   alias IO.ANSI
 
-  @typedoc "Answer to a yes-no question"
+  @typedoc "Answer to a yes/no question"
   @type yesno() :: :yes | :no | nil
 
   @yes ~w(y Y yes YES Yes)
@@ -57,9 +57,9 @@ defmodule Marcus do
     * `error_message` - the message to print if a required input is missing
     * `length` - the range of acceptable string length
   """
-  @spec prompt(String.t()) :: String.t()
-  @spec prompt(String.t(), keyword()) :: String.t()
-  def prompt(message, opts \\ []) do
+  @spec prompt_string(String.t()) :: String.t()
+  @spec prompt_string(String.t(), keyword()) :: String.t()
+  def prompt_string(message, opts \\ []) do
     (message <> format_length(opts[:length]) <> format_default(opts[:default]))
     |> IO.gets()
     |> String.trim()
@@ -68,7 +68,7 @@ defmodule Marcus do
       nil ->
         error_message = opts[:error_message] || "You must provide a value!"
         error(error_message <> "\n")
-        prompt(message, opts)
+        prompt_string(message, opts)
 
       value ->
         if valid_length?(value, opts[:length]) do
@@ -76,7 +76,7 @@ defmodule Marcus do
         else
           min..max = opts[:length]
           error("The value must be #{min} to #{max} characters long.\n")
-          prompt(message, opts)
+          prompt_string(message, opts)
         end
     end
   end
@@ -113,7 +113,7 @@ defmodule Marcus do
     default = if opts[:default], do: opts[:default] |> Integer.to_string()
 
     (message <> format_range(opts[:range]))
-    |> prompt(default: default, required: true)
+    |> prompt_string(default: default, required: true)
     |> Integer.parse()
     |> case do
       {choice, ""} ->
@@ -140,7 +140,7 @@ defmodule Marcus do
   defp in_range?(value, min..max), do: value in min..max
 
   @doc """
-  Asks the user a yes-no `question`.
+  Asks the user a yes/no `question`.
 
   If there is no default value, the user must type an answer. Otherwise hitting
   enter chooses the default answer.
@@ -215,7 +215,7 @@ defmodule Marcus do
   @spec get_choice(pos_integer(), pos_integer() | nil) :: pos_integer()
   defp get_choice(max, default) do
     "Choice"
-    |> prompt(
+    |> prompt_string(
       default: default,
       required: true,
       error_message: "You must make a choice!"

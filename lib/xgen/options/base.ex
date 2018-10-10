@@ -4,6 +4,8 @@ defmodule XGen.Options.Base do
   use XGen.Option, collection: true
 
   defoption Path do
+    import Marcus
+
     key :path
     type :string
     options required: true
@@ -17,7 +19,7 @@ defmodule XGen.Options.Base do
           "want to continue?"
 
       # Abort the project creation if the answer is no.
-      if File.dir?(path) and not Marcus.yes?(msg, default: :no) do
+      if File.dir?(path) and not yes?(msg, default: :no) do
         System.halt()
       end
 

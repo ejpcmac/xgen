@@ -230,6 +230,8 @@ defmodule XGen.Option do
 
   use XGen.Properties
 
+  import Marcus
+
   @typedoc "A generator option"
   @type t() :: module()
 
@@ -339,10 +341,10 @@ defmodule XGen.Option do
   defp get_value(prompt, type, default, validator, opts) do
     type
     |> case do
-      :string -> Marcus.prompt(prompt, [default: default] ++ opts)
-      :integer -> Marcus.prompt_integer(prompt, [default: default] ++ opts)
-      :yesno -> Marcus.yes?(prompt, default: default)
-      :choice -> Marcus.choose(prompt, opts[:choices], default: default)
+      :string -> prompt_string(prompt, [default: default] ++ opts)
+      :integer -> prompt_integer(prompt, [default: default] ++ opts)
+      :yesno -> yes?(prompt, default: default)
+      :choice -> choose(prompt, opts[:choices], default: default)
     end
     |> validate(validator)
     |> case do

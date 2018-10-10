@@ -130,7 +130,7 @@ defmodule XGen.Generator do
         @spec build_instructions(map()) :: map()
         defp build_instructions(opts) do
           if opts[:build_script?] do
-            Marcus.info(\"""
+            info(\"""
             You can now build the project:
 
                 cd \#{opts.path}
@@ -158,6 +158,8 @@ defmodule XGen.Generator do
   """
 
   use XGen.Properties
+
+  import Marcus
 
   alias XGen.Option
   alias XGen.Templates
@@ -272,7 +274,7 @@ defmodule XGen.Generator do
   """
   @spec run(t(), map()) :: :ok
   def run(generator, %{} = config) do
-    Marcus.info([:bright, "\n=== #{generator.name()} ===\n"])
+    info([:bright, "\n=== #{generator.name()} ===\n"])
 
     # Always ask for the project directory.
     options = [XGen.Options.Base.Path | generator.options()]
@@ -285,7 +287,7 @@ defmodule XGen.Generator do
 
     collection = generator.__build_collection__(opts)
 
-    Marcus.info("\nGenerating the project...")
+    info("\nGenerating the project...")
 
     File.mkdir_p!(opts.path)
     File.cd!(opts.path)

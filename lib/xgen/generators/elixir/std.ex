@@ -5,6 +5,7 @@ defmodule XGen.Generators.Elixir.Std do
 
   use XGen.Generator
 
+  import Marcus
   import XGen.Generator.CallbackHelpers
   import XGen.Generator.StandardCallbacks
   import XGen.Generators.Elixir.Callbacks
@@ -79,19 +80,19 @@ defmodule XGen.Generators.Elixir.Std do
     msg =
       "\nFetch dependencies and build in dev and test environments in parallel?"
 
-    if Marcus.yes?(msg, default: :yes) do
+    if yes?(msg, default: :yes) do
       run_command("mix", ["deps.get"])
 
       build_task =
         Task.async(fn ->
           run_command("mix", ["compile"])
-          Marcus.green_info("=> project compilation complete")
+          green_info("=> project compilation complete")
         end)
 
       test_task =
         Task.async(fn ->
           run_command("mix", ["compile"], env: [{"MIX_ENV", "test"}])
-          Marcus.green_info("=> tests compilation complete")
+          green_info("=> tests compilation complete")
         end)
 
       Task.await(build_task, :infinity)
@@ -105,7 +106,7 @@ defmodule XGen.Generators.Elixir.Std do
   @spec build_instructions(map()) :: map()
   defp build_instructions(opts) do
     unless opts[:built?] do
-      Marcus.info("""
+      info("""
       You can now fetch its dependencies and compile it:
 
           cd #{opts.path}
