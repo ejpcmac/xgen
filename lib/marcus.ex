@@ -1,6 +1,47 @@
 defmodule Marcus do
   @moduledoc """
   Yet another prompt library.
+
+  ## Features
+
+  Marcus provides helpers for:
+
+    * printing ANSI-formatted information,
+    * printing information in green,
+    * printing errors (in bright red, on `stderr`)
+    * halting the VM with an error message and status.
+
+  You can also prompt the user for:
+
+    * a string,
+    * an integer,
+    * a yes/no question,
+    * a choice from a list.
+
+  ## Examples
+
+      import Marcus
+
+      prompt_string("Name")
+      # Name: Jean-Philippe
+      # => "Jean-Philippe"
+
+      prompt_integer("Integer")
+      # Integer: 8
+      # => 8
+
+      yes?("Do you want?")
+      # Do you want? (y/n) y
+      # => true
+
+      choose("Make a choice:", item1: "Item 1", item2: "Item 2")
+      # Make a choice:
+      #
+      #   1. Item 1
+      #   2. Item 2
+      #
+      # Choice: 2
+      # => :item2
   """
 
   alias IO.ANSI
@@ -56,6 +97,31 @@ defmodule Marcus do
     * `required` - wether a non-empty input is required (default: `false`)
     * `error_message` - the message to print if a required input is missing
     * `length` - the range of acceptable string length
+
+  ## Examples
+
+      prompt_string("GitHub account")
+      # Name: ejpcmac
+      # => "ejpcmac"
+
+      prompt_string("Hello", default: "world")
+      # Hello [world]:
+      # => "world"
+
+      prompt_string("Name", required: true)
+      # Name:
+      # You must provide a value!
+
+      prompt_string("Name", required: true, error_message: "Please provide a name.")
+      # Name:
+      # Please provide a name.
+
+      prompt_string("Nick", length: 3..20)
+      # Nick (3-20 characters): me
+      # The value must be 3 to 20 characters
+      #
+      # Nick (3-20 characters): my_nick
+      # => "my_nick"
   """
   @spec prompt_string(String.t()) :: String.t()
   @spec prompt_string(String.t(), keyword()) :: String.t()
@@ -106,6 +172,24 @@ defmodule Marcus do
 
     * `default` - default value for empty replies (printed in the prompt if set)
     * `range` - the acceptable range
+
+  ## Examples
+
+      prompt_integer("Age")
+      # Age: 24
+      # => 24
+
+      prompt_integer("Integer")
+      # Integer: Hello
+      # The value must be an integer.
+
+      prompt_integer("Current level", default: 1)
+      # Current level [1]:
+      # => 1
+
+      prompt_integer("Percentage", range: 0..100)
+      # Percentage (0-100): 200
+      # The value must be between 0 and 100.
   """
   @spec prompt_integer(String.t()) :: integer()
   @spec prompt_integer(String.t(), keyword()) :: integer()
@@ -149,6 +233,23 @@ defmodule Marcus do
 
     * `default` - default value for empty replies (`:yes` or `:no`, hilighted in
         the prompt if set)
+
+  ## Examples
+
+      yes?("Continue?")
+      # Continue? (y/n)
+      # You must answer yes or no.
+      #
+      # Continue? (y/n) y
+      # => true
+
+      yes?("Is it good?", default: :yes)
+      # Is it good? [Y/n]
+      # => true
+
+      yes?("No?", default: :no)
+      # No? [y/N]
+      # => false
   """
   @spec yes?(String.t()) :: boolean()
   @spec yes?(String.t(), keyword()) :: boolean()
@@ -187,6 +288,33 @@ defmodule Marcus do
   ## Options
 
     * `default` - default key for empty replies (printed in the prompt if set)
+
+  ## Examples
+
+      choose("What do you want?",
+        tea: "A cup of tea",
+        coffee: "Some coffee",
+        other: "Something else"
+      )
+      # What do you want?
+      #
+      #   1. A cup of tea
+      #   2. Some coffee
+      #   3. Something else
+      #
+      # Choice: 4
+      # The choice must be an integer between 1 and 3.
+      #
+      # Choice: 3
+      # => :other
+
+      choose("Please make a choice:", [good: "The good choice"], default: :good)
+      # Please make a choice:
+      #
+      #   1. The good choice
+      #
+      # Choice [1]:
+      # => :good
   """
   @spec choose(String.t(), keyword()) :: atom()
   @spec choose(String.t(), keyword(), keyword()) :: atom()
