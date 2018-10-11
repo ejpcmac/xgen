@@ -332,7 +332,7 @@ defmodule XGen.Option do
     end
   end
 
-  @spec doc(String.t(), ANSI.ansidata()) :: :ok
+  @spec doc(String.t(), IO.ANSI.ansidata()) :: :ok
   defp doc(title, content) do
     Marcus.info([:blue, :bright, "\n  #{title}\n\n", :normal, content])
   end
