@@ -42,7 +42,7 @@ defmodule XGen.Generators.Elixir.Nerves do
       "_elixir_/_base_/shell.nix.eex",
       "_base_/.envrc",
       "_base_/.editorconfig",
-      "_elixir_/_nerves_/.formatter.exs",
+      "_elixir_/_nerves_/.formatter.exs.eex",
       "_elixir_/_base_/.gitignore.eex",
       "_elixir_/_nerves_/mix.exs.eex",
       "_elixir_/_nerves_/config/config.exs.eex",
