@@ -44,10 +44,10 @@ defmodule XGen.Generators.Elixir.Std do
       "_elixir_/_base_/.dialyzer_ignore",
       "_elixir_/_base_/.gitignore.eex",
       "_elixir_/_std_/mix.exs.eex",
-      "_elixir_/_std_/config/config.exs",
+      "_elixir_/_base_/config/config.exs",
       "_elixir_/_std_/lib/@module_path@.ex.eex",
-      "_elixir_/_std_/test/support/",
-      "_elixir_/_std_/test/test_helper.exs",
+      "_elixir_/_base_/test/support/",
+      "_elixir_/_base_/test/test_helper.exs",
       "_elixir_/_std_/test/@module_path@_test.exs.eex"
     ]
   end
@@ -56,8 +56,8 @@ defmodule XGen.Generators.Elixir.Std do
 
   collection @release? do
     [
-      "_elixir_/_std_/rel/plugins/.gitignore",
-      "_elixir_/_std_/rel/config.exs.eex"
+      "_elixir_/_base_/rel/plugins/.gitignore",
+      "_elixir_/_base_/rel/config.exs.eex"
     ]
   end
 
