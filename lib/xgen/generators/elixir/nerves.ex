@@ -6,7 +6,6 @@ defmodule XGen.Generators.Elixir.Nerves do
   use XGen.Generator
 
   import Marcus
-  import XGen.Generator.CallbackHelpers
   import XGen.Generator.StandardCallbacks
   import XGen.Generators.Elixir.Callbacks
 
@@ -70,8 +69,8 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   postgen :generate_ssh_keys
   postgen :init_git
+  postgen :fetch_deps
   postgen :run_formatter
-  postgen :prompt_to_build
   postgen :project_created
   postgen :build_instructions
   postgen :gitsetup_instructions
@@ -127,29 +126,10 @@ defmodule XGen.Generators.Elixir.Nerves do
   ## Post-generation callbacks
   ##
 
-  @spec prompt_to_build(map()) :: map()
-  defp prompt_to_build(opts) do
-    if yes?("\nFetch dependencies?", default: :yes) do
-      run_command("mix", ["deps.get"])
-      Map.put(opts, :built?, true)
-    else
-      Map.put(opts, :built?, false)
-    end
-  end
-
   @spec build_instructions(map()) :: map()
   defp build_instructions(opts) do
-    unless opts[:built?] do
-      info("""
-      You can now fetch its dependencies:
-
-          cd #{opts.path}
-          mix deps.get
-      """)
-    end
-
     info("""
-    You can then build a firmware image:
+    You can now build a firmware image:
 
         cd #{opts.path}
         direnv allow

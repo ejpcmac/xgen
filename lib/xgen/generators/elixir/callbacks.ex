@@ -31,6 +31,15 @@ defmodule XGen.Generators.Elixir.Callbacks do
   end
 
   @doc """
+  Fetches the dependencies.
+  """
+  @spec fetch_deps(map()) :: map()
+  def fetch_deps(opts) do
+    run_command("mix", ["deps.get"])
+    opts
+  end
+
+  @doc """
   Runs the the code formatter.
   """
   @spec run_formatter(map()) :: map()

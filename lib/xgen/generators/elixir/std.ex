@@ -66,6 +66,7 @@ defmodule XGen.Generators.Elixir.Std do
   collection @git?, do: ["_base_/.gitsetup"]
 
   postgen :init_git
+  postgen :fetch_deps
   postgen :run_formatter
   postgen :prompt_to_build
   postgen :project_created
@@ -78,12 +79,9 @@ defmodule XGen.Generators.Elixir.Std do
 
   @spec prompt_to_build(map()) :: map()
   defp prompt_to_build(opts) do
-    msg =
-      "\nFetch dependencies and build in dev and test environments in parallel?"
+    msg = "\nBuild the project in dev and test environments in parallel?"
 
     if yes?(msg, default: :yes) do
-      run_command("mix", ["deps.get"])
-
       build_task =
         Task.async(fn ->
           run_command("mix", ["compile"])
@@ -111,7 +109,6 @@ defmodule XGen.Generators.Elixir.Std do
       You can now fetch its dependencies and compile it:
 
           cd #{opts.path}
-          mix deps.get
           mix compile
 
       You can also run tests:

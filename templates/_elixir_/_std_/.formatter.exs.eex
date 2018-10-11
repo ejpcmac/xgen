@@ -1,8 +1,4 @@
 [
   <%= render("_elixir_/_fragments_/formatter_base.exs", assigns) %><%= if @release? do %>,
-  locals_without_parens: [
-    # Distillery
-    plugin: 1,
-    set: 1
-  ]<% end %>
+  import_deps: [:distillery]<% end %>
 ]
