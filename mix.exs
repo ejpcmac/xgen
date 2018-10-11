@@ -37,6 +37,7 @@ defmodule XGen.MixProject do
 
       # Project dependencies
       {:ex_cli, "~> 0.1.4"},
+      {:marcus, "~> 0.1.0"},
       {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies
