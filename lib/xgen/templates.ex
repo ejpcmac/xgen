@@ -22,11 +22,12 @@ defmodule XGen.Templates do
 
     case type do
       :text ->
-        defp render(unquote(source), _assigns), do: unquote(File.read!(file))
+        defp render(unquote(source), _assigns),
+          do: unquote(File.read!(file)) |> String.trim()
 
       :eex ->
         defp render(unquote(source), assigns),
-          do: unquote(EEx.compile_file(file))
+          do: unquote(EEx.compile_file(file)) |> String.trim()
 
       :keep ->
         nil
@@ -54,7 +55,7 @@ defmodule XGen.Templates do
 
       case type do
         :keep -> create_directory(target)
-        _ -> create_file(target, render(template, assigns))
+        _ -> create_file(target, render(template, assigns) <> "\n")
       end
     end)
   end
