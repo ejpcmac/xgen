@@ -19,7 +19,7 @@ defmodule XGen do
 
   alias XGen.Configuration
   alias XGen.Generator
-  alias XGen.Generators.Elixir.{Nerves, Std}
+  alias XGen.Generators.Elixir.{Escript, Nerves, Std}
   alias XGen.Options.Config
 
   @repo "ejpcmac/xgen"
@@ -32,7 +32,8 @@ defmodule XGen do
 
   @generators [
     Std,
-    Nerves
+    Nerves,
+    Escript
   ]
 
   name "xgen"
