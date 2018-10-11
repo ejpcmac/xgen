@@ -106,7 +106,7 @@ defmodule XGen.Generators.Elixir.Std do
   defp build_instructions(opts) do
     unless opts[:built?] do
       info("""
-      You can now fetch its dependencies and compile it:
+      You can now build the project:
 
           cd #{opts.path}
           mix compile
