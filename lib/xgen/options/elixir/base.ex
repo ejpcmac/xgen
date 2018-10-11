@@ -82,4 +82,18 @@ defmodule XGen.Options.Elixir.Base do
     mix.exs.
     """
   end
+
+  defoption Contributing do
+    key :contributing?
+    type :yesno
+    default :no
+    name "CONTRIBUTING.md"
+    prompt "Add a CONTRIBUTING.md?"
+
+    documentation """
+    xgen can add a CONTRIBUTING.md with generic instructions for Elixir projects
+    hosted on GitHub. It covers all steps from forking to setting the
+    environment and creating a pull request.
+    """
+  end
 end

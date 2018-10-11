@@ -11,7 +11,6 @@ defmodule XGen.Generators.Elixir.Escript do
 
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
-  alias XGen.Options.Elixir.Std, as: ElixirStd
 
   type :escript
 
@@ -20,7 +19,7 @@ defmodule XGen.Generators.Elixir.Escript do
   options [
     ElixirBase.Application,
     ElixirBase.Module,
-    ElixirStd.Contributing,
+    ElixirBase.Contributing,
     Base.License,
     Base.Git
   ]

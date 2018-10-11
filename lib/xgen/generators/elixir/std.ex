@@ -23,8 +23,8 @@ defmodule XGen.Generators.Elixir.Std do
     ElixirBase.Module,
     ElixirBase.SupervisionTree,
     ElixirStd.Release,
-    ElixirStd.Contributing,
     ElixirStd.Package,
+    ElixirBase.Contributing,
     Base.License,
     Base.Git
   ]
