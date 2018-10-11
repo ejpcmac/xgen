@@ -1,9 +1,5 @@
 [
-  inputs: [
-    "{mix,.iex,.formatter,.credo}.exs",
-    "{config,lib,test}/**/*.{ex,exs}"
-  ],
-  line_length: 80<%= if @release? do %>,
+  <%= render("_elixir_/_fragments_/formatter_base.exs", assigns) %><%= if @release? do %>,
   locals_without_parens: [
     # Distillery
     plugin: 1,
