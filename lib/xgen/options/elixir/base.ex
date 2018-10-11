@@ -74,7 +74,7 @@ defmodule XGen.Options.Elixir.Base do
     type :yesno
     default :no
     name "Supervision tree"
-    prompt "Generate a release configuration?"
+    prompt "Generate a supervision tree?"
 
     documentation """
     xgen can generate for you the module #{@module}.Application containing a
