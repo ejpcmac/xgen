@@ -3,6 +3,8 @@ defmodule XGen.Generators.Elixir.Callbacks do
   Pre and post generation callbacks for Elixir projects.
   """
 
+  import XGen.Generator.CallbackHelpers
+
   @doc """
   Adds the module path name to the options.
   """
@@ -26,6 +28,15 @@ defmodule XGen.Generators.Elixir.Callbacks do
   @spec cookie_generator(map()) :: map()
   def cookie_generator(opts) do
     Map.put(opts, :cookie_generator, &generate_cookie/0)
+  end
+
+  @doc """
+  Runs the the code formatter.
+  """
+  @spec run_formatter(map()) :: map()
+  def run_formatter(opts) do
+    run_command("mix", ["format"])
+    opts
   end
 
   ##

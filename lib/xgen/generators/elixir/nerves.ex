@@ -70,6 +70,7 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   postgen :generate_ssh_keys
   postgen :init_git
+  postgen :run_formatter
   postgen :prompt_to_build
   postgen :project_created
   postgen :build_instructions
