@@ -13,10 +13,7 @@ defmodule <%= @module %>.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
 
-      # Tools
-      dialyzer: dialyzer(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: cli_env(),
+      <%= render("_elixir_/_fragments_/tools.exs", assigns) %>,
 
       # Docs
       docs: [
@@ -44,46 +41,21 @@ defmodule <%= @module %>.MixProject do
 
   defp deps do
     [
-      # Development and test dependencies
-      {:credo, "~> 0.10.0", only: :dev, runtime: false},
-      {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
-      {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
-      {:mix_test_watch, ">= 0.0.0", only: :dev, runtime: false},
-      {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
-      {:stream_data, "~> 0.4.0", only: :test},
+      <%= render("_elixir_/_fragments_/deps_dev.exs", assigns) %>,
 
       # Project dependencies
 
-      # Documentation dependencies
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}<%= if @release? do %>,
+      <%= render("_elixir_/_fragments_/deps_doc.exs", assigns) %><%= if @release? do %>,
 
-      # Release dependencies
-      {:distillery, "~> 2.0"}<% end %>
+      <%= render("_elixir_/_fragments_/deps_release.exs", assigns) %><% end %>
     ]
   end
 
-  # Dialyzer configuration
-  defp dialyzer do
-    [
-      plt_add_deps: :transitive,
-      flags: [
-        :unmatched_returns,
-        :error_handling,
-        :race_conditions
-      ],
-      ignore_warnings: ".dialyzer_ignore"
-    ]
-  end
+  <%= render("_elixir_/_fragments_/dialyzer.exs", assigns) %>
 
-  defp cli_env do
-    [
-      # Always run coveralls mix tasks in `:test` env.
-      coveralls: :test,
-      "coveralls.detail": :test,
-      "coveralls.html": :test
-    ]
-  end<%= if @package? do %>
+  <%= render("_elixir_/_fragments_/cli_env.exs", assigns) %>
 
+  <%= if @package? do %>
   defp package do
     [<%= if @license do %>
       licenses: ["<%= @license %>"],<% end %>
