@@ -26,7 +26,7 @@ defmodule XGen.Generators.Elixir.Nerves do
     Nerves.SSH,
     Nerves.NTP,
     Nerves.RTC,
-    Nerves.Contributing,
+    ElixirBase.Contributing,
     Base.License,
     Base.Git
   ]
@@ -66,7 +66,7 @@ defmodule XGen.Generators.Elixir.Nerves do
     do: ["_elixir_/_nerves_/lib/@module_path@/ssh_server.ex.eex"]
 
   collection @push? or @ssh?, do: ["_elixir_/_nerves_/gen-ssh-keys"]
-  collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
+  collection @contributing?, do: ["_elixir_/_nerves_/CONTRIBUTING.md.eex"]
   collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]
   collection @git?, do: ["_base_/.gitsetup"]
 
