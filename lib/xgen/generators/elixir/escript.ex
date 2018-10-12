@@ -77,6 +77,7 @@ defmodule XGen.Generators.Elixir.Escript do
     You can now build and execute the escript:
 
         cd #{opts.path}
+        direnv allow
         mix escript.build
         ./#{opts.app}
     """)

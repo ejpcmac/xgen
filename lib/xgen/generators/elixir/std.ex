@@ -120,6 +120,7 @@ defmodule XGen.Generators.Elixir.Std do
       You can now build the project:
 
           cd #{opts.path}
+          direnv allow
           mix compile
 
       You can also run tests:
