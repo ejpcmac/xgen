@@ -1,7 +1,7 @@
 defmodule <%= @module %>.MixProject do
   use Mix.Project
 
-  @version "0.1.0-dev"
+  @version "<%= @initial_version %>"
   <%= unless @package?, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
 
   def project do

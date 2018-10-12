@@ -31,11 +31,12 @@ defmodule XGen.Generators.Elixir.Std do
 
   pregen :module_path
   pregen :cookie_generator
+  pregen :constants
 
   collection do
     [
       "_base_/README.md.eex",
-      "_base_/CHANGELOG.md",
+      "_base_/CHANGELOG.md.eex",
       "_elixir_/_base_/shell.nix.eex",
       "_base_/.envrc",
       "_base_/.editorconfig",
@@ -72,6 +73,16 @@ defmodule XGen.Generators.Elixir.Std do
   postgen :project_created
   postgen :build_instructions
   postgen :gitsetup_instructions
+
+  ##
+  ## Pre-generation callbacks
+  ##
+
+  @spec constants(map()) :: map()
+  defp constants(opts) do
+    opts
+    |> Map.put(:initial_version, "0.1.0-dev")
+  end
 
   ##
   ## Post-generation callbacks

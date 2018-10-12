@@ -34,11 +34,12 @@ defmodule XGen.Generators.Elixir.Nerves do
   pregen :module_path
   pregen :cookie
   pregen :supervision_for_ssh
+  pregen :constants
 
   collection do
     [
       "_base_/README.md.eex",
-      "_base_/CHANGELOG.md",
+      "_base_/CHANGELOG.md.eex",
       "_elixir_/_base_/shell.nix.eex",
       "_base_/.envrc",
       "_base_/.editorconfig",
@@ -83,6 +84,16 @@ defmodule XGen.Generators.Elixir.Nerves do
   defp supervision_for_ssh(%{ssh?: true} = opts), do: %{opts | sup?: true}
   defp supervision_for_ssh(opts), do: opts
 
+  @spec constants(map()) :: map()
+  defp constants(opts) do
+    opts
+    |> Map.put(:initial_version, "0.0.1-dev")
+  end
+
+  ##
+  ## Post-generation callbacks
+  ##
+
   @spec generate_ssh_keys(map()) :: map()
   defp generate_ssh_keys(opts) do
     if opts[:push?] || opts[:ssh?] do
@@ -121,10 +132,6 @@ defmodule XGen.Generators.Elixir.Nerves do
 
     opts
   end
-
-  ##
-  ## Post-generation callbacks
-  ##
 
   @spec build_instructions(map()) :: map()
   defp build_instructions(opts) do

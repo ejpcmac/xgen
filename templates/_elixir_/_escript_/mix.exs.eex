@@ -4,7 +4,7 @@ defmodule <%= @module %>.MixProject do
   def project do
     [
       app: :<%= @app %>,
-      version: "0.0.1-dev",
+      version: "<%= @initial_version %>",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       escript: [main_module: <%= @module %>],

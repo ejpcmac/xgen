@@ -6,7 +6,7 @@ defmodule <%= @module %>.MixProject do
   def project do
     [
       app: :<%= @app %>,
-      version: "0.1.0-dev",
+      version: "<%= @initial_version %>",
       elixir: "~> 1.7",
       target: @target,
       archives: [nerves_bootstrap: "~> 1.0"],
