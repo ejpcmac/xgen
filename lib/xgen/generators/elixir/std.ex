@@ -8,7 +8,7 @@ defmodule XGen.Generators.Elixir.Std do
   import Marcus
   import XGen.Generator.CallbackHelpers
   import XGen.Generator.StandardCallbacks
-  import XGen.Generators.Elixir.Callbacks
+  import XGen.Generators.Elixir.Helpers
 
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
@@ -29,9 +29,11 @@ defmodule XGen.Generators.Elixir.Std do
     Base.Git
   ]
 
-  pregen :module_path
-  pregen :cookie_generator
-  pregen :constants
+  overrides %{
+    initial_version: "0.1.0-dev",
+    module_path: Macro.underscore(@module),
+    cookie_generator: &generate_cookie/0
+  }
 
   collection do
     [
@@ -73,16 +75,6 @@ defmodule XGen.Generators.Elixir.Std do
   postgen :project_created
   postgen :build_instructions
   postgen :gitsetup_instructions
-
-  ##
-  ## Pre-generation callbacks
-  ##
-
-  @spec constants(map()) :: map()
-  defp constants(opts) do
-    opts
-    |> Map.put(:initial_version, "0.1.0-dev")
-  end
 
   ##
   ## Post-generation callbacks

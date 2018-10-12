@@ -6,7 +6,7 @@ defmodule XGen.Generator do
 
     1. the generator name is printed,
     2. the user is asked a few questions to configure the project,
-    3. optional pre-generation callbacks are run,
+    3. optional overrides to these answers are applied,
     4. a collection of templates is built,
     5. files are generated and copied,
     6. optional post-generation callbacks are run.
@@ -41,6 +41,7 @@ defmodule XGen.Generator do
         # of these in the order they are declared. Base.Path is automatically
         # added as first option, so you don’t need to state it.
         options [
+          ModuleName,
           MyOption,
           Script,
           BuildScript,
@@ -48,14 +49,18 @@ defmodule XGen.Generator do
           Base.Git
         ]
 
-        # Pre-generation scripts can be registered here. They are functions that
-        # takes the map of resolved options as argument and return an updated
-        # map. If multiple pre-generation scripts are registered, they are
-        # executed in the order they are declared here
-        #
-        # :secret_key is defined at the end of this module so you can see a
-        # simple example.
-        pregen :secret_key
+        # If you need to add more values to the map of resolved options or
+        # override some existing values, you can optionally register a map of
+        # overrides. Previously resolved options are accessible using the
+        # @option_key syntax.
+        overrides %{
+          initial_version: "0.0.1-dev",
+          module_path: Macro.underscore(@module_name),
+          secret_key: generate_secret_key(),
+
+          # Always enable `my_option?` if Git is enabled.
+          my_option?: @my_option? || @git?
+        }
 
         # This is the default collection. All the templates listed here will be
         # added to the project.
@@ -87,10 +92,11 @@ defmodule XGen.Generator do
         # You can even use option values to choose dynamically a template.
         collection @license?, do: ["base/LICENSE+\#{@license}.eex"]
 
-        # In the same way as pre-generation scripts, post-generation scripts
-        # take the map of option and return an optionally updated map. They are
-        # mainly made to perform tasks like running commands in the newly
-        # generated project and print some information to the user.
+        # Post-generation scripts can be registered here. They are functions
+        # that take the map of resolved options as argument and return an
+        # optionally updated map. They are mainly made to perform tasks like
+        # running commands in the newly generated project and print some
+        # information to the user.
         #
         # :fix_permissions and :build_instructions are defined below, while
         # :init_git and :project_created are standard callbacks defined in
@@ -105,15 +111,14 @@ defmodule XGen.Generator do
         # post-generation callbacks.
 
         ##
-        ## Pre-generation callbacks
+        ## Helpers
         ##
 
-        @spec secret_key(map()) :: map()
-        defp secret_key(opts) do
+        @spec generate_secret_key :: String.t()
+        defp generate_secret_key do
           # NOTE: Since we have aliased XGen.Options.Base, we must use here
           # Elixir.Base.
-          key = 32 |> :crypto.strong_rand_bytes() |> Elixir.Base.encode64()
-          Map.put(opts, :secret_key, key)
+          32 |> :crypto.strong_rand_bytes() |> Elixir.Base.encode64()
         end
 
         ##
@@ -171,11 +176,14 @@ defmodule XGen.Generator do
   defproperty :name, String.t(), doc: "the generator name"
   defproperty :options, [Option.t()], doc: "the list of options"
 
+  defproperty :overrides, map(),
+    doc: "the list of options overrides",
+    optional: true
+
   using do
     quote do
       @before_compile unquote(__MODULE__)
 
-      Module.register_attribute(__MODULE__, :pregen, accumulate: true)
       Module.register_attribute(__MODULE__, :postgen, accumulate: true)
       Module.put_attribute(__MODULE__, :collection_num, 0)
 
@@ -214,15 +222,6 @@ defmodule XGen.Generator do
   end
 
   @doc """
-  Registers a pre-generation callback.
-  """
-  defmacro pregen(callback) do
-    quote do
-      Module.put_attribute(__MODULE__, :pregen, unquote(callback))
-    end
-  end
-
-  @doc """
   Registers a post-generation callback.
   """
   defmacro postgen(callback) do
@@ -233,8 +232,13 @@ defmodule XGen.Generator do
 
   @doc false
   defmacro __before_compile__(env) do
-    pregens = callback_chain(env.module, :pregen)
-    postgens = callback_chain(env.module, :postgen)
+    postgens =
+      env.module
+      |> Module.get_attribute(:postgen)
+      |> Enum.reduce([], fn callback, acc ->
+        block = quote do: opts = unquote(callback)(opts)
+        [block | acc]
+      end)
 
     quote do
       @doc false
@@ -244,29 +248,12 @@ defmodule XGen.Generator do
       end
 
       @doc false
-      @spec __pregen__(map()) :: map()
-      def __pregen__(opts) do
-        (unquote_splicing(pregens))
-        opts
-      end
-
-      @doc false
       @spec __postgen__(map()) :: :ok
       def __postgen__(opts) do
         (unquote_splicing(postgens))
         :ok
       end
     end
-  end
-
-  @spec callback_chain(module(), atom()) :: Macro.t()
-  defp callback_chain(module, name) do
-    module
-    |> Module.get_attribute(name)
-    |> Enum.reduce([], fn callback, acc ->
-      block = quote do: opts = unquote(callback)(opts)
-      [block | acc]
-    end)
   end
 
   @doc """
@@ -283,7 +270,7 @@ defmodule XGen.Generator do
       options
       |> Enum.reduce(config, &Option.resolve/2)
       |> Map.put(:type, generator.type())
-      |> generator.__pregen__()
+      |> apply_overrides(generator)
 
     collection = generator.__build_collection__(opts)
 
@@ -294,5 +281,15 @@ defmodule XGen.Generator do
     Templates.copy(collection, opts)
 
     generator.__postgen__(opts)
+  end
+
+  @spec apply_overrides(map(), t()) :: map()
+  defp apply_overrides(opts, generator) do
+    overrides =
+      if {:overrides, 1} in generator.__info__(:functions),
+        do: generator.overrides(opts),
+        else: %{}
+
+    Map.merge(opts, overrides)
   end
 end

@@ -7,7 +7,7 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   import Marcus
   import XGen.Generator.StandardCallbacks
-  import XGen.Generators.Elixir.Callbacks
+  import XGen.Generators.Elixir.Helpers
 
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
@@ -31,10 +31,12 @@ defmodule XGen.Generators.Elixir.Nerves do
     Base.Git
   ]
 
-  pregen :module_path
-  pregen :cookie
-  pregen :supervision_for_ssh
-  pregen :constants
+  overrides %{
+    initial_version: "0.0.1-dev",
+    module_path: Macro.underscore(@module),
+    cookie: generate_cookie(),
+    sup?: @sup? || @ssh?
+  }
 
   collection do
     [
@@ -75,20 +77,6 @@ defmodule XGen.Generators.Elixir.Nerves do
   postgen :project_created
   postgen :build_instructions
   postgen :gitsetup_instructions
-
-  ##
-  ## Pre-generation callbacks.
-  ##
-
-  @spec supervision_for_ssh(map()) :: map()
-  defp supervision_for_ssh(%{ssh?: true} = opts), do: %{opts | sup?: true}
-  defp supervision_for_ssh(opts), do: opts
-
-  @spec constants(map()) :: map()
-  defp constants(opts) do
-    opts
-    |> Map.put(:initial_version, "0.0.1-dev")
-  end
 
   ##
   ## Post-generation callbacks

@@ -20,10 +20,10 @@
     options: 1,
 
     # Generators
-    pregen: 1,
-    postgen: 1,
+    overrides: 1,
     collection: 1,
     collection: 2,
+    postgen: 1,
 
     # ExCLI.DSL
     aliases: 1,

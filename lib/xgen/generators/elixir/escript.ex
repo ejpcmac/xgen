@@ -7,7 +7,7 @@ defmodule XGen.Generators.Elixir.Escript do
 
   import Marcus
   import XGen.Generator.StandardCallbacks
-  import XGen.Generators.Elixir.Callbacks
+  import XGen.Generators.Elixir.Helpers
 
   alias XGen.Options.Base
   alias XGen.Options.Elixir.Base, as: ElixirBase
@@ -24,8 +24,10 @@ defmodule XGen.Generators.Elixir.Escript do
     Base.Git
   ]
 
-  pregen :module_path
-  pregen :constants
+  overrides %{
+    initial_version: "0.0.1-dev",
+    module_path: Macro.underscore(@module)
+  }
 
   collection do
     [
@@ -56,16 +58,6 @@ defmodule XGen.Generators.Elixir.Escript do
   postgen :project_created
   postgen :build_instructions
   postgen :gitsetup_instructions
-
-  ##
-  ## Pre-generation callbacks
-  ##
-
-  @spec constants(map()) :: map()
-  defp constants(opts) do
-    opts
-    |> Map.put(:initial_version, "0.0.1-dev")
-  end
 
   ##
   ## Post-generation callbacks
