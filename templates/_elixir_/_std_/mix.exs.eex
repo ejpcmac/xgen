@@ -13,7 +13,7 @@ defmodule <%= @module %>.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
 
-      <%= render("_elixir_/_fragments_/tools.exs", assigns) %>,
+      <%= render("_elixir_/_fragments_/mix.exs/tools.exs", assigns) %>,
 
       # Docs
       docs: [
@@ -41,19 +41,19 @@ defmodule <%= @module %>.MixProject do
 
   defp deps do
     [
-      <%= render("_elixir_/_fragments_/deps_dev.exs", assigns) %>,
+      <%= render("_elixir_/_fragments_/mix.exs/deps/dev.exs", assigns) %>,
 
       # Project dependencies
 
-      <%= render("_elixir_/_fragments_/deps_doc.exs", assigns) %><%= if @release? do %>,
+      <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %><%= if @release? do %>,
 
-      <%= render("_elixir_/_fragments_/deps_release.exs", assigns) %><% end %>
+      <%= render("_elixir_/_fragments_/mix.exs/deps/release.exs", assigns) %><% end %>
     ]
   end
 
-  <%= render("_elixir_/_fragments_/dialyzer.exs", assigns) %>
+  <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs", assigns) %>
 
-  <%= render("_elixir_/_fragments_/cli_env.exs", assigns) %>
+  <%= render("_elixir_/_fragments_/mix.exs/cli_env.exs", assigns) %>
 
   <%= if @package? do %>
   defp package do
