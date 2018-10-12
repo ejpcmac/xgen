@@ -26,7 +26,7 @@ defmodule XGen.Generators.Elixir.Nerves do
     Nerves.SSH,
     Nerves.NTP,
     Nerves.RTC,
-    ElixirBase.Contributing,
+    Base.Contributing,
     Base.License,
     Base.Git
   ]

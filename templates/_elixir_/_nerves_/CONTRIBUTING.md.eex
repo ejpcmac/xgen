@@ -13,7 +13,7 @@ including Elixir, `git-flow` and all Nerves dependencies, by using
 
 ### Local repository
 
-<%= render("_base_/_fragments_/CONTRIBUTING.md/github_fork.md.eex", assigns) %>
+<%= render("_base_/_fragments_/CONTRIBUTING.md/#{@clone_type}.md.eex", assigns) %>
 
 ### Development environment (with Nix)
 
@@ -53,7 +53,7 @@ All the tests should pass.
 
 ## Workflow
 
-<%= render("_elixir_/_fragments_/CONTRIBUTING.md/workflow_external.md", assigns) %>
+<%= render("_elixir_/_fragments_/CONTRIBUTING.md/workflow_#{@workflow}.md", assigns) %>
 
 ## Coding style
 

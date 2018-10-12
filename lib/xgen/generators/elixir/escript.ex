@@ -19,7 +19,7 @@ defmodule XGen.Generators.Elixir.Escript do
   options [
     ElixirBase.Application,
     ElixirBase.Module,
-    ElixirBase.Contributing,
+    Base.Contributing,
     Base.License,
     Base.Git
   ]

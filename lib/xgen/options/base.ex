@@ -27,6 +27,58 @@ defmodule XGen.Options.Base do
     end
   end
 
+  defoption Contributing do
+    defoption CloneType do
+      defoption GitRepo do
+        key :git_repo
+        type :string
+        options required: true
+        prompt "Git repository"
+      end
+
+      key :clone_type
+      type :choice
+      options choices: clone_types(), repo_clone: [GitRepo]
+
+      prompt "\nWhich kind of workflow do you want for setting up the local " <>
+               "repo?"
+
+      defp clone_types do
+        [
+          github_fork:
+            "Do a fork on GitHub, then clone and add an upstream remote",
+          repo_clone: "Clone the repository"
+        ]
+      end
+    end
+
+    defoption Workflow do
+      key :workflow
+      type :choice
+      options choices: workflows()
+      prompt "\nWhich kind of branching workflow do you want to follow?"
+
+      defp workflows do
+        [
+          external: "GitHub-style contributing workflow with git-flow"
+        ]
+      end
+    end
+
+    key :contributing?
+    type :yesno
+    default :no
+    options yes: [CloneType, Workflow]
+    name "CONTRIBUTING.md"
+    prompt "Add a CONTRIBUTING.md?"
+
+    documentation """
+    xgen can add a CONTRIBUTING.md with instructions covering the setup for
+    the local repository, the development environment, the workflow and style
+    guide. You will be asked some questions to customise its content.
+    """
+  end
+
   defoption License do
     defoption LicenseChoice do
       key :license
