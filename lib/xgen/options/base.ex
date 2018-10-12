@@ -44,7 +44,7 @@ defmodule XGen.Options.Base do
     key :license?
     type :yesno
     default :no
-    options if_yes: [LicenseChoice]
+    options yes: [LicenseChoice]
     name "License"
     prompt "Add a license?"
 

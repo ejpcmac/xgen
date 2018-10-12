@@ -138,7 +138,7 @@ defmodule XGen.Option do
 
   Options for the yes/no questions are:
 
-    * `if_yes` - an optional list of options to run if the user answers yes
+    * `yes` - an optional list of options to resolve if the user answers yes
 
   For instance:
 
@@ -146,7 +146,7 @@ defmodule XGen.Option do
         name :yesno_example
         type :yesno
         default :no
-        options if_yes: [ChoiceExample]
+        options yes: [ChoiceExample]
         prompt "Do you want to add an item?"
       end
 
@@ -185,6 +185,26 @@ defmodule XGen.Option do
         3. A knife
 
       Choice [2]:
+
+  Like for yes/no questions, it is possible to resolve additional options
+  depending on the answer:
+
+      defoption ChoiceExample do
+        name :choice_example
+        type :choice
+        default :fork
+        # Here, NumberOfTines will be resolved only if the choice is :fork.
+        options choices: items(), fork: [NumberOfTines]
+        prompt "Which item to add?"
+
+        defp choices do
+          [
+            spoon: "A spoon",
+            fork: "A fork",
+            knife: "A knife"
+          ]
+        end
+      end
 
   ## Validators
 
@@ -322,13 +342,20 @@ defmodule XGen.Option do
 
     value = get_value(prompt, type, default, validator, options)
 
-    # Yes/no question can lead to more options being resolved.
-    if type == :yesno and value and is_list(options[:if_yes]) do
-      opts
-      |> Map.merge(Enum.reduce(options[:if_yes], %{}, &resolve/2))
-      |> Map.put(key, value)
-    else
-      Map.put(opts, key, value)
+    # Some options can lead to more options being resolved.
+    cond do
+      type == :yesno and value and is_list(options[:yes]) ->
+        opts
+        |> Map.merge(Enum.reduce(options[:yes], %{}, &resolve/2))
+        |> Map.put(key, value)
+
+      type == :choice and is_list(options[value]) ->
+        opts
+        |> Map.merge(Enum.reduce(options[value], %{}, &resolve/2))
+        |> Map.put(key, value)
+
+      true ->
+        Map.put(opts, key, value)
     end
   end
 
