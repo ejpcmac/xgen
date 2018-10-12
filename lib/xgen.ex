@@ -1,6 +1,6 @@
 defmodule XGen do
   @moduledoc """
-  An opinionated project generator.
+  An opinionated interactive project generator.
 
   ## Commands
 
