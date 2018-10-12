@@ -1,0 +1,31 @@
+1. Install Nix by running the script and following the instructions:
+
+        $ curl https://nixos.org/nix/install | sh
+
+2. Optionally install [direnv](https://github.com/direnv/direnv) to
+    automatically setup the environment when you enter the project directory:
+
+        $ nix-env -i direnv
+
+    In this case, you also need to add to your `~/.<shell>rc`:
+
+    ```sh
+    eval "$(direnv hook <shell>)"
+    ```
+
+    *Make sure to replace `<shell>` by your shell, namely `bash`, `zsh`, …*
+
+3. In the project directory, if you **did not** install direnv, start a Nix
+   shell:
+
+        $ cd <%= @app %>
+        $ nix-shell
+
+    If you opted to use direnv, please allow the `.envrc` instead of running a
+    Nix shell manually:
+
+        $ cd <%= @app %>
+        $ direnv allow
+
+    In this case, direnv will automatically update your environment to behave
+    like a Nix shell whenever you enter the project directory.

@@ -1,0 +1,14 @@
+1. Fork the repository
+
+2. Clone your fork to a local repository:
+
+        $ git clone https://github.com/you/<%= @app %>.git
+        $ cd <%= @app %>
+
+3. Add the main repository as a remote:
+
+        $ git remote add upstream https://github.com/<%= @github_account %>/<%= @app %>.git
+
+4. Checkout to `develop`:
+
+        $ git checkout develop
