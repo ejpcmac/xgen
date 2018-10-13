@@ -14,6 +14,7 @@ defmodule <%= @module %>.MixProject do
       build_path: "_build/#{@target}",
       lockfile: "mix.lock.#{@target}",
       start_permanent: Mix.env() == :prod,
+      build_embedded: @target != "host",
       aliases: [loadconfig: [&bootstrap/1]],
       deps: deps()
     ]
@@ -72,6 +73,6 @@ defmodule <%= @module %>.MixProject do
           "ev3",
           "x86_64"
         ] do %>
-  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.4", runtime: false}<% end %>
+  defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.5", runtime: false}<% end %>
   defp system(target), do: Mix.raise("Unknown MIX_TARGET: #{target}")
 end
