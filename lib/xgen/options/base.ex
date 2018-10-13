@@ -38,6 +38,7 @@ defmodule XGen.Options.Base do
 
       key :clone_type
       type :choice
+      default :github_fork
       options choices: clone_types(), repo_clone: [GitRepo]
 
       prompt "\nWhich kind of workflow do you want for setting up the local " <>
@@ -47,7 +48,7 @@ defmodule XGen.Options.Base do
         [
           github_fork:
             "Do a fork on GitHub, then clone and add an upstream remote",
-          repo_clone: "Clone the repository"
+          repo_clone: "Clone the repository directly"
         ]
       end
     end
@@ -55,6 +56,7 @@ defmodule XGen.Options.Base do
     defoption Workflow do
       key :workflow
       type :choice
+      default :external
       options choices: workflows()
       prompt "\nWhich kind of branching workflow do you want to follow?"
 
