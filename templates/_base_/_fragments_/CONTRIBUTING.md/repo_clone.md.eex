@@ -1,0 +1,8 @@
+1. Clone your fork to a local repository:
+
+        $ git clone <%= @git_repo %>
+        $ cd <%= @app %>
+
+2. Checkout to `develop`:
+
+        $ git checkout develop

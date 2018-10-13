@@ -1,0 +1,65 @@
+defmodule <%= @module %>.MixProject do
+  use Mix.Project
+
+  @version "<%= @initial_version %>"
+  <%= unless @package?, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
+
+  def project do
+    [
+      app: :<%= @app %>,
+      version: @version,
+      elixir: "~> 1.7",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+
+      <%= render("_elixir_/_fragments_/mix.exs/tools.exs", assigns) %>,
+
+      # Docs
+      docs: [
+        main: "<%= @module %>"<%= if @package?, do: "," %>
+        <%= unless @package?, do: "# " %>source_url: @repo_url,
+        <%= unless @package?, do: "# " %>source_ref: "v#{@version}"
+      ]<%= if @package? do %>,
+
+      # Package
+      package: package(),
+      description: "Description for <%= @module %>."<% end %>
+    ]
+  end
+
+  def application do
+    [<%= if @sup? do %>
+      mod: {<%= @module %>.Application, []},<% end %>
+      extra_applications: [:logger]
+    ]
+  end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
+  defp deps do
+    [
+      <%= render("_elixir_/_fragments_/mix.exs/deps/dev.exs", assigns) %>,
+
+      # Project dependencies
+
+      <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %><%= if @release? do %>,
+
+      <%= render("_elixir_/_fragments_/mix.exs/deps/release.exs", assigns) %><% end %>
+    ]
+  end
+
+  <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs", assigns) %>
+
+  <%= render("_elixir_/_fragments_/mix.exs/cli_env.exs", assigns) %>
+
+  <%= if @package? do %>
+  defp package do
+    [<%= if @license do %>
+      licenses: ["<%= @license %>"],<% end %>
+      links: %{"GitHub" => @repo_url}
+    ]
+  end<% end %>
+end

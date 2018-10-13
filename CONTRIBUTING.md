@@ -1,8 +1,15 @@
-# Contributing to ExGen
+# Contributing to xgen
 
-This project uses [git-flow](https://github.com/petervanderdoes/gitflow-avh).
-The `master` branch is reserved to releases: the development process occurs on
-`develop` and feature branches. **Please never commit to master.**
+xgen is written in [Elixir](https://elixir-lang.org).
+
+For branching management, this project uses
+[git-flow](https://github.com/petervanderdoes/gitflow-avh). The `master` branch
+is reserved for releases: the development process occurs on `develop` and
+feature branches. **Please never commit to master.**
+
+You can easily set up a development environment featuring all the dependencies,
+including Elixir and `git-flow`, by using [Nix](https://nixos.org/nix/). This is
+detailed below.
 
 ## Setup
 
@@ -12,29 +19,70 @@ The `master` branch is reserved to releases: the development process occurs on
 
 2. Clone your fork to a local repository:
 
-        $ git clone https://github.com/you/ex_gen.git
-        $ cd ex_gen
+        $ git clone https://github.com/you/xgen.git
+        $ cd xgen
 
 3. Add the main repository as a remote:
 
-        $ git remote add upstream https://github.com/ejpcmac/ex_gen.git
+        $ git remote add upstream https://github.com/ejpcmac/xgen.git
 
-4. Setup `git-flow`:
+4. Checkout to `develop`:
 
-        $ ./.gitsetup
+        $ git checkout develop
 
-You should now be on `develop`.
+### Development environment (without Nix)
 
-### Development environment
+Install an Elixir environment, and optionally install `git-flow`.
 
-1. Install an Elixir environment.
+### Development environment (with Nix)
 
-2. Fetch the project dependencies and build the project:
+1. Install Nix by running the script and following the instructions:
 
-        $ cd ex_gen
+        $ curl https://nixos.org/nix/install | sh
+
+2. Optionally install [direnv](https://github.com/direnv/direnv) to
+    automatically setup the environment when you enter the project directory:
+
+        $ nix-env -i direnv
+
+    In this case, you also need to add to your `~/.<shell>rc`:
+
+    ```sh
+    eval "$(direnv hook <shell>)"
+    ```
+
+    *Make sure to replace `<shell>` by your shell, namely `bash`, `zsh`, …*
+
+3. In the project directory, if you **did not** install direnv, start a Nix
+   shell:
+
+        $ cd xgen
+        $ nix-shell
+
+    If you opted to use direnv, please allow the `.envrc` instead of running a
+    Nix shell manually:
+
+        $ cd xgen
+        $ direnv allow
+
+    In this case, direnv will automatically update your environment to behave
+    like a Nix shell whenever you enter the project directory.
+
+### Git-flow
+
+If you want to use `git-flow` and use the standard project configuration, please
+run:
+
+    $ ./.gitsetup
+
+### Building the project
+
+1. Fetch the project dependencies and build the project:
+
+        $ cd xgen
         $ mix do deps.get, compile
 
-3. Launch the tests:
+2. Launch the tests:
 
         $ mix test
 
@@ -42,7 +90,7 @@ All the tests should pass.
 
 ## Workflow
 
-To make a change, please follow this workflow:
+To make a change, please use this workflow:
 
 1. Checkout to `develop` and apply the last upstream changes (use rebase, not
     merge!):
@@ -51,7 +99,7 @@ To make a change, please follow this workflow:
         $ git fetch --all --prune
         $ git rebase upstream/develop
 
-2. Create a new branch with an explicit name:
+2. For a tiny patch, create a new branch with an explicit name:
 
         $ git checkout -b <my_branch>
 
@@ -97,6 +145,7 @@ To make a change, please follow this workflow:
     works as expected:
 
         $ mix test
+        $ mix dialyzer
         $ mix credo
 
 7. If it’s all good, open a pull request to merge your branch into the `develop`
@@ -108,4 +157,4 @@ Please format your code with `mix format` or your editor and follow
 [this style guide](https://github.com/christopheradams/elixir_style_guide).
 
 All contributed code must be documented and functions must have typespecs. In
-general, take your inspiration in the existing code.
+general, take your inspiration from the existing code.

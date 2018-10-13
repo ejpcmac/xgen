@@ -1,136 +1,93 @@
-# ExGen
+# xgen
 
-An opinionated Elixir multi-project generator.
+`xgen` is an opinionated interactive project generator. It can currently
+generate standard Elixir, Nerves and escript projects. The documentation for
+options is printed directly during the generation process, so that you don’t
+need to remember all the possibilities if you don’t use it every day.
 
 ## Features
 
-ExGen can currently generate standard or Nerves projects.
+Each project comes with:
 
-### Standard projects
+* a `README.md` template;
+* a `CHANGELOG.md` with the initial version;
+* a `.editorconfig`;
+* a `shell.nix` and `.envrc` to set up reliably the development environment
+    using [Nix](https://nixos.org/nix/), and optionally
+    [direnv](https://github.com/direnv/direnv);
+* an optional license file.
 
-Each new project comes with the following dependencies:
+If Git is enabled, a `.gitsetup` script is also added to the project to help
+setting `git-flow` the same way on every machine.
 
-* `credo`
-* `dialyxir`
-* `excoveralls`
-* `mix_test_watch`
-* `ex_unit_notifier`
-* `stream_data`
-* `ex_doc`
+### Standard Elixir projects
 
-You can choose to add a supervision tree, Distillery, package information, a
-license, and a `CONTRIBUTING.md` to your project. A Git repository is
-automatically initialised, with an opt-out switch if you don’t need it.
+Each new standard Elixir project comes with the following dependencies:
+
+* [`credo`](https://github.com/rrrene/credo)
+* [`dialyxir`](https://github.com/jeremyjh/dialyxir)
+* [`excoveralls`](https://github.com/parroty/excoveralls)
+* [`mix_test_watch`](https://github.com/lpil/mix-test.watch)
+* [`ex_unit_notifier`](https://github.com/navinpeiris/ex_unit_notifier)
+* [`stream_data`](https://github.com/whatyouhide/stream_data)
+* [`ex_doc`](https://github.com/elixir-lang/ex_doc)
+
+In addition to the common options, you can choose to add a supervision tree, a
+release configuration with Distillery, package information, and a
+`CONTRIBUTING.md` to your project.
 
 ### Nerves projects
 
 Nerves project are already configured with a release and the IEx console on
-UART. In addition to the options available in a standard project, you can add a
-network configuration that works out of the box.
+UART. In addition to the options available in standard projects, you can add a
+network configuration that works out of the box, setup SSH firmware updates, NTP
+and more.
+
+### Elixir escripts
+
+escript projects comes with the standard Elixir projects dependencies, and:
+
+* [`ex_cli`](https://github.com/danhper/ex_cli)
+* [`marcus`](https://github.com/ejpcmac/marcus)
+
+A “Hello, World!” escript is generated as an example.
 
 ## Installation
 
-### From archive
+To install `xgen`:
 
-You can install ExGen directly from a compiled archive:
+    $ mix escript.install github ejpcmac/xgen
 
-    $ mix archive.install https://ejpcmac.net/bin/ex_gen.ez
+To update an already installed `xgen`:
 
-To update an already installed ExGen:
-
-    $ mix local.xgen
-
-### From source
-
-1. Clone this repository
-
-        $ git clone https://github.com/ejpcmac/ex_gen.git
-
-2. Build and install the archive:
-
-        $ MIX_ENV=prod mix archive.install
-
-## Configuration
-
-You will need to generate a configuration file for ExGen to put your name and
-the correct GitHub links in the generated projects:
-
-    $ mix xgen.config.create
-    Full name: <your name>
-    GitHub account: <your account>
+    $ xgen update
 
 ## Usage
 
-#### Standard
+Once installed, simply run:
 
-    $ mix xgen.std <path> [--app <app>] [--module <module>] [--sup] [--rel]
-                          [--contrib] [--package] [--license <license>] [--todo]
-                          [--no-git] [--config <file>]
+    $ xgen
 
-#### Nerves
-
-    $ mix xgen.nerves <path> [--app <app>] [--module <module>] [--sup] [--net]
-                             [--push] [--ssh] [--ntp] [--rtc] [--contrib]
-                             [--license <license>] [--todo] [--no-git]
-                             [--config <file>]
-
-A project will be created at the given `<path>`. The application and module
-names will be inferred from the path, unless you specify them using the
-`--app` and `--module` options.
-
-## Options
-
-* `--app <app>`: set the OTP application name for the project.
-
-* `--module <module>`: set the module name for the project.
-
-* `--sup`: add an `Application` module to the project containing a supervision
-    tree. This option also adds the callback in `mix.exs`.
-
-* `--rel`: add Distillery to the project with a configuration.
-
-* `--net`: add `nerves_network` to the project with a basic configuration.
-
-* `--push`: add `nerves_firmware_ssh` to the project to push fwupdates over the
-    air.
-
-* `--ssh`: add an SSH server to the project. This enables remote IEx sessions
-    through SSH. (implies `--sup`)
-
-* `--ntp`: add `nerves_ntp` to the project.
-
-* `--rtc`: add support for a DS3231 RTC. If the `--sup` option is set, a
-    temporary task is generated to set the OS time from the RTC on startup. If
-    both `--sup` and `--ntp` are set, a temporary task is generated to sync the
-    RTC from OS time 15 seconds after the application startup. This lets some
-    time for NTP to sync.
-
-* `--contrib`: add a `CONTRIBUTING.md` to the project.
-
-* `--package`: add package information in `mix.exs`.
-
-* `--license <license>`: set the license for the project. If the license is
-    supported, a `LICENSE` file is created with the maintainer name. If the
-    `--package` option is set, the license is precised in the package
-    information.
-
-* `--todo`: add a `TODO` file to the project. This file is also added to the
-    Git excluded files in `.git/info/exclude`.
-
-* `--no-git`: do not initialise a Git repository.
-
-* `--config <file>`: indicate which configuration file to use. Defaults to
-    `~/.xgen.exs`
-
-## Supported licenses
-
-Currently, only the `MIT` license is supported.
+You will asked to choose the type of project you want to generate and guided
+through the process.
 
 ## Roadmap
 
-In the future, this generator will be able to generate more complex project,
-like Phoenix applications with a full-featured user management to kickstart
-development. That mainly depends on my needs and the time I have.
+* [x] Standard Elixir projects generator
+* [x] Nerves projects generator
+* [x] Interactive generation
+* [x] Declarative way of handling generators and options
+* [x] escript generation
+* [ ] Minimal Phoenix projects generation
+* [ ] C projects generation (with Nix and Ceedling configured)
+* [ ] Exctraction of the generation logic\*
+* [ ] Project generator generation (for fun!)
+
+\* I eventually plan to extract all the generation logic in a project generator
+framework and only keep generators, options and templates in `xgen`. This way,
+anyone will be able to build easily a project generator fitting its own needs.
+`xgen` will provide a project generator generator as a beautiful *mise en
+abyme*.
 
 ## [Contributing](CONTRIBUTING.md)
 

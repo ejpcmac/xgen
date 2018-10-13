@@ -64,7 +64,8 @@
         # You can customize the priority of any check
         # Priority values are: `low, normal, high, higher`
         #
-        {Credo.Check.Design.AliasUsage, priority: :low},
+        {Credo.Check.Design.AliasUsage,
+         priority: :low, excluded_namespaces: ["EEx"]},
         # For some checks, you can also set other parameters
         #
         # If you don't want the `setup` and `test` macro calls in ExUnit tests

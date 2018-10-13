@@ -1,0 +1,28 @@
+{ pkgs ? import <nixpkgs> {} }:
+
+with pkgs;
+
+let
+  inherit (lib) optional optionals;
+
+  elixir = beam.packages.erlangR21.elixir_1_7;
+  gitflow = gitAndTools.gitflow;
+in
+
+mkShell {
+  buildInputs = [ elixir git gitflow<%= if @type == :nerves do %> fwup squashfsTools file<% end %> ]
+    ++ optional stdenv.isLinux libnotify # For ExUnit Notifier on Linux.
+    ++ optional stdenv.isLinux inotify-tools # For file_system on Linux.
+    ++ optional stdenv.isDarwin terminal-notifier # For ExUnit Notifier on macOS.<%= if @type == :nerves do %>
+    ++ optional stdenv.isDarwin coreutils-prefixed # For Nerves on macOS.
+    ++ optional stdenv.isLinux x11_ssh_askpass # For Nerves on Linux.<% end %>
+    ++ optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      # For file_system on macOS.
+      CoreFoundation
+      CoreServices
+    ]);<%= if @type == :nerves do %>
+
+  shellHooks = optional stdenv.isLinux ''
+    export SUDO_ASKPASS=${x11_ssh_askpass}/libexec/x11-ssh-askpass
+  '';<% end %>
+}

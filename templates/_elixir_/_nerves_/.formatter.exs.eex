@@ -1,0 +1,4 @@
+[
+  <%= render("_elixir_/_fragments_/formatter_base.exs", assigns) %>,
+  import_deps: [:distillery]
+]

@@ -1,0 +1,60 @@
+# Contributing to <%= @module %>
+
+<%= @module %> is written in [Elixir](https://elixir-lang.org) using the
+[Nerves](https://nerves-project.org/) framework.
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/gitflow_message.md", assigns) %>
+
+You can easily set up a development environment featuring all the dependencies,
+including Elixir, `git-flow` and all Nerves dependencies, by using
+[Nix](https://nixos.org/nix/). This is detailed below.
+
+## Setup
+
+### Local repository
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/#{@clone_type}.md.eex", assigns) %>
+
+### Development environment (with Nix)
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/nix_setup.md.eex", assigns) %>
+
+### Development environment (without Nix)
+
+1. Setup an Elixir environment.
+
+2. Install [fwup](https://github.com/fhunleth/fwup).
+
+3. Install the following dependencies:
+
+        # Debian-based distributions
+        $ sudo apt-get install ssh-askpass squashfs-tools
+
+        # Fedora
+        $ sudo dnf install openssh-askpass squashfs-tools
+        $ sudo ln -s /usr/libexec/openssh/ssh-askpass /usr/local/bin
+
+### Git-flow
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/gitflow_setup.md", assigns) %>
+
+### Building the project
+
+1. Fetch the project dependencies and build the project:
+
+        $ cd <%= @app %>
+        $ mix do deps.get, compile
+
+2. Launch the tests:
+
+        $ mix test
+
+All the tests should pass.
+
+## Workflow
+
+<%= render("_elixir_/_fragments_/CONTRIBUTING.md/workflow_#{@workflow}.md", assigns) %>
+
+## Coding style
+
+<%= render("_elixir_/_fragments_/CONTRIBUTING.md/style.md", assigns) %>

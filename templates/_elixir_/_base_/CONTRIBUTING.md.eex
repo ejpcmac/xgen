@@ -1,0 +1,48 @@
+# Contributing to <%= @module %>
+
+<%= @module %> is written in [Elixir](https://elixir-lang.org).
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/gitflow_message.md", assigns) %>
+
+You can easily set up a development environment featuring all the dependencies,
+including Elixir and `git-flow`, by using [Nix](https://nixos.org/nix/). This is
+detailed below.
+
+## Setup
+
+### Local repository
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/#{@clone_type}.md.eex", assigns) %>
+
+### Development environment (without Nix)
+
+Install an Elixir environment, and optionally install `git-flow`.
+
+### Development environment (with Nix)
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/nix_setup.md.eex", assigns) %>
+
+### Git-flow
+
+<%= render("_base_/_fragments_/CONTRIBUTING.md/gitflow_setup.md", assigns) %>
+
+### Building the project
+
+1. Fetch the project dependencies and build the project:
+
+        $ cd <%= @app %>
+        $ mix do deps.get, compile
+
+2. Launch the tests:
+
+        $ mix test
+
+All the tests should pass.
+
+## Workflow
+
+<%= render("_elixir_/_fragments_/CONTRIBUTING.md/workflow_#{@workflow}.md", assigns) %>
+
+## Coding style
+
+<%= render("_elixir_/_fragments_/CONTRIBUTING.md/style.md", assigns) %>

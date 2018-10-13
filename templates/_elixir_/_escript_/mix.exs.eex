@@ -1,0 +1,41 @@
+defmodule <%= @module %>.MixProject do
+  use Mix.Project
+
+  def project do
+    [
+      app: :<%= @app %>,
+      version: "<%= @initial_version %>",
+      elixir: "~> 1.7",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      escript: [main_module: <%= @module %>],
+      deps: deps(),
+
+      <%= render("_elixir_/_fragments_/mix.exs/tools.exs", assigns) %>,
+
+      # Docs
+      docs: [
+        main: "<%= @module %>"
+      ]
+    ]
+  end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
+  defp deps do
+    [
+      <%= render("_elixir_/_fragments_/mix.exs/deps/dev.exs", assigns) %>,
+
+      # Project dependencies
+      {:ex_cli, "~> 0.1.6"},
+      {:marcus, "~> 0.1.0"},
+
+      <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %>
+    ]
+  end
+
+  <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs", assigns) %>
+
+  <%= render("_elixir_/_fragments_/mix.exs/cli_env.exs", assigns) %>
+end

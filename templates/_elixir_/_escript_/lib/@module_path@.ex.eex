@@ -1,0 +1,31 @@
+defmodule <%= @module %> do
+  @moduledoc """
+  Documentation for <%= @module %>.
+  """
+
+  use ExCLI.DSL
+
+  import Marcus
+
+  name "<%= @app %>"
+  description "Description for <%= @app %>"
+
+  default_command :hello
+
+  command :hello do
+    description "Says hello"
+
+    run _context do
+      info("Hello, world!")
+    end
+  end
+
+  @doc false
+  @spec main([binary()]) :: any()
+  def main(args) do
+    # Enable ANSI printing. This could cause issues on Windows, but it is not
+    # supported yet.
+    Application.put_env(:elixir, :ansi_enabled, true)
+    ExCLI.run!(__MODULE__, args)
+  end
+end

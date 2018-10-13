@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.3.0
+
+### Breaking changes
+
+* Rename to `xgen`
+* xgen is now an interactive escript and no longer a Mix task
+
+### New features
+
+* [*] Add a `shell.nix` and `.envrc` to all generated projects
+* [escript] Add an escript generator
+
+### Enhancements
+
+* Update dependencies
+* Huge refactoring to achive more modularity and extensivity
+* [*] Add workflow preferences for the contributing guidelines
+* [nerves] Update to Nerves 1.3
+* [nerves] Add specific contributing guidelines
+
 ## v0.2.9
 
 ### Enhancements
