@@ -12,7 +12,7 @@ Each project comes with:
 * a `README.md` template;
 * a `CHANGELOG.md` with the initial version;
 * a `.editorconfig`;
-* a `shell.nix` and `.envrc` to set up reliably the development environement
+* a `shell.nix` and `.envrc` to set up reliably the development environment
     using [Nix](https://nixos.org/nix/), and optionally
     [direnv](https://github.com/direnv/direnv);
 * an optional license file.
