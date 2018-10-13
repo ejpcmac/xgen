@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.3.1
+
+### Enhancements
+
+* Additional options are now declared using `if_*`, and there is `if_no` for
+    yes/no questions
+
+### Bug fixes
+
+* [update] Make it work
+
 ## v0.3.0
 
 ### Breaking changes
