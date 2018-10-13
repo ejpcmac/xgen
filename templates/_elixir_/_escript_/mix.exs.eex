@@ -28,7 +28,7 @@ defmodule <%= @module %>.MixProject do
       <%= render("_elixir_/_fragments_/mix.exs/deps/dev.exs", assigns) %>,
 
       # Project dependencies
-      {:ex_cli, "~> 0.1.4"},
+      {:ex_cli, "~> 0.1.6"},
       {:marcus, "~> 0.1.0"},
 
       <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %>
