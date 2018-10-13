@@ -39,7 +39,7 @@ defmodule XGen.Options.Base do
       key :clone_type
       type :choice
       default :github_fork
-      options choices: clone_types(), repo_clone: [GitRepo]
+      options choices: clone_types(), if_repo_clone: [GitRepo]
 
       prompt "\nWhich kind of workflow do you want for setting up the local " <>
                "repo?"
@@ -70,7 +70,7 @@ defmodule XGen.Options.Base do
     key :contributing?
     type :yesno
     default :no
-    options yes: [CloneType, Workflow]
+    options if_yes: [CloneType, Workflow]
     name "CONTRIBUTING.md"
     prompt "Add a CONTRIBUTING.md?"
 
@@ -98,7 +98,7 @@ defmodule XGen.Options.Base do
     key :license?
     type :yesno
     default :no
-    options yes: [LicenseChoice]
+    options if_yes: [LicenseChoice]
     name "License"
     prompt "Add a license?"
 

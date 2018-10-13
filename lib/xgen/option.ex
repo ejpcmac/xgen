@@ -138,7 +138,8 @@ defmodule XGen.Option do
 
   Options for the yes/no questions are:
 
-    * `yes` - an optional list of options to resolve if the user answers yes
+    * `if_yes` - an optional list of options to resolve if the user answers yes
+    * `if_no` - an optional list of options to resolve if the user answers no
 
   For instance:
 
@@ -146,7 +147,7 @@ defmodule XGen.Option do
         name :yesno_example
         type :yesno
         default :no
-        options yes: [ChoiceExample]
+        options if_yes: [ChoiceExample]
         prompt "Do you want to add an item?"
       end
 
@@ -194,7 +195,7 @@ defmodule XGen.Option do
         type :choice
         default :fork
         # Here, NumberOfTines will be resolved only if the choice is :fork.
-        options choices: items(), fork: [NumberOfTines]
+        options choices: items(), if_fork: [NumberOfTines]
         prompt "Which item to add?"
 
         defp choices do
@@ -341,22 +342,12 @@ defmodule XGen.Option do
     end
 
     value = get_value(prompt, type, default, validator, options)
+    opts = Map.put(opts, key, value)
 
     # Some options can lead to more options being resolved.
-    cond do
-      type == :yesno and value and is_list(options[:yes]) ->
-        opts
-        |> Map.merge(Enum.reduce(options[:yes], %{}, &resolve/2))
-        |> Map.put(key, value)
-
-      type == :choice and is_list(options[value]) ->
-        opts
-        |> Map.merge(Enum.reduce(options[value], %{}, &resolve/2))
-        |> Map.put(key, value)
-
-      true ->
-        Map.put(opts, key, value)
-    end
+    if is_list(options[if_(value)]),
+      do: Enum.reduce(options[if_(value)], opts, &resolve/2),
+      else: opts
   end
 
   @spec doc(String.t(), IO.ANSI.ansidata()) :: :ok
@@ -387,4 +378,9 @@ defmodule XGen.Option do
   @spec validate(term(), function()) :: {:ok, term()} | {:error, String.t()}
   defp validate(value, nil), do: {:ok, value}
   defp validate(value, validator), do: validator.(value)
+
+  @spec if_(atom()) :: atom()
+  defp if_(true), do: :if_yes
+  defp if_(false), do: :if_no
+  defp if_(value), do: :"if_#{value}"
 end

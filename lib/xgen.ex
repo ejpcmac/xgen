@@ -87,7 +87,9 @@ defmodule XGen do
           """)
 
         mix ->
-          System.cmd(mix, ["escript.install", "github", @repo])
+          System.cmd(mix, ["escript.install", "--force", "github", @repo],
+            into: IO.stream(:stdio, :line)
+          )
       end
     end
   end
