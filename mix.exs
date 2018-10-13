@@ -5,7 +5,7 @@ defmodule XGen.MixProject do
     [
       app: :xgen,
       version: "0.3.0-dev",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
 
@@ -36,7 +36,7 @@ defmodule XGen.MixProject do
       {:stream_data, "~> 0.4.0", only: :test},
 
       # Project dependencies
-      {:ex_cli, "~> 0.1.4"},
+      {:ex_cli, "~> 0.1.6"},
       {:marcus, "~> 0.1.0"},
       {:typed_struct, "~> 0.1.3", runtime: false},
 
