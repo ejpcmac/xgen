@@ -37,7 +37,7 @@ defmodule XGen.MixProject do
 
       # Project dependencies
       {:ex_cli, "~> 0.1.6"},
-      {:marcus, github: "ejpcmac/marcus"},
+      {:marcus, "~> 0.1.1"},
       {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies
