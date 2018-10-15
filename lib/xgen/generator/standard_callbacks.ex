@@ -25,7 +25,7 @@ defmodule XGen.Generator.StandardCallbacks do
   """
   @spec project_created(map()) :: map()
   def project_created(opts) do
-    info([:green, :bright, "\nYour project has been successfully created.\n"])
+    success("\nYour project has been successfully created.\n")
     opts
   end
 

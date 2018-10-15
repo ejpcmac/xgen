@@ -97,10 +97,7 @@ defmodule XGen do
   @doc false
   @spec main([binary()]) :: any()
   def main(args) do
-    # Enable ANSI printing. This could cause issues on Windows, but it is not
-    # supported yet.
-    Application.put_env(:elixir, :ansi_enabled, true)
-
+    enable_colors()
     info("xgen #{@version}\n")
     ExCLI.run!(__MODULE__, args)
   end
