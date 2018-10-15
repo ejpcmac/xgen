@@ -1,7 +1,7 @@
 defmodule <%= @module %>.MixProject do
   use Mix.Project
 
-  @version "<%= @initial_version %>"
+  @version "<%= @initial_version %>" <> dev()
   <%= unless @package?, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
 
   def project do
@@ -62,4 +62,6 @@ defmodule <%= @module %>.MixProject do
       links: %{"GitHub" => @repo_url}
     ]
   end<% end %>
+
+  <%= render("_elixir_/_fragments_/mix.exs/dev.exs", assigns) %>
 end

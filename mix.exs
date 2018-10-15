@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.2-dev",
+      version: "0.3.2" <> dev(),
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
@@ -65,5 +65,23 @@ defmodule XGen.MixProject do
       "coveralls.detail": :test,
       "coveralls.html": :test
     ]
+  end
+
+  # Helper to add a development revision to the version. Do NOT make a call to
+  # Git this way in a production release!!
+  def dev do
+    if Mix.env() == :prod do
+      stacktrace = [{__MODULE__, :project, 0, [file: 'mix.exs']}]
+      IO.warn("You are using a development version.", stacktrace)
+    end
+
+    with {rev, 0} <-
+           System.cmd("git", ["rev-parse", "--short", "HEAD"],
+             stderr_to_stdout: true
+           ) do
+      "-dev+" <> String.trim(rev)
+    else
+      _ -> "-dev"
+    end
   end
 end
