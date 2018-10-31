@@ -64,6 +64,12 @@ defmodule XGen.Generators.Elixir.Std do
     ]
   end
 
+  collection @release? and @config_provider == :toml,
+    do: ["_elixir_/_base_/rel/config/defaults.toml.eex"]
+
+  collection @release? and @config_provider == :mix,
+    do: ["_elixir_/_base_/rel/config/config.exs.eex"]
+
   collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
   collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]
   collection @git?, do: ["_base_/.gitsetup"]

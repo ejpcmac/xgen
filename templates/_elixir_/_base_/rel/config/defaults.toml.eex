@@ -1,0 +1,8 @@
+# Configuration for <%= @module %>.
+
+##
+## Logging
+##
+
+[logger]
+level = "info"

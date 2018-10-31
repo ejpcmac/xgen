@@ -2,7 +2,7 @@
 ~w(rel plugins *.exs)
 |> Path.join()
 |> Path.wildcard()
-|> Enum.map(&Code.eval_file(&1))
+|> Enum.map(&Code.eval_file/1)
 
 use Mix.Releases.Config,
   default_release: :default,
@@ -25,6 +25,10 @@ environment :prod do
 
   set cookie:
         :"<%= @cookie_generator.() %>"
+
+  <%= if @config_provider do
+    render("_elixir_/_fragments_/config_providers/#{@config_provider}.exs", assigns)
+  end %>
 end
 
 release :<%= @app %> do
