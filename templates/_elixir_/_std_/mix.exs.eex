@@ -1,13 +1,13 @@
 defmodule <%= @module %>.MixProject do
   use Mix.Project
 
-  @version "<%= @initial_version %>" <> dev()
+  @version "<%= @initial_version %>"
   <%= unless @package?, do: "# " %>@repo_url "https://github.com/<%= @github_account %>/<%= @app %>"
 
   def project do
     [
       app: :<%= @app %>,
-      version: @version,
+      version: @version <> dev(),
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
