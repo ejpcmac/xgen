@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.3.2
+
+### New features
+
+* [elixir_std] Add config providers for Distillery
+
+### Enhancements
+
+* [*] Add the Git revision to development versions
+* [escript] Use Marcus from Hex
+
 ## v0.3.1
 
 ### Enhancements

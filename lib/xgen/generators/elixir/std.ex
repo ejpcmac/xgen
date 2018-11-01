@@ -30,7 +30,7 @@ defmodule XGen.Generators.Elixir.Std do
   ]
 
   overrides %{
-    initial_version: "0.1.0-dev",
+    initial_version: "0.1.0",
     module_path: Macro.underscore(@module),
     cookie_generator: &generate_cookie/0
   }
@@ -63,6 +63,12 @@ defmodule XGen.Generators.Elixir.Std do
       "_elixir_/_base_/rel/config.exs.eex"
     ]
   end
+
+  collection @release? and @config_provider == :toml,
+    do: ["_elixir_/_base_/rel/config/defaults.toml.eex"]
+
+  collection @release? and @config_provider == :mix,
+    do: ["_elixir_/_base_/rel/config/config.exs.eex"]
 
   collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
   collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]

@@ -4,7 +4,7 @@ defmodule <%= @module %>.MixProject do
   def project do
     [
       app: :<%= @app %>,
-      version: "<%= @initial_version %>",
+      version: "<%= @initial_version %>" <> dev(),
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       escript: [main_module: <%= @module %>],
@@ -29,7 +29,7 @@ defmodule <%= @module %>.MixProject do
 
       # Project dependencies
       {:ex_cli, "~> 0.1.6"},
-      {:marcus, "~> 0.1.0"},
+      {:marcus, "~> 0.1.1"},
 
       <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %>
     ]
@@ -38,4 +38,6 @@ defmodule <%= @module %>.MixProject do
   <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs", assigns) %>
 
   <%= render("_elixir_/_fragments_/mix.exs/cli_env.exs", assigns) %>
+
+  <%= render("_elixir_/_fragments_/mix.exs/dev.exs", assigns) %>
 end

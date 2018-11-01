@@ -1,0 +1,6 @@
+# Runtime configuration for <%= @module %>.
+
+use Mix.Config
+
+# Configures the logger.
+config :logger, level: :info

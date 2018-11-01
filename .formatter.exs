@@ -21,6 +21,9 @@
     overrides: 1,
     postgen: 1,
     prompt: 1,
-    type: 1
+    type: 1,
+
+    # Templates
+    set: 1
   ]
 ]

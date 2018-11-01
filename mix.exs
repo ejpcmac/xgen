@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.1",
+      version: "0.3.2",
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
@@ -37,7 +37,7 @@ defmodule XGen.MixProject do
 
       # Project dependencies
       {:ex_cli, "~> 0.1.6"},
-      {:marcus, "~> 0.1.0"},
+      {:marcus, "~> 0.1.1"},
       {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies
@@ -65,5 +65,18 @@ defmodule XGen.MixProject do
       "coveralls.detail": :test,
       "coveralls.html": :test
     ]
+  end
+
+  # Helper to add a development revision to the version. Do NOT make a call to
+  # Git this way in a production release!!
+  def dev do
+    with {rev, 0} <-
+           System.cmd("git", ["rev-parse", "--short", "HEAD"],
+             stderr_to_stdout: true
+           ) do
+      "-dev+" <> String.trim(rev)
+    else
+      _ -> "-dev"
+    end
   end
 end

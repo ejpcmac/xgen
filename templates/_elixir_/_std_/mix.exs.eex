@@ -7,7 +7,7 @@ defmodule <%= @module %>.MixProject do
   def project do
     [
       app: :<%= @app %>,
-      version: @version,
+      version: @version <> dev(),
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -47,7 +47,7 @@ defmodule <%= @module %>.MixProject do
 
       <%= render("_elixir_/_fragments_/mix.exs/deps/doc.exs", assigns) %><%= if @release? do %>,
 
-      <%= render("_elixir_/_fragments_/mix.exs/deps/release.exs", assigns) %><% end %>
+      <%= render("_elixir_/_fragments_/mix.exs/deps/release.exs.eex", assigns) %><% end %>
     ]
   end
 
@@ -62,4 +62,6 @@ defmodule <%= @module %>.MixProject do
       links: %{"GitHub" => @repo_url}
     ]
   end<% end %>
+
+  <%= render("_elixir_/_fragments_/mix.exs/dev.exs", assigns) %>
 end

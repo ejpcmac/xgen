@@ -6,7 +6,7 @@ defmodule <%= @module %>.MixProject do
   def project do
     [
       app: :<%= @app %>,
-      version: "<%= @initial_version %>",
+      version: "<%= @initial_version %>" <> dev(),
       elixir: "~> 1.7",
       target: @target,
       archives: [nerves_bootstrap: "~> 1.0"],
@@ -75,4 +75,6 @@ defmodule <%= @module %>.MixProject do
         ] do %>
   defp system("<%= target %>"), do: {:nerves_system_<%= target %>, "~> 1.5", runtime: false}<% end %>
   defp system(target), do: Mix.raise("Unknown MIX_TARGET: #{target}")
+
+  <%= render("_elixir_/_fragments_/mix.exs/dev.exs", assigns) %>
 end
