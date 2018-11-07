@@ -1,8 +1,11 @@
 defp cli_env do
   [
-    # Always run coveralls mix tasks in `:test` env.
+    # Always run Coveralls Mix tasks in `:test` env.
     coveralls: :test,
     "coveralls.detail": :test,
-    "coveralls.html": :test
+    "coveralls.html": :test,
+
+    # Use a custom env for docs.
+    docs: :docs
   ]
 end
