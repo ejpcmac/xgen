@@ -6,6 +6,7 @@ defmodule XGen do
 
     * `generate`: executes the project generator *(default)*
     * `config`: configures xgen
+    * `update`: updates xgen
 
   ## Options
 
