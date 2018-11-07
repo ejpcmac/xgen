@@ -40,7 +40,7 @@ defmodule XGen do
   description "An opinionated project generator"
 
   option :config,
-    help: "Sets a config file",
+    help: "Set a config file",
     aliases: [:c]
 
   default_command :generate
@@ -80,7 +80,7 @@ defmodule XGen do
 
     option :dev,
       type: :boolean,
-      help: "Uses the development version"
+      help: "Use the development version"
 
     run context do
       dev? = Map.get(context, :dev, false)
