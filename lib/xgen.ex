@@ -78,7 +78,14 @@ defmodule XGen do
   command :update do
     description "Updates xgen"
 
-    run _context do
+    option :dev,
+      type: :boolean,
+      help: "Uses the development version"
+
+    run context do
+      dev? = Map.get(context, :dev, false)
+      opts = if dev?, do: ["branch", "develop"], else: []
+
       case System.find_executable("mix") do
         nil ->
           halt("""
@@ -87,7 +94,9 @@ defmodule XGen do
           """)
 
         mix ->
-          System.cmd(mix, ["escript.install", "--force", "github", @repo],
+          System.cmd(
+            mix,
+            ["escript.install", "--force", "github", @repo] ++ opts,
             into: IO.stream(:stdio, :line)
           )
       end
