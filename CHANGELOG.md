@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.3
+
+### New features
+
+* [update] Add a `--dev` switch to use the development version
+
+### Enhancements
+
+* [elixir_*] Use a custom env for docs
+
 ## v0.3.2
 
 ### New features
