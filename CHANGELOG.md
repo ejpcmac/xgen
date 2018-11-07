@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.4
+
+### Enhancements
+
+* Use the `:test` env for `mix test.watch`
+* [elixir_*] Fix the `config.exs` template
+
 ## v0.3.3
 
 ### New features
