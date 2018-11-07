@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.2",
+      version: "0.3.3",
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
@@ -41,7 +41,7 @@ defmodule XGen.MixProject do
       {:typed_struct, "~> 0.1.3", runtime: false},
 
       # Documentation dependencies
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :docs, runtime: false}
     ]
   end
 
@@ -60,10 +60,13 @@ defmodule XGen.MixProject do
 
   defp cli_env do
     [
-      # Always run coveralls mix tasks in `:test` env.
+      # Always run Coveralls Mix tasks in `:test` env.
       coveralls: :test,
       "coveralls.detail": :test,
-      "coveralls.html": :test
+      "coveralls.html": :test,
+
+      # Use a custom env for docs.
+      docs: :docs
     ]
   end
 
