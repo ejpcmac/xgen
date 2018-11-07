@@ -62,6 +62,10 @@ To update an already installed `xgen`:
 
     $ xgen update
 
+To update to the current development version:
+
+    $ xgen update --dev
+
 ## Usage
 
 Once installed, simply run:
