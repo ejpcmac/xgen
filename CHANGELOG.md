@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.3.5
+
+### New features
+
+* [*] Add an option to add CI configuration
+
+### Enhancements
+
+* [elixir_*] Set the Dialyxir version to `1.0-rc`
+
+### Bug fixes
+
+* [elixir_std] Fix an assing misspelling in the `mix.exs`
+
 ## v0.3.4
 
 ### Enhancements
