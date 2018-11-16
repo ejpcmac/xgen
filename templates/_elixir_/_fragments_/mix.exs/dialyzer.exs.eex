@@ -1,0 +1,24 @@
+# Dialyzer configuration
+defp dialyzer do
+  [<%= if @ci? do %>
+    # Use a custom PLT directory for continuous integration caching.
+    plt_core_path: System.get_env("PLT_DIR"),
+    plt_file: plt_file(),<% end %>
+    plt_add_deps: :transitive,
+    flags: [
+      :unmatched_returns,
+      :error_handling,
+      :race_conditions
+    ],
+    ignore_warnings: ".dialyzer_ignore"
+  ]
+end
+
+<%= if @ci? do %>
+defp plt_file do
+  case System.get_env("PLT_DIR") do
+    nil -> nil
+    plt_dir -> {:no_warn, Path.join(plt_dir, "<%= @app %>.plt")}
+  end
+end
+<% end %>

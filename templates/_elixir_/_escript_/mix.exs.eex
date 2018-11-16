@@ -35,7 +35,7 @@ defmodule <%= @module %>.MixProject do
     ]
   end
 
-  <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs", assigns) %>
+  <%= render("_elixir_/_fragments_/mix.exs/dialyzer.exs.eex", assigns) %>
 
   <%= render("_elixir_/_fragments_/mix.exs/cli_env.exs", assigns) %>
 

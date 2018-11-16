@@ -27,6 +27,33 @@ defmodule XGen.Options.Base do
     end
   end
 
+  defoption CI do
+    defoption CIService do
+      key :ci_service
+      type :choice
+      options choices: ci_services()
+      prompt "\nWhich CI service do you want to use?"
+
+      defp ci_services do
+        [
+          travis: "Travis CI"
+        ]
+      end
+    end
+
+    key :ci?
+    type :yesno
+    default :no
+    options if_yes: [CIService]
+    name "Continuous Integration"
+    prompt "Add CI configuration?"
+
+    documentation """
+    xgen can generate configuration for Continuous Integration services.
+    Currently, only Travis CI is handled.
+    """
+  end
+
   defoption Contributing do
     defoption CloneType do
       defoption GitRepo do
