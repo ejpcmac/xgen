@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.6
+
+### Enhancements
+
+* Update Credo to `1.0.0` 🎉
+
 ## v0.3.5
 
 ### New features

@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.5",
+      version: "0.3.6",
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
@@ -28,7 +28,7 @@ defmodule XGen.MixProject do
   defp deps do
     [
       # Development dependencies
-      {:credo, "~> 0.10.0", only: :dev, runtime: false},
+      {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0-rc", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
       {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
