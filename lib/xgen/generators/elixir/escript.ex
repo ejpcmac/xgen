@@ -19,6 +19,7 @@ defmodule XGen.Generators.Elixir.Escript do
   options [
     ElixirBase.Application,
     ElixirBase.Module,
+    Base.CI,
     Base.Contributing,
     Base.License,
     Base.Git
@@ -47,6 +48,9 @@ defmodule XGen.Generators.Elixir.Escript do
       "_elixir_/_base_/test/test_helper.exs"
     ]
   end
+
+  collection @ci? and @ci_service == :travis,
+    do: ["_elixir_/_base_/.travis.yml"]
 
   collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
   collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]

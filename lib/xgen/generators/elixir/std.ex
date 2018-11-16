@@ -24,6 +24,7 @@ defmodule XGen.Generators.Elixir.Std do
     ElixirBase.SupervisionTree,
     ElixirStd.Release,
     ElixirStd.Package,
+    Base.CI,
     Base.Contributing,
     Base.License,
     Base.Git
@@ -69,6 +70,9 @@ defmodule XGen.Generators.Elixir.Std do
 
   collection @release? and @config_provider == :mix,
     do: ["_elixir_/_base_/rel/config/config.exs.eex"]
+
+  collection @ci? and @ci_service == :travis,
+    do: ["_elixir_/_base_/.travis.yml"]
 
   collection @contributing?, do: ["_elixir_/_base_/CONTRIBUTING.md.eex"]
   collection @license?, do: ["_base_/LICENSE+#{@license}.eex"]

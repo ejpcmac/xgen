@@ -1,6 +1,6 @@
 # <%= @module %>
-<%= if @type == :elixir_std and @package? do %>
-[![hex.pm version](http://img.shields.io/hexpm/v/<%= @app %>.svg?style=flat)](https://hex.pm/packages/<%= @app %>)
+<%= if @ci? or @type == :elixir_std and @package? do %>
+<%= render("_base_/_fragments_/README.md/badges.md.eex", assigns) %>
 <% end %>
 **TODO: Add description**
 

@@ -1,5 +1,7 @@
 # xgen
 
+[![Build Status](https://travis-ci.com/ejpcmac/xgen.svg?branch=develop)](https://travis-ci.com/ejpcmac/xgen)
+
 `xgen` is an opinionated interactive project generator. It can currently
 generate standard Elixir, Nerves and escript projects. The documentation for
 options is printed directly during the generation process, so that you don’t

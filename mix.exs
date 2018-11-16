@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.4",
+      version: "0.3.5",
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
@@ -29,7 +29,7 @@ defmodule XGen.MixProject do
     [
       # Development dependencies
       {:credo, "~> 0.10.0", only: :dev, runtime: false},
-      {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0-rc", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
       {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
@@ -48,6 +48,9 @@ defmodule XGen.MixProject do
   # Dialyzer configuration
   defp dialyzer do
     [
+      # Use a custom PLT directory for continuous integration caching.
+      plt_core_path: System.get_env("PLT_DIR"),
+      plt_file: plt_file(),
       plt_add_deps: :transitive,
       flags: [
         :unmatched_returns,
@@ -56,6 +59,13 @@ defmodule XGen.MixProject do
       ],
       ignore_warnings: ".dialyzer_ignore"
     ]
+  end
+
+  defp plt_file do
+    case System.get_env("PLT_DIR") do
+      nil -> nil
+      plt_dir -> {:no_warn, Path.join(plt_dir, "xgen.plt")}
+    end
   end
 
   defp cli_env do

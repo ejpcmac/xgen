@@ -1,0 +1,3 @@
+<%= if @ci? and @ci_service == :travis do %>
+[![Build Status](https://travis-ci.com/ejpcmac/<%= @app %>.svg?branch=develop)](https://travis-ci.com/<%= @github_account %>/<%= @app %>)<% end %><%= if @type == :elixir_std and @package? do %>
+[![hex.pm version](http://img.shields.io/hexpm/v/<%= @app %>.svg?style=flat)](https://hex.pm/packages/<%= @app %>)<% end %>
