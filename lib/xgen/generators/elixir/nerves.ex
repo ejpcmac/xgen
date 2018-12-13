@@ -35,7 +35,8 @@ defmodule XGen.Generators.Elixir.Nerves do
     initial_version: "0.0.1",
     module_path: Macro.underscore(@module),
     cookie: generate_cookie(),
-    sup?: @sup? || @ssh?
+    sup?: @sup? || @ssh?,
+    ci?: false
   }
 
   collection do

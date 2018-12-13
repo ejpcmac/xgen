@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.7
+
+### Enhancements
+
+* [elixir_*] Remove `sudo: false` from the Travis CI configuration
+
+### Bug fixes
+
+* [nerves] Make the generator work
+
 ## v0.3.6
 
 ### Enhancements
