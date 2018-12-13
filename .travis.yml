@@ -3,7 +3,7 @@ elixir:
   - 1.7.4
 otp_release:
   - 20.3
-  - 21.1
+  - 21.2
 env:
   - PLT_DIR=$HOME/.plt
 before_script:
