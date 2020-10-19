@@ -4,7 +4,7 @@ defmodule XGen.MixProject do
   def project do
     [
       app: :xgen,
-      version: "0.3.7",
+      version: "0.3.8" <> dev(),
       elixir: "~> 1.7",
       escript: [main_module: XGen],
       deps: deps(),
