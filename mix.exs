@@ -28,17 +28,17 @@ defmodule XGen.MixProject do
   defp deps do
     [
       # Development dependencies
-      {:credo, "~> 1.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0-rc", only: :dev, runtime: false},
+      {:credo, github: "rrrene/credo", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
       {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
-      {:stream_data, "~> 0.4.0", only: :test},
+      {:stream_data, "~> 0.5.0", only: :test},
 
       # Project dependencies
       {:ex_cli, "~> 0.1.6"},
       {:marcus, "~> 0.1.1"},
-      {:typed_struct, "~> 0.1.3", runtime: false},
+      {:typed_struct, "~> 0.2.0", runtime: false},
 
       # Documentation dependencies
       {:ex_doc, "~> 0.19", only: :docs, runtime: false}
