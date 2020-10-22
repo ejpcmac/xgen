@@ -94,14 +94,34 @@ defmodule XGen.Generators.Elixir.Nerves do
       File.mkdir_p!(system_dir)
 
       _ =
-        :os.cmd(
-          'ssh-keygen -q -t rsa -b 4096 -N "" -f #{system_dir}/ssh_host_rsa_key'
-        )
+        System.cmd("ssh-keygen", [
+          "-q",
+          "-t",
+          "rsa",
+          "-b",
+          "4096",
+          "-N",
+          "",
+          "-f",
+          "#{system_dir}/ssh_host_rsa_key"
+        ])
 
       # Generate user SSH key.
       green_info("* generating user SSH key")
       File.mkdir_p!(user_dir)
-      _ = :os.cmd('ssh-keygen -q -t rsa -b 4096 -N "" -f #{user_dir}/id_rsa')
+
+      _ =
+        System.cmd("ssh-keygen", [
+          "-q",
+          "-t",
+          "rsa",
+          "-b",
+          "4096",
+          "-N",
+          "",
+          "-f",
+          "#{user_dir}/ssh_host_rsa_key"
+        ])
 
       # Get the generated user key.
       local_key = user_dir |> Path.join("id_rsa.pub") |> File.read!()
