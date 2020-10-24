@@ -22,7 +22,7 @@ defmodule XGen.Options.Elixir.Std do
       defp config_providers do
         [
           toml: "Toml.Provider",
-          mix: "Mix.Releases.Config.Providers.Elixir",
+          mix: "Distillery.Releases.Config.Providers.Elixir",
           nil: "Do not use a Config Provider"
         ]
       end
