@@ -32,7 +32,8 @@ defmodule XGen.Generators.Elixir.Std do
 
   overrides %{
     initial_version: "0.1.0",
-    elixir_version: System.version(),
+    elixir_version: elixir_version(),
+    elixir_requirement: elixir_requirement(),
     module_path: Macro.underscore(@module),
     cookie_generator: &generate_cookie/0
   }

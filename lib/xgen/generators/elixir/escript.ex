@@ -27,7 +27,8 @@ defmodule XGen.Generators.Elixir.Escript do
 
   overrides %{
     initial_version: "0.0.1",
-    elixir_version: System.version(),
+    elixir_version: elixir_version(),
+    elixir_requirement: elixir_requirement(),
     module_path: Macro.underscore(@module)
   }
 

@@ -33,6 +33,7 @@ defmodule XGen.Generators.Elixir.Nerves do
 
   overrides %{
     initial_version: "0.0.1",
+    elixir_requirement: elixir_requirement(),
     module_path: Macro.underscore(@module),
     cookie: generate_cookie(),
     sup?: @sup? || @ssh?,

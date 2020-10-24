@@ -6,6 +6,23 @@ defmodule XGen.Generators.Elixir.Helpers do
   import XGen.Generator.CallbackHelpers
 
   @doc """
+  Returns the current Elixir version.
+  """
+  @spec elixir_version :: String.t()
+  def elixir_version do
+    System.version()
+  end
+
+  @doc """
+  Returns the current Elixir version requirement.
+  """
+  @spec elixir_requirement :: String.t()
+  def elixir_requirement do
+    version = elixir_version() |> Version.parse!()
+    "~> #{version.major}.#{version.minor}"
+  end
+
+  @doc """
   Generates an Erlang cookie.
   """
   @spec generate_cookie :: String.t()
