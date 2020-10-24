@@ -1,3 +1,4 @@
 # Release dependencies
+{:observer_cli, "~> 1.0", only: :prod},
 {:distillery, "~> 2.1"}<%= if @config_provider == :toml do %>,
 {:toml, "~> 0.5.0"}<% end %>
