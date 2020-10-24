@@ -120,7 +120,7 @@ defmodule XGen.Generators.Elixir.Nerves do
           "-N",
           "",
           "-f",
-          "#{user_dir}/ssh_host_rsa_key"
+          "#{user_dir}/id_rsa"
         ])
 
       # Get the generated user key.
