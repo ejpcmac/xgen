@@ -27,6 +27,7 @@ defmodule XGen.Generators.Elixir.Escript do
 
   overrides %{
     initial_version: "0.0.1",
+    elixir_version: System.version(),
     module_path: Macro.underscore(@module)
   }
 
@@ -38,6 +39,7 @@ defmodule XGen.Generators.Elixir.Escript do
       "_base_/.envrc",
       "_base_/.editorconfig",
       "_elixir_/_escript_/.formatter.exs.eex",
+      "_elixir_/_base_/.check.exs.eex",
       "_elixir_/_base_/.credo.exs",
       "_elixir_/_base_/.dialyzer_ignore",
       "_elixir_/_base_/.gitignore.eex",

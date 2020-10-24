@@ -32,6 +32,7 @@ defmodule XGen.Generators.Elixir.Std do
 
   overrides %{
     initial_version: "0.1.0",
+    elixir_version: System.version(),
     module_path: Macro.underscore(@module),
     cookie_generator: &generate_cookie/0
   }
@@ -44,6 +45,7 @@ defmodule XGen.Generators.Elixir.Std do
       "_base_/.envrc",
       "_base_/.editorconfig",
       "_elixir_/_std_/.formatter.exs.eex",
+      "_elixir_/_base_/.check.exs.eex",
       "_elixir_/_base_/.credo.exs",
       "_elixir_/_base_/.dialyzer_ignore",
       "_elixir_/_base_/.gitignore.eex",
